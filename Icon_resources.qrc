@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>Menu Icon/Image.png</file>
+        <file>Menu Icon/Preview.png</file>
+        <file>Menu Icon/Version.png</file>
+        <file>Menu Icon/Delete.svg</file>
+        <file>Menu Icon/Create Image.svg</file>
+        <file>Menu Icon/Create Video.svg</file>
+        <file>Menu Icon/Help.svg</file>
+        <file>Menu Icon/New.svg</file>
+        <file>Menu Icon/Save.svg</file>
+        <file>Menu Icon/SaveAs.svg</file>
+        <file>Menu Icon/Open.svg</file>
+        <file>Menu Icon/Exit.svg</file>
+        <file>Menu Icon/Stop.svg</file>
+        <file>Menu Icon/Search.svg</file>
+        <file>Menu Icon/Redo.svg</file>
+        <file>Menu Icon/Undo.svg</file>
+        <file>Menu Icon/Create Images in Range.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Menu Icon/Next.svg</file>
+        <file>Menu Icon/Previous.svg</file>
+        <file>Menu Icon/FolderBrowser.svg</file>
+        <file>Menu Icon/Route_Tool.svg</file>
+        <file>Menu Icon/Refresh.svg</file>
+    </qresource>
+</RCC>

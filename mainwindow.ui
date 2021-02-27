@@ -1,0 +1,2566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Fractal_Designer</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="EXE_Icons.qrc">
+    <normaloff>:/exe_icon/EXE Icons/FRD_icon.png</normaloff>:/exe_icon/EXE Icons/FRD_icon.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2" columnstretch="1">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="Tab">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="whatsThis">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Template&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="locale">
+       <locale language="English" country="UnitedKingdom"/>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="Welcome">
+       <property name="minimumSize">
+        <size>
+         <width>931</width>
+         <height>0</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Welcome</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="2" column="1">
+         <widget class="Line" name="line">
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTextBrowser" name="textBrowser">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+             </font>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="locale">
+             <locale language="English" country="UnitedKingdom"/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="html">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Welcome!&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:20pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is an application that enables you to draw fractals and make videos at your command!&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is the new version of Fractal Designer and does not support all the functions. You can refer to Help, or contact Teddy van Jerry for help.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  For more information, please refer to Help (Ctrl + H) or view the Chinese version with Ctrl + Shift + H.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.0.26 (2021/02/27)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; font-weight:600;&quot;&gt;Contributors&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_50012998&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Fractal Designer 5 development&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* UI design&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route tool&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route formula calculation&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Build thread (creating images)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Integration&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Help&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;a href=&quot;https://panoan.org/&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Panoan&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Formula display of colours&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* FFmpeg codes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Cmd and Powershell codes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  King:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Define colour&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Define colour parameters setting&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  ZYB:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Design formulas&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Create images&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route parameters setting&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:9.07563pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="2" rowspan="2">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item>
+           <spacer name="verticalSpacer_19">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <family>Sitka Heading</family>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Quick options:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_Newfile">
+            <property name="text">
+             <string>New File(N)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_openfile">
+            <property name="text">
+             <string>Open Existing File(O)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_HelpEnglish">
+            <property name="text">
+             <string>View Help (English)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>View Help (Chinese)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_AboutFD">
+            <property name="text">
+             <string>About Fractal Designer</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_11">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_AboutTVJ">
+            <property name="text">
+             <string>About Teddy van Jerry</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MainWindow_exit">
+            <property name="text">
+             <string>Exit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_20">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0" colspan="3">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>48</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 50), stop:0.166 rgba(255, 255, 0, 50), stop:0.333 rgba(0, 255, 0, 50), stop:0.5 rgba(0, 255, 255, 50), stop:0.666 rgba(0, 0, 255, 50), stop:0.833 rgba(255, 0, 255, 50), stop:1 rgba(255, 0, 0, 50))</string>
+          </property>
+          <property name="text">
+           <string>Fractal Designer</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="Template">
+       <property name="toolTip">
+        <string>Template</string>
+       </property>
+       <attribute name="title">
+        <string>Template</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,1,1,3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Current Layer:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_Template_4">
+            <property name="text">
+             <string>Template 4</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="Template_Choice_4">
+            <property name="text">
+             <string>Template 4</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="3">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="label_Template_2">
+            <property name="text">
+             <string>Template 2</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="Template_Choice_2">
+            <property name="text">
+             <string>Template 2</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBox_Template_Layer">
+          <item>
+           <property name="text">
+            <string>Fractal 1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0" colspan="3">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QWidget" name="widget_T1" native="true">
+            <widget class="QLabel" name="label_Template_1">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>101</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Template 1</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="Template_Choice_1">
+            <property name="text">
+             <string>Template 1</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QLabel" name="label_Template_3">
+            <property name="text">
+             <string>Template 3</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="Template_Choice_3">
+            <property name="text">
+             <string>Template 3</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="Image">
+       <attribute name="title">
+        <string>Image</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,100,0,0,0" columnstretch="10,0,1,10,0,1" rowminimumheight="0,0,0,0,0,0,0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinAndMaxSize</enum>
+        </property>
+        <item row="0" column="0" rowspan="8">
+         <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinAndMaxSize</enum>
+          </property>
+          <item>
+           <widget class="QToolBox" name="toolBox">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="ToolBoxPage1_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>389</width>
+               <height>417</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Page 1 of 4 - DEFINE VALUES</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_9">
+                <item row="2" column="0">
+                 <widget class="QPushButton" name="pushButton_Min_class_default">
+                  <property name="text">
+                   <string>Use Default Value</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <spacer name="verticalSpacer_17">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="pushButton_IV_clear1">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <spacer name="verticalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="0">
+                 <spacer name="verticalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="Min_class_value">
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000000.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QSpinBox" name="Max_loop_time">
+                  <property name="maximum">
+                   <number>9999</number>
+                  </property>
+                  <property name="value">
+                   <number>50</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QPushButton" name="pushButton_Max_value_default">
+                  <property name="text">
+                   <string>Use Default Value</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QDoubleSpinBox" name="Max_class_value">
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000000.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QPushButton" name="pushButton_IV_clear3">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QPushButton" name="pushButton_Max_loop_default">
+                  <property name="text">
+                   <string>Use Default Value</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_24">
+                  <property name="text">
+                   <string>Maximum unclassified value</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="label_25">
+                  <property name="text">
+                   <string>Maximum loop time</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QPushButton" name="pushButton_IV_clear2">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_23">
+                  <property name="text">
+                   <string>Minimum unclassified value</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="0">
+                 <spacer name="verticalSpacer_18">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="ToolBoxPage2_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>314</width>
+               <height>321</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Page 2 of 4 - DEFINE COLOURS</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_19">
+                <item row="1" column="0" colspan="3">
+                 <widget class="QTextBrowser" name="Convergent_Points_Colour_Formula_View">
+                  <property name="font">
+                   <font>
+                    <family>Consolas</family>
+                   </font>
+                  </property>
+                  <property name="html">
+                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#282828;&quot;&gt;A = 0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QPushButton" name="pushButton_42">
+                  <property name="text">
+                   <string>Default</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="Convergent_setColour">
+                  <property name="text">
+                   <string>Customize</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_44">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_26">
+                  <property name="text">
+                   <string>Convergent Points</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="0">
+               <layout class="QGridLayout" name="gridLayout_20">
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="Unconvergent_setColour">
+                  <property name="text">
+                   <string>Customize</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_27">
+                  <property name="text">
+                   <string>Unconvergent Points</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QPushButton" name="pushButton_45">
+                  <property name="text">
+                   <string>Default</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_47">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="3">
+                 <widget class="QTextBrowser" name="Unconvergent_Points_Colour_Formula_View">
+                  <property name="font">
+                   <font>
+                    <family>Consolas</family>
+                   </font>
+                  </property>
+                  <property name="html">
+                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#282828;&quot;&gt;A = 0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="ToolBoxPage3_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>358</width>
+               <height>181</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Page 3 of 4 - DEFINE ROUTE</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_12">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_21" columnstretch="1,1,1,0">
+                <item row="0" column="0" colspan="4">
+                 <widget class="QTableView" name="tableView_Route"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="pushButton_routeClear">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QPushButton" name="pushButton_routeImport">
+                  <property name="text">
+                   <string>Import from TXT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="pushButton_49">
+                  <property name="text">
+                   <string>Default</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QPushButton" name="pushButton_UniformMotion">
+                  <property name="text">
+                   <string>Uniform Motion</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_routeRemove">
+                  <property name="text">
+                   <string>Remove</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="pushButton_routeAdd">
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="ToolBoxPage4_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>401</width>
+               <height>443</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Page 4 of 4 - OTHER INFORMATION</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_13">
+              <item row="0" column="1">
+               <layout class="QGridLayout" name="gridLayout_22" columnstretch="0,0,0,0,0,0">
+                <item row="5" column="0">
+                 <spacer name="verticalSpacer_14">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="11" column="1" colspan="5">
+                 <widget class="QCommandLinkButton" name="commandLinkButton_Image">
+                  <property name="text">
+                   <string>Create images</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_31">
+                  <property name="text">
+                   <string>Total Time(mm:ss)</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="label_30">
+                  <property name="text">
+                   <string>Path</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="label_32">
+                  <property name="text">
+                   <string>File Name</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="Image_size_X">
+                  <property name="minimum">
+                   <number>2</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>2</number>
+                  </property>
+                  <property name="value">
+                   <number>1920</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_28">
+                  <property name="text">
+                   <string>Frame Rate(fps)</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="0">
+                 <spacer name="verticalSpacer_16">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="11" column="0">
+                 <widget class="QCheckBox" name="checkBox_2">
+                  <property name="text">
+                   <string>Save Preview Image</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_10">
+                  <property name="text">
+                   <string>X</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <spacer name="verticalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="7" column="0">
+                 <spacer name="verticalSpacer_15">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_29">
+                  <property name="text">
+                   <string>Image Size(px)</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <spacer name="verticalSpacer_13">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="1" colspan="4">
+                 <widget class="QComboBox" name="comboBox_fps">
+                  <property name="currentText">
+                   <string>24</string>
+                  </property>
+                  <property name="currentIndex">
+                   <number>1</number>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>15</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>24</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>30</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>60</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>144</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="4" column="1" colspan="4">
+                 <widget class="QTimeEdit" name="timeEdit">
+                  <property name="maximumTime">
+                   <time>
+                    <hour>0</hour>
+                    <minute>59</minute>
+                    <second>59</second>
+                   </time>
+                  </property>
+                  <property name="displayFormat">
+                   <string>mm:ss</string>
+                  </property>
+                  <property name="time">
+                   <time>
+                    <hour>0</hour>
+                    <minute>1</minute>
+                    <second>0</second>
+                   </time>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1" colspan="3">
+                 <widget class="QLineEdit" name="lineEdit_imagePath">
+                  <property name="inputMask">
+                   <string/>
+                  </property>
+                  <property name="placeholderText">
+                   <string>the path of the folder</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="4">
+                 <widget class="QToolButton" name="toolButton_imagePath">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="Icon_resources.qrc">
+                    <normaloff>:/Menu Icon/FolderBrowser.svg</normaloff>:/Menu Icon/FolderBrowser.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1" colspan="4">
+                 <widget class="QLineEdit" name="lineEdit_imagePrefix">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="placeholderText">
+                   <string>the name of image files</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QSpinBox" name="Image_size_Y">
+                  <property name="minimum">
+                   <number>2</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>2</number>
+                  </property>
+                  <property name="value">
+                   <number>1080</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="5">
+         <widget class="QComboBox" name="comboBox">
+          <item>
+           <property name="text">
+            <string>Mixed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Fractal 1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="5">
+         <widget class="QDoubleSpinBox" name="doubleSpinBox_t">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>2</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>118</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="decimals">
+           <number>9</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000010000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" colspan="2">
+         <widget class="QLabel" name="label_5">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Preview</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1" rowspan="4" colspan="5">
+         <layout class="QVBoxLayout" name="verticalLayout_11" stretch="15">
+          <item>
+           <widget class="QWidget" name="Preview_Image" native="true">
+            <widget class="QLabel" name="Label_Preview_Image">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>61</width>
+               <height>31</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Preview</string>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="1" colspan="4">
+         <widget class="QSlider" name="Slider_t">
+          <property name="maximum">
+           <number>1000000000</number>
+          </property>
+          <property name="pageStep">
+           <number>100000</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1" colspan="5">
+         <widget class="QProgressBar" name="progressBar_Preview">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="Video">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <attribute name="title">
+        <string>Video</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7" rowstretch="1,3,3,0" columnstretch="1,0,1">
+        <item row="2" column="0" rowspan="2">
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="title">
+             <string>Video Option</string>
+            </property>
+            <widget class="QRadioButton" name="radioButton_5">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>30</y>
+               <width>112</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Keep Images</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="radioButton_6">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>60</y>
+               <width>271</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Delete All Images</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="radioButton_7">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>90</y>
+               <width>331</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Delete All Images Except Preview Image</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBox_3">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>180</y>
+               <width>261</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Open The Video After creating</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBox_4">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>120</y>
+               <width>281</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Add Fractal Designer water mark</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBox_5">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>150</y>
+               <width>401</width>
+               <height>19</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Close Fractal Designer after creating the video</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="2" rowspan="4">
+         <layout class="QGridLayout" name="gridLayout_6" rowstretch="1,7,1,0,1,1,1,1">
+          <item row="7" column="1">
+           <widget class="QCommandLinkButton" name="commandLinkButton_3">
+            <property name="text">
+             <string>Create Video</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButton_deleteMusic">
+            <property name="text">
+             <string>Delete Music</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="6" column="1">
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pushButton_addMusic">
+            <property name="text">
+             <string>Add music</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="label_8">
+            <property name="font">
+             <font>
+              <family>Agency FB</family>
+              <pointsize>20</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Music Option</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="2">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>TIP: You can choose the format of the video in the Menu.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QTextBrowser" name="textBrowser_music">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="html">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:9.07563pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QWidget" name="widget_previewInVideo" native="true">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(203,213,240,100)</string>
+            </property>
+            <widget class="QLabel" name="label_previewInVideo">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>0</width>
+               <height>0</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: transparent</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="lineEdit_videoPath">
+            <property name="placeholderText">
+             <string>the path of the folder to store the video</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>File Name</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Path</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="lineEdit_videoName">
+            <property name="placeholderText">
+             <string>the name of the video file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButton_videoPath">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Icon_resources.qrc">
+              <normaloff>:/Menu Icon/FolderBrowser.svg</normaloff>:/Menu Icon/FolderBrowser.svg</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="3">
+           <widget class="QLabel" name="label_9">
+            <property name="font">
+             <font>
+              <family>Agency FB</family>
+              <pointsize>48</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>File Option</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1" rowspan="4">
+         <widget class="Line" name="line_2">
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile_F">
+    <property name="title">
+     <string>File(&amp;F)</string>
+    </property>
+    <widget class="QMenu" name="menuFRD_4_Compatibility">
+     <property name="title">
+      <string>FRD 4 Compatibility</string>
+     </property>
+     <property name="icon">
+      <iconset resource="EXE_Icons.qrc">
+       <normaloff>:/exe_icon/EXE Icons/FRD_icon.png</normaloff>:/exe_icon/EXE Icons/FRD_icon.png</iconset>
+     </property>
+     <widget class="QMenu" name="menuSave_As">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="title">
+       <string>Save As</string>
+      </property>
+      <addaction name="actionFRD_4_Project"/>
+      <addaction name="actionFRD_H_Project"/>
+     </widget>
+     <addaction name="actionNew"/>
+     <addaction name="actionOpen"/>
+     <addaction name="actionSave"/>
+     <addaction name="menuSave_As"/>
+     <addaction name="separator"/>
+     <addaction name="actionFRD_4_Help"/>
+    </widget>
+    <addaction name="actionNew_N"/>
+    <addaction name="actionOpen_O"/>
+    <addaction name="actionSave_S"/>
+    <addaction name="actionSave_As_A"/>
+    <addaction name="actionClose"/>
+    <addaction name="actionRename"/>
+    <addaction name="separator"/>
+    <addaction name="menuFRD_4_Compatibility"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit_E"/>
+    <addaction name="actionDelete"/>
+   </widget>
+   <widget class="QMenu" name="menuView_V">
+    <property name="title">
+     <string>View(&amp;V)</string>
+    </property>
+    <widget class="QMenu" name="menuPreview">
+     <property name="title">
+      <string>Preview</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Icon_resources.qrc">
+       <normaloff>:/icon/Menu Icon/Preview.png</normaloff>:/icon/Menu Icon/Preview.png</iconset>
+     </property>
+     <widget class="QMenu" name="menuSettings">
+      <property name="title">
+       <string>Settings</string>
+      </property>
+      <addaction name="actionSize"/>
+      <addaction name="separator"/>
+      <addaction name="actionAuto_Refresh"/>
+     </widget>
+     <addaction name="menuSettings"/>
+    </widget>
+    <widget class="QMenu" name="menuMagnify_Settings">
+     <property name="title">
+      <string>Magnify Settings</string>
+     </property>
+     <addaction name="actionSmall"/>
+     <addaction name="actionMedium"/>
+     <addaction name="actionLarge"/>
+     <addaction name="separator"/>
+     <addaction name="action2x"/>
+     <addaction name="action5x"/>
+     <addaction name="action10x"/>
+     <addaction name="action20x"/>
+     <addaction name="action50x"/>
+     <addaction name="action100x"/>
+     <addaction name="action200x"/>
+     <addaction name="action500x"/>
+     <addaction name="action1000x"/>
+     <addaction name="action5000x"/>
+     <addaction name="action10000x"/>
+     <addaction name="action50000x"/>
+     <addaction name="action1E5x"/>
+     <addaction name="action1E6x"/>
+     <addaction name="action1E7x"/>
+     <addaction name="action1E8x"/>
+    </widget>
+    <addaction name="menuPreview"/>
+    <addaction name="actionPreview_Refresh"/>
+    <addaction name="separator"/>
+    <addaction name="actionMagnifier"/>
+    <addaction name="menuMagnify_Settings"/>
+   </widget>
+   <widget class="QMenu" name="menuPicture_P">
+    <property name="title">
+     <string>Image(&amp;I)</string>
+    </property>
+    <widget class="QMenu" name="menuAlpha_Channel">
+     <property name="title">
+      <string>Alpha Channel</string>
+     </property>
+     <addaction name="actionOn_2"/>
+     <addaction name="actionOff_2"/>
+    </widget>
+    <widget class="QMenu" name="menuFormat">
+     <property name="title">
+      <string>Format</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Icon_resources.qrc">
+       <normaloff>:/icon/Menu Icon/Image.png</normaloff>:/icon/Menu Icon/Image.png</iconset>
+     </property>
+     <addaction name="actionpng"/>
+     <addaction name="actionjpg"/>
+     <addaction name="actionbmp"/>
+     <addaction name="actiongif"/>
+    </widget>
+    <widget class="QMenu" name="menuLayer">
+     <property name="title">
+      <string>Layer</string>
+     </property>
+     <addaction name="actionFractal_1"/>
+     <addaction name="actionFractal_2"/>
+     <addaction name="actionFractal_3"/>
+     <addaction name="actionFractal_4"/>
+     <addaction name="separator"/>
+     <addaction name="actionPicture_1"/>
+     <addaction name="actionPicture_2"/>
+     <addaction name="separator"/>
+     <addaction name="actionWatermark"/>
+    </widget>
+    <addaction name="actionCreate_Images"/>
+    <addaction name="actionCreate_Images_in_Range"/>
+    <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="actionColour_Definition_Auto_Save"/>
+    <addaction name="actionHigh_Quailty_Mode"/>
+    <addaction name="separator"/>
+    <addaction name="actionRoute_Tool"/>
+    <addaction name="menuFormat"/>
+    <addaction name="menuAlpha_Channel"/>
+    <addaction name="separator"/>
+    <addaction name="menuLayer"/>
+    <addaction name="actionPicture_Layer_Settings"/>
+    <addaction name="actionWatermark_Layer_Settings"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp_H">
+    <property name="title">
+     <string>Help(&amp;H)</string>
+    </property>
+    <widget class="QMenu" name="menuView_Help">
+     <property name="title">
+      <string>View Help</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Icon_resources.qrc">
+       <normaloff>:/icon/Menu Icon/Help.svg</normaloff>:/icon/Menu Icon/Help.svg</iconset>
+     </property>
+     <addaction name="actionEnglish"/>
+     <addaction name="actionChinese"/>
+    </widget>
+    <widget class="QMenu" name="menuSample_Video">
+     <property name="title">
+      <string>Sample Video</string>
+     </property>
+     <widget class="QMenu" name="menuTemplate_1">
+      <property name="title">
+       <string>Template 1</string>
+      </property>
+      <addaction name="actionVersion_1"/>
+      <addaction name="actionVersion_2"/>
+      <addaction name="actionVersion_3"/>
+     </widget>
+     <addaction name="menuTemplate_1"/>
+     <addaction name="actionTemplate_3"/>
+     <addaction name="actionTemplate_4"/>
+     <addaction name="actionTemplate_5"/>
+    </widget>
+    <addaction name="menuView_Help"/>
+    <addaction name="actionVersion"/>
+    <addaction name="actionCheck_Update"/>
+    <addaction name="actionGitHub_Repository"/>
+    <addaction name="actionNew_Features"/>
+    <addaction name="actionBug_Report"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_Teddy_van_Jerry"/>
+    <addaction name="separator"/>
+    <addaction name="menuSample_Video"/>
+   </widget>
+   <widget class="QMenu" name="menuVideo_D">
+    <property name="title">
+     <string>Video(&amp;D)</string>
+    </property>
+    <widget class="QMenu" name="menuFormat_2">
+     <property name="title">
+      <string>Format</string>
+     </property>
+     <addaction name="actionmp4"/>
+    </widget>
+    <addaction name="actionCreate_Video"/>
+    <addaction name="separator"/>
+    <addaction name="menuFormat_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionFFmpeg"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit_E">
+    <property name="title">
+     <string>Edit(&amp;E)</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_All_Parameters"/>
+   </widget>
+   <widget class="QMenu" name="menuTemplate">
+    <property name="title">
+     <string>Template(&amp;T)</string>
+    </property>
+    <widget class="QMenu" name="menuAdditional_template_settings">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Additional template settings</string>
+     </property>
+     <addaction name="actionTemplate_2"/>
+    </widget>
+    <widget class="QMenu" name="menuMore_Templates">
+     <property name="title">
+      <string>More Templates</string>
+     </property>
+     <addaction name="actionFrom_EXE"/>
+     <addaction name="actionFrom_Python"/>
+    </widget>
+    <addaction name="menuMore_Templates"/>
+    <addaction name="separator"/>
+    <addaction name="menuAdditional_template_settings"/>
+   </widget>
+   <addaction name="menuFile_F"/>
+   <addaction name="menuEdit_E"/>
+   <addaction name="menuView_V"/>
+   <addaction name="menuTemplate"/>
+   <addaction name="menuPicture_P"/>
+   <addaction name="menuVideo_D"/>
+   <addaction name="menuHelp_H"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew_N"/>
+   <addaction name="actionOpen_O"/>
+   <addaction name="actionSave_S"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreview_Refresh"/>
+   <addaction name="actionDelete_All_Parameters"/>
+   <addaction name="separator"/>
+   <addaction name="actionRoute_Tool"/>
+   <addaction name="actionCreate_Images"/>
+   <addaction name="actionCreate_Video"/>
+   <addaction name="actionStop"/>
+   <addaction name="separator"/>
+   <addaction name="actionEnglish"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionNew_N">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/New.svg</normaloff>:/icon/Menu Icon/New.svg</iconset>
+   </property>
+   <property name="text">
+    <string>New(&amp;N)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpen_O">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Open.svg</normaloff>:/icon/Menu Icon/Open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Open(&amp;O)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open(O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_S">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Save.svg</normaloff>:/icon/Menu Icon/Save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save(&amp;S)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionExit_E">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Exit.svg</normaloff>:/icon/Menu Icon/Exit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionOff">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Off</string>
+   </property>
+  </action>
+  <action name="actionJPG">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>JPG</string>
+   </property>
+  </action>
+  <action name="actionOn_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>On</string>
+   </property>
+  </action>
+  <action name="actionOff_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Off</string>
+   </property>
+  </action>
+  <action name="actionAbout_Teddy_van_Jerry">
+   <property name="text">
+    <string>About Teddy van Jerry</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Help.svg</normaloff>:/icon/Menu Icon/Help.svg</iconset>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="actionChinese">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Help.svg</normaloff>:/icon/Menu Icon/Help.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Chinese</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
+   </property>
+  </action>
+  <action name="actionVersion">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Version.png</normaloff>:/icon/Menu Icon/Version.png</iconset>
+   </property>
+   <property name="text">
+    <string>Version</string>
+   </property>
+  </action>
+  <action name="actionDelete_All_Parameters">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Delete.svg</normaloff>:/icon/Menu Icon/Delete.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Delete All Parameters</string>
+   </property>
+  </action>
+  <action name="actionSave_As_A">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/SaveAs.svg</normaloff>:/icon/Menu Icon/SaveAs.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save As(&amp;A)</string>
+   </property>
+  </action>
+  <action name="actionCreate_Images">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Create Image.svg</normaloff>:/icon/Menu Icon/Create Image.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create Images</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionCreate_Video">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Create Video.svg</normaloff>:/icon/Menu Icon/Create Video.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create Video</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionMore_Templates">
+   <property name="text">
+    <string>More Templates</string>
+   </property>
+  </action>
+  <action name="actionRoute_Tool">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/Menu Icon/Route_Tool.svg</normaloff>:/Menu Icon/Route_Tool.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Route Tool</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionPreview_Refresh">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/Menu Icon/Refresh.svg</normaloff>:/Menu Icon/Refresh.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Preview Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F5</string>
+   </property>
+  </action>
+  <action name="actionpng">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>png</string>
+   </property>
+  </action>
+  <action name="actionjpg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>jpg</string>
+   </property>
+  </action>
+  <action name="actionbmp">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>bmp</string>
+   </property>
+  </action>
+  <action name="actiongif">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>gif</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Rename</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionTemplate_2">
+   <property name="text">
+    <string>Template 2</string>
+   </property>
+  </action>
+  <action name="actionSize">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Size</string>
+   </property>
+  </action>
+  <action name="actionAuto_Refresh">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto Refresh</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Stop.svg</normaloff>:/icon/Menu Icon/Stop.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+.</string>
+   </property>
+  </action>
+  <action name="actionmp4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>mp4</string>
+   </property>
+  </action>
+  <action name="actionFFmpeg">
+   <property name="text">
+    <string>Install FFmpeg</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update">
+   <property name="text">
+    <string>Check Update</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/New.svg</normaloff>:/icon/Menu Icon/New.svg</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Open.svg</normaloff>:/icon/Menu Icon/Open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Save.svg</normaloff>:/icon/Menu Icon/Save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionFRD_4_Help">
+   <property name="text">
+    <string>FRD 4 Help</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Undo.svg</normaloff>:/icon/Menu Icon/Undo.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Redo.svg</normaloff>:/icon/Menu Icon/Redo.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionFRD_4_Project">
+   <property name="text">
+    <string>FRD 4 Project</string>
+   </property>
+  </action>
+  <action name="actionFRD_H_Project">
+   <property name="text">
+    <string>FRD 5 Project</string>
+   </property>
+  </action>
+  <action name="actionFractal_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fractal 1 </string>
+   </property>
+  </action>
+  <action name="actionFractal_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Fractal 2</string>
+   </property>
+  </action>
+  <action name="actionFractal_3">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Fractal 3</string>
+   </property>
+  </action>
+  <action name="actionFractal_4">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Fractal 4</string>
+   </property>
+  </action>
+  <action name="actionPicture_1">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Picture 1</string>
+   </property>
+  </action>
+  <action name="actionPicture_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Picture 2</string>
+   </property>
+  </action>
+  <action name="actionWatermark">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Watermark</string>
+   </property>
+  </action>
+  <action name="actionPicture_Layer_Settings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Picture Layer Settings</string>
+   </property>
+  </action>
+  <action name="actionWatermark_Layer_Settings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Watermark Layer Settings</string>
+   </property>
+  </action>
+  <action name="actionFrom_EXE">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>From EXE</string>
+   </property>
+  </action>
+  <action name="actionFrom_Python">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>From Python</string>
+   </property>
+  </action>
+  <action name="actionTemplate_3">
+   <property name="text">
+    <string>Template 2</string>
+   </property>
+  </action>
+  <action name="actionTemplate_4">
+   <property name="text">
+    <string>Template 3</string>
+   </property>
+  </action>
+  <action name="actionTemplate_5">
+   <property name="text">
+    <string>Template 4</string>
+   </property>
+  </action>
+  <action name="actionVersion_1">
+   <property name="text">
+    <string>Version 1</string>
+   </property>
+  </action>
+  <action name="actionVersion_2">
+   <property name="text">
+    <string>Version 2</string>
+   </property>
+  </action>
+  <action name="actionSmall">
+   <property name="text">
+    <string>Small</string>
+   </property>
+  </action>
+  <action name="actionMedium">
+   <property name="text">
+    <string>Medium</string>
+   </property>
+  </action>
+  <action name="actionLarge">
+   <property name="text">
+    <string>Large</string>
+   </property>
+  </action>
+  <action name="action2x">
+   <property name="text">
+    <string>2x</string>
+   </property>
+  </action>
+  <action name="action5x">
+   <property name="text">
+    <string>5x</string>
+   </property>
+  </action>
+  <action name="action10x">
+   <property name="text">
+    <string>10x</string>
+   </property>
+  </action>
+  <action name="action20x">
+   <property name="text">
+    <string>20x</string>
+   </property>
+  </action>
+  <action name="action50x">
+   <property name="text">
+    <string>50x</string>
+   </property>
+  </action>
+  <action name="action100x">
+   <property name="text">
+    <string>100x</string>
+   </property>
+  </action>
+  <action name="action200x">
+   <property name="text">
+    <string>200x</string>
+   </property>
+  </action>
+  <action name="action500x">
+   <property name="text">
+    <string>500x</string>
+   </property>
+  </action>
+  <action name="action1000x">
+   <property name="text">
+    <string>1000x</string>
+   </property>
+  </action>
+  <action name="action5000x">
+   <property name="text">
+    <string>5000x</string>
+   </property>
+  </action>
+  <action name="action10000x">
+   <property name="text">
+    <string>10000x</string>
+   </property>
+  </action>
+  <action name="action50000x">
+   <property name="text">
+    <string>50000x</string>
+   </property>
+  </action>
+  <action name="actionMagnifier">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Magnifier</string>
+   </property>
+  </action>
+  <action name="actionColour_Definition_Auto_Save">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Colour Definition Auto Save</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icon.qrc">
+     <normaloff>:/Menu Icon/Close.svg</normaloff>:/Menu Icon/Close.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action1E5x">
+   <property name="text">
+    <string>1E5x</string>
+   </property>
+  </action>
+  <action name="action1E6x">
+   <property name="text">
+    <string>1E6x</string>
+   </property>
+  </action>
+  <action name="action1E7x">
+   <property name="text">
+    <string>1E7x</string>
+   </property>
+  </action>
+  <action name="action1E8x">
+   <property name="text">
+    <string>1E8x</string>
+   </property>
+  </action>
+  <action name="actionHigh_Quailty_Mode">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>High Quailty Mode</string>
+   </property>
+  </action>
+  <action name="actionBug_Report">
+   <property name="text">
+    <string>Bug Report</string>
+   </property>
+  </action>
+  <action name="actionNew_Features">
+   <property name="text">
+    <string>New Features</string>
+   </property>
+  </action>
+  <action name="actionCreate_Images_in_Range">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Create Images in Range.svg</normaloff>:/icon/Menu Icon/Create Images in Range.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create Images in Range</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+B</string>
+   </property>
+  </action>
+  <action name="actionVersion_3">
+   <property name="text">
+    <string>Version 3</string>
+   </property>
+  </action>
+  <action name="actionGitHub_Repository">
+   <property name="text">
+    <string>GitHub Repository</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="EXE_Icons.qrc"/>
+  <include location="Icon_resources.qrc"/>
+  <include location="Icon.qrc"/>
+ </resources>
+ <connections/>
+</ui>

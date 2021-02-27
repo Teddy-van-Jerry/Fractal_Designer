@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>EXE Icons/FRD.ico</file>
+        <file>Menu Icon/Close.svg</file>
+    </qresource>
+</RCC>
