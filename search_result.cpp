@@ -149,11 +149,11 @@ void Search_Result::getSearch(QString search)
         ui->gridLayout_search->addWidget(label);
         Help_E = new QPushButton();
         Help_C = new QPushButton();
-        Help_E->setText(All_P[2].Text);
-        Help_E->setToolTip(All_P[2].Tip);
+        Help_E->setText(All_P[3].Text);
+        Help_E->setToolTip(All_P[3].Tip);
         Help_E->setStyleSheet(Button_qss_str);
-        Help_C->setText(All_P[3].Text);
-        Help_C->setToolTip(All_P[3].Tip);
+        Help_C->setText(All_P[4].Text);
+        Help_C->setToolTip(All_P[4].Tip);
         Help_C->setStyleSheet(Button_qss_str);
         connect(Help_E, SIGNAL(clicked()), parent(), SLOT(on_actionEnglish_triggered()));
         connect(Help_C, SIGNAL(clicked()), parent(), SLOT(on_actionChinese_triggered()));

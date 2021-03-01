@@ -106,7 +106,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 0, 26, 0};
+    uint8_t FRD_Version[4] = {5, 0, 27, 0};
 
     QString Open_Location = "";
 
