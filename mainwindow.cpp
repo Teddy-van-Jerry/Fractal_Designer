@@ -2739,3 +2739,44 @@ void MainWindow::on_actionGitHub_Repository_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/Teddy-van-Jerry/Fractal_Designer"));
 }
+
+void MainWindow::on_actionCheck_Images_triggered()
+{
+    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
+    QList<int> Missed_Images;
+    for(int i = 0; i != total_image; i++)
+    {
+        if(!QFile(ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png").exists())
+        {
+            Missed_Images.push_back(i);
+        }
+    }
+    QString content;
+    if(Missed_Images.size() == 0)
+    {
+        content = "No missing inages!";
+        QMessageBox::information(this, "Check Finished", content, QMessageBox::Ok);
+    }
+    else if(Missed_Images.size() < 10)
+    {
+        content = "Missing images with the number:\n";
+        content.append(QString::number(Missed_Images[0]));
+        for(int i = 1; i != Missed_Images.size(); i++)
+        {
+            content.append(tr(", ") + QString::number(Missed_Images[i]));
+        }
+        content.append(".\nDo you want to recreate them?");
+        QMessageBox::information(this, "Check Finished", content, QMessageBox::Yes | QMessageBox::No);
+    }
+    else
+    {
+        content = "Missing images with the number:\n";
+        content.append(QString::number(Missed_Images[0]));
+        for(int i = 1; i != 10; i++)
+        {
+            content.append(tr(", ") + QString::number(Missed_Images[i]));
+        }
+        content.append(", ..., " + QString::number(*(--Missed_Images.end())) + ".\nDo you want to recreate them?");
+        QMessageBox::information(this, "Check Finished", content, QMessageBox::Yes | QMessageBox::No);
+    }
+}

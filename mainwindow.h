@@ -356,6 +356,8 @@ private slots:
 
     void on_actionGitHub_Repository_triggered();
 
+    void on_actionCheck_Images_triggered();
+
 signals:
 
     void Search_clicked(QString);

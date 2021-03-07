@@ -99,11 +99,11 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:20pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is an application that enables you to draw fractals and make videos at your command!&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is the new version of Fractal Designer and does not support all the functions. You can refer to Help, or contact Teddy van Jerry for help.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is the dev version of Fractal Designer and does not support all the functions. You can refer to Help, or contact Teddy van Jerry for help.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  For more information, please refer to Help (Ctrl + H) or view the Chinese version with Ctrl + Shift + H.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.0.28 (2021/03/02)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.1.1 (2021/03/07)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; font-weight:600;&quot;&gt;Contributors&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_50012998&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
@@ -1726,6 +1726,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionCreate_Images"/>
     <addaction name="actionCreate_Images_in_Range"/>
     <addaction name="actionStop"/>
+    <addaction name="actionCheck_Images"/>
     <addaction name="actionDelete_Images"/>
     <addaction name="separator"/>
     <addaction name="actionColour_Definition_Auto_Save"/>
@@ -2566,11 +2567,20 @@ p, li { white-space: pre-wrap; }
     <string>Delete Images</string>
    </property>
   </action>
+  <action name="actionCheck_Images">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/Check Images.svg</normaloff>:/icon/Menu Icon/Check Images.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Check Images</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="Icon_resources.qrc"/>
-  <include location="EXE_Icons.qrc"/>
   <include location="Icon.qrc"/>
+  <include location="EXE_Icons.qrc"/>
+  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -44,6 +44,12 @@ void New_File::on_button_confirm_new_clicked()
     QString new_path;
     QString path = ui->new_path_edit->text();
 
+    if(!QDir(path).exists() || path == "")
+    {
+        QMessageBox::critical(this, "Fail to create a new project", "The path you choose does not exist!");
+        return;
+    }
+
     if(path.right(1) != "\\")
     {
         path.append(tr("\\"));
