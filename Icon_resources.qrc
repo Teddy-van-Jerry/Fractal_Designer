@@ -17,6 +17,8 @@
         <file>Menu Icon/Redo.svg</file>
         <file>Menu Icon/Undo.svg</file>
         <file>Menu Icon/Create Images in Range.svg</file>
+        <file>Menu Icon/DeleteImage.svg</file>
+        <file>Menu Icon/Check Images.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>Menu Icon/Next.svg</file>

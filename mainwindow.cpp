@@ -960,6 +960,7 @@ void MainWindow::on_actionStop_triggered()
 
     qDebug() << "Build Thread quit";
     ui->actionCreate_Images->setDisabled(false);
+    ui->actionCreate_Images_in_Range->setDisabled(false);
     ui->actionStop->setDisabled(true);
 }
 
@@ -2730,6 +2731,81 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     to_i = -1;
 }
 
+void MainWindow::createImagesInList(const QList<int>& list)
+{
+    ui->actionStop->setDisabled(false);
+    ui->actionCreate_Images->setDisabled(true);
+    ui->actionCreate_Images_in_Range->setDisabled(true);
+    on_actionPreview_Refresh_triggered();
+    work_thread->start();
+
+    qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
+    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
+    int current_index = 0;
+    int X = ui->Image_size_X->value();
+    int Y = ui->Image_size_Y->value();
+    QString image_format = "png";
+    QString path = ui->lineEdit_imagePath->text();
+    QString name = ui->lineEdit_imagePrefix->text();
+
+    create_image_info = new Create_Image_Info();
+    connect(this, &MainWindow::build_image_info_signal_, create_image_info, &Create_Image_Info::set_info_);
+    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
+    //connect(create_image_info, &Create_Image_Info::close, create_image_info, &Create_Image_Info::close_create_image_info);
+    create_image_info->show();
+    emit build_image_info_signal_(path + "\\" + name, image_format, list);
+    qDebug() << from_i << to_i;
+
+    // New version with the normal speed
+    for(int i = 0; i <= total_image - 1; i++)
+    {
+        double T = static_cast<double>(i) / total_image;
+        while(current_index + 2 < model->rowCount() && T > Tb(current_index + 1, 0))
+        {
+            current_index++;
+        }
+        if(!list.contains(i)) continue;
+
+        double w1 = Tb(current_index, 4);
+        double w2 = Tb(current_index + 1, 4);
+        double t1 = Tb(current_index, 0);
+        double t2 = Tb(current_index + 1, 0);
+        double x1 = Tb(current_index, 1);
+        double x2 = Tb(current_index + 1, 1);
+        double y1 = Tb(current_index, 2);
+        double y2 = Tb(current_index + 1, 2);
+        double k  = Tb(current_index, 5);
+        double t  = (T - t1) / (t2 - t1);
+        double x, y;
+
+        double angle = Tb(current_index, 3)
+                + (Tb(current_index + 1, 3) - Tb(current_index, 3))
+                * ((1 - k) * t + k * pow(t, 2));
+        double width = 1 / (t * (1 / w2) + (1 - t) * (1 / w1));
+
+        if(fabs(1 - w1 / w2) < 1E-5)
+        {
+            x = x1 + t * x2 + (1 - t) * x1;
+            y = y1 + t * y2 + (1 - t) * y1;
+        }
+        else
+        {
+            x = x1 + (x2 - x1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+            y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+        }
+
+        // qDebug() << t << current_index << x << y << width << angle;
+        if(i != *(--list.end()))
+        {
+            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+        }
+        else
+        {
+            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+        }
+    }
+}
+
 void MainWindow::on_actionVersion_3_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV17K4y1J7XM"));
@@ -2738,4 +2814,110 @@ void MainWindow::on_actionVersion_3_triggered()
 void MainWindow::on_actionGitHub_Repository_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/Teddy-van-Jerry/Fractal_Designer"));
+}
+
+void MainWindow::on_actionCheck_Images_triggered()
+{
+    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
+    QList<int> Missed_Images;
+    for(int i = 0; i != total_image; i++)
+    {
+        if(!QFile(ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png").exists())
+        {
+            Missed_Images.push_back(i);
+        }
+    }
+    QString content;
+    if(Missed_Images.size() == 0)
+    {
+        content = "No missing inages!";
+        QMessageBox::information(this, "Check Finished", content, QMessageBox::Ok);
+    }
+    else if(Missed_Images.size() < 10)
+    {
+        content = "Missing images with the number:\n";
+        content.append(QString::number(Missed_Images[0]));
+        for(int i = 1; i != Missed_Images.size(); i++)
+        {
+            content.append(tr(", ") + QString::number(Missed_Images[i]));
+        }
+        content.append(".\nDo you want to recreate them?");
+        if(QMessageBox::information(this, "Check Finished", content, QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+        {
+            if(!ui->actionCreate_Images_in_Range->isEnabled()) return;
+            if(User_Name.isEmpty())
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not logged in.");
+                return;
+            }
+
+            if(!save_or_not)
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
+                return;
+            }
+
+            if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
+                return;
+            }
+
+            if(Version_Higher_Than_4 && !isRouteValid)
+            {
+                QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
+                return;
+            }
+            createImagesInList(Missed_Images);
+        }
+    }
+    else
+    {
+        content = "Missing images with the number:\n";
+        content.append(QString::number(Missed_Images[0]));
+        for(int i = 1; i != 10; i++)
+        {
+            content.append(tr(", ") + QString::number(Missed_Images[i]));
+        }
+        content.append(", ..., " + QString::number(*(--Missed_Images.end())) + ".\nDo you want to recreate them?");
+        if(QMessageBox::information(this, "Check Finished", content, QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+        {
+            if(!ui->actionCreate_Images_in_Range->isEnabled()) return;
+            if(User_Name.isEmpty())
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not logged in.");
+                return;
+            }
+
+            if(!save_or_not)
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
+                return;
+            }
+
+            if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
+            {
+                QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
+                return;
+            }
+
+            if(Version_Higher_Than_4 && !isRouteValid)
+            {
+                QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
+                return;
+            }
+            createImagesInList(Missed_Images);
+        }
+    }
+}
+
+void MainWindow::deleteImage(int i)
+{
+    QFile image_file(ui->lineEdit_videoPath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png");
+    image_file.remove();
+}
+
+void MainWindow::on_actionDelete_Images_triggered()
+{
+
 }

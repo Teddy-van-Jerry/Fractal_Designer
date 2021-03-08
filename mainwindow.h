@@ -156,6 +156,12 @@ public:
 
     void NewFeatures();
 
+    void createImagesInList(const QList<int>& list);
+
+    void createImagesInRange(int From_I, int To_I);
+
+    void deleteImage(int);
+
 private slots:
 
     void getUserName(QString);
@@ -356,6 +362,10 @@ private slots:
 
     void on_actionGitHub_Repository_triggered();
 
+    void on_actionCheck_Images_triggered();
+
+    void on_actionDelete_Images_triggered();
+
 signals:
 
     void Search_clicked(QString);
@@ -371,6 +381,8 @@ signals:
     void InfoForColourSet_signal(QString);
 
     void build_image_info_signal(QString name, QString format, int total, int start);
+
+    void build_image_info_signal_(QString name, QString format, QList<int> list);
 
     void build_image_updateInfo_signal();
 
