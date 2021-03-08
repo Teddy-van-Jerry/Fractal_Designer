@@ -21,6 +21,8 @@ public:
 public slots:
     void set_info(QString name, QString format, int total, int start = 0);
 
+    void set_info_(QString name, QString format, QList<int> list);
+
     void updateInfo();
 
     void close_create_image_info();
@@ -51,6 +53,10 @@ private:
     int index;
 
     int start;
+
+    bool usingQList = false;
+
+    QList<int> list_;
 };
 
 #endif // CREATE_IMAGE_INFO_H

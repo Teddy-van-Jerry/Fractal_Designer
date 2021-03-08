@@ -32,6 +32,19 @@ void Create_Image_Info::set_info(QString Name, QString Format, int Total, int St
     total = Total;
     index = Start;
     start = Start;
+    usingQList = false;
+}
+
+void Create_Image_Info::set_info_(QString Name, QString Format, QList<int> list)
+{
+    // qDebug() << "Set Info Successfully" << Total << Start;
+    name = Name;
+    format = Format;
+    total = list.size();
+    start = 0;
+    index = 0;
+    list_ = list;
+    usingQList = true;
 }
 
 void Create_Image_Info::updateTime()
@@ -43,7 +56,14 @@ void Create_Image_Info::updateTime()
     {
         time_left = time_left.addMSecs(-50);
     }
-    ui->label_now->setText(tr("Now: ") + name + QString::number(index) + "." + format);
+    if(usingQList)
+    {
+        ui->label_now->setText(tr("Now: ") + name + QString::number(list_[index]) + "." + format);
+    }
+    else
+    {
+        ui->label_now->setText(tr("Now: ") + name + QString::number(index) + "." + format);
+    }
     ui->label_progress->setText(tr("Progress: ") + QString::number(index - start) + " / " + QString::number(total));
     ui->label_timeUsed->setText(tr("Time Used: ") + time_now.toString("hh:mm:ss"));
     ui->label_leftTime->setText(tr("Estimated left time: ") + time_left.toString("hh:mm:ss"));
@@ -54,10 +74,21 @@ void Create_Image_Info::updateInfo()
     qDebug() << "updateInfo";
     index++;
     int size_of_image = 1024;
-    QFile already_created_image(name + QString::number(index) + "." + format);
-    if(already_created_image.exists())
+    if(usingQList)
     {
-        size_of_image = already_created_image.size();
+        QFile already_created_image(name + QString::number(list_[index]) + "." + format);
+        if(already_created_image.exists())
+        {
+            size_of_image = already_created_image.size();
+        }
+    }
+    else
+    {
+        QFile already_created_image(name + QString::number(index) + "." + format);
+        if(already_created_image.exists())
+        {
+            size_of_image = already_created_image.size();
+        }
     }
     double time_for_one = 3600 * time_one.hour() + 60 * time_one.minute() + time_one.second() + time_one.msec() / 1000.0;
     double speed = (time_for_one < 0.05)
@@ -68,7 +99,14 @@ void Create_Image_Info::updateInfo()
     time_left.setHMS(0, 0, 0, 0);
     time_left = time_left.addMSecs(1000 * estimated_left_time);
     //time_left.setHMS((int)estimated_left_time / 3600, (int)estimated_left_time / 60 % 60, (int) estimated_left_time % 60);
-    ui->label_now->setText(tr("Now: ") + name + QString::number(index) + "." + format);
+    if(usingQList)
+    {
+        ui->label_now->setText(tr("Now: ") + name + QString::number(list_[index]) + "." + format);
+    }
+    else
+    {
+        ui->label_now->setText(tr("Now: ") + name + QString::number(index) + "." + format);
+    }
     ui->label_speed->setText(tr("Speed: ") + QString::number(speed, 'g', 4) + " kb/s");
     ui->label_progress->setText(tr("Progress: ") + QString::number(index - start) + " / " + QString::number(total));
     ui->label_timeUsed->setText(tr("Time Used: ") + time_now.toString("hh:mm:ss"));
