@@ -160,6 +160,8 @@ public:
 
     void createImagesInRange(int From_I, int To_I);
 
+    bool existImage(int) const;
+
     void deleteImage(int);
 
 private slots:

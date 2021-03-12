@@ -834,6 +834,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     ui->actionStop->setDisabled(false);
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
+    ui->actionCheck_Images->setDisabled(true);
     on_actionPreview_Refresh_triggered();
     work_thread->start();
     qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
@@ -961,6 +962,7 @@ void MainWindow::on_actionStop_triggered()
     qDebug() << "Build Thread quit";
     ui->actionCreate_Images->setDisabled(false);
     ui->actionCreate_Images_in_Range->setDisabled(false);
+    ui->actionCheck_Images->setDisabled(false);
     ui->actionStop->setDisabled(true);
 }
 
@@ -968,6 +970,7 @@ void MainWindow::build_image_finished_deal()
 {
     ui->actionCreate_Images->setDisabled(false);
     ui->actionCreate_Images_in_Range->setDisabled(false);
+    ui->actionCheck_Images->setDisabled(false);
     ui->actionStop->setDisabled(true);
     emit build_image_updateInfo_signal();
 }
@@ -2658,6 +2661,7 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     ui->actionStop->setDisabled(false);
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
+    ui->actionCheck_Images->setDisabled(true);
     on_actionPreview_Refresh_triggered();
     work_thread->start();
 
@@ -2911,13 +2915,35 @@ void MainWindow::on_actionCheck_Images_triggered()
     }
 }
 
+bool MainWindow::existImage(int i) const
+{
+    QFile image_file(ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png");
+    if(image_file.exists()) return true;
+    else return false;
+}
+
 void MainWindow::deleteImage(int i)
 {
-    QFile image_file(ui->lineEdit_videoPath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png");
+    QFile image_file(ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png");
     image_file.remove();
 }
 
 void MainWindow::on_actionDelete_Images_triggered()
 {
-
+    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
+    for(int i = 0; i != total_image; i++)
+    {
+        deleteImage(i);
+    }
+    int skip_number = 0;
+    int check_till = total_image - 1;
+    while(skip_number++ < 10000)
+    {
+        if(existImage(++check_till))
+        {
+            deleteImage(check_till);
+            skip_number = 0;
+        }
+    }
+    QMessageBox::information(this, "Information", "Deleting Images Finished!");
 }
