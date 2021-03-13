@@ -1,6 +1,10 @@
 #include "search_result.h"
 #include "ui_search_result.h"
 
+#define Btn_Con(case_number__, action_triggered__) case case_number__: \
+    connect(new_btn, SIGNAL(clicked()), parent(), SLOT(action_triggered__)); \
+    break
+
 Search_Result::Search_Result(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Search_Result)
@@ -47,7 +51,7 @@ void Search_Result::getSearch(QString search)
     {
         already_open = true;
     }
-    Possible_Result All_P[25];
+    Possible_Result All_P[27];
     All_P[0]  = {0,  "Create Images", "Action to create images based on the parameters you have set.", {"create", "image", "images", "生成", "图片", "生成图片"}};
     All_P[1]  = {1,  "Create Images in Range", "Action to create images in a specific range you set.", {"create", "image", "images", "range", "生成", "图片", "生成图片", "范围", "范围内生成图片"}};
     All_P[2]  = {2,  "Create Video", "Action to create video based on images and music if added.", {"create", "video", "生成", "视频", "生成视频"}};
@@ -73,6 +77,8 @@ void Search_Result::getSearch(QString search)
     All_P[22] = {22, "Bug Report", "Report the bugs you have found.", {"bug", "bugs", "report", "错误"}};
     All_P[23] = {23, "Close", "Close the project.", {"close", "关闭"}};
     All_P[24] = {24, "GitHub Repository", "View the GitHub repository of Fractal Designer.", {"update", "check", "github", "repository", "git", "查看", "最新", "版本", "最新版", "最新版本", "查看最新版", "查看最新版本", "更新", "查看更新", "仓库"}};
+    All_P[25] = {25, "Check Images", "Check if images are created or missed. You can choose to recreate missed ones.", {"create", "image", "images", "check", "检查", "图片", "检查图片"}};
+    All_P[26] = {26, "Delete Images", "Delete Images that have already been created.", {"delete", "image", "images", "删除", "图片", "删除图片", "删除所有图片"}};
     QFile Button_qss(":/StyleSheet/Button_Search_Result.qss");
     Button_qss.open(QFile::ReadOnly);
     QString Button_qss_str = QLatin1String(Button_qss.readAll());
@@ -96,7 +102,7 @@ void Search_Result::getSearch(QString search)
         }
     }
 
-    sort_possible_result(All_P, 25);
+    sort_possible_result(All_P, 27);
 
     //connect(btn, SIGNAL(clicked()), this, SLOT(search_result_clicked()));
 
@@ -111,31 +117,33 @@ void Search_Result::getSearch(QString search)
         btn.push_back(new_btn);
         switch(result.index)
         {
-        case 0:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionCreate_Images_triggered())); break;
-        case 1:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionCreate_Images_in_Range_triggered())); break;
-        case 2:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionCreate_Video_triggered())); break;
-        case 3:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionEnglish_triggered())); break;
-        case 4:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionChinese_triggered())); break;
-        case 5:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionExit_E_triggered())); break;
-        case 6:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_MainWindow_AboutTVJ_clicked())); break;
-        case 7:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionNew_N_triggered())); break;
-        case 8:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionOpen_O_triggered())); break;
-        case 9:  connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionSave_S_triggered())); break;
-        case 10: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionPreviewRefresh_triggered())); break;
-        case 11: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionRoute_Tool_triggered())); break;
-        case 12: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionCheck_Update_triggered())); break;
-        case 13: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionFFmpeg_triggered())); break;
-        case 14: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_Button_Login_MainWindow_clicked())); break;
-        case 15: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionAuto_Refresh_triggered())); break;
-        case 16: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionStop_triggered())); break;
-        case 17: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionUndo_triggered())); break;
-        case 18: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionRedo_triggered())); break;
-        case 19: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionFRD_4_Help_triggered())); break;
-        case 20: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionNew_Features_triggered())); break;
-        case 21: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionVersion_triggered())); break;
-        case 22: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionBug_Report_triggered())); break;
-        case 23: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionClose_triggered())); break;
-        case 24: connect(new_btn, SIGNAL(clicked()), parent(), SLOT(on_actionGitHub_Repository_triggered())); break;
+        Btn_Con(0 , on_actionCreate_Images_triggered());
+        Btn_Con(1 , on_actionCreate_Images_in_Range_triggered());
+        Btn_Con(2 , on_actionCreate_Video_triggered());
+        Btn_Con(3 , on_actionEnglish_triggered());
+        Btn_Con(4 , on_actionChinese_triggered());
+        Btn_Con(5 , on_actionExit_E_triggered());
+        Btn_Con(6 , on_MainWindow_AboutTVJ_clicked());
+        Btn_Con(7 , on_actionNew_N_triggered());
+        Btn_Con(8 , on_actionOpen_O_triggered());
+        Btn_Con(9 , on_actionSave_S_triggered());
+        Btn_Con(10, on_actionPreviewRefresh_triggered());
+        Btn_Con(11, on_actionRoute_Tool_triggered());
+        Btn_Con(12, on_actionCheck_Update_triggered());
+        Btn_Con(13, on_actionFFmpeg_triggered());
+        Btn_Con(14, on_Button_Login_MainWindow_clicked());
+        Btn_Con(15, on_actionAuto_Refresh_triggered());
+        Btn_Con(16, on_actionStop_triggered());
+        Btn_Con(17, on_actionUndo_triggered());
+        Btn_Con(18, on_actionRedo_triggered());
+        Btn_Con(19, on_actionFRD_4_Help_triggered());
+        Btn_Con(20, on_actionNew_Features_triggered());
+        Btn_Con(21, on_actionVersion_triggered());
+        Btn_Con(22, on_actionBug_Report_triggered());
+        Btn_Con(23, on_actionClose_triggered());
+        Btn_Con(24, on_actionGitHub_Repository_triggered());
+        Btn_Con(25, on_actionCheck_Images_triggered());
+        Btn_Con(26, on_actionDelete_Images_triggered());
         default: break;
         }
         ui->gridLayout_search->addWidget(new_btn);

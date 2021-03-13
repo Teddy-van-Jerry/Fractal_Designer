@@ -76,10 +76,15 @@
             <property name="font">
              <font>
               <family>Consolas</family>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
              </font>
             </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">text-decoration: none</string>
             </property>
             <property name="locale">
              <locale language="English" country="UnitedKingdom"/>
@@ -103,37 +108,17 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  For more information, please refer to Help (Ctrl + H) or view the Chinese version with Ctrl + Shift + H.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.1.5 (2021/03/08)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; font-weight:600;&quot;&gt;Contributors&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_50012998&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Fractal Designer 5 development&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* UI design&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route tool&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route formula calculation&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Build thread (creating images)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Integration&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Help&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;a href=&quot;https://panoan.org/&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Panoan&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Formula display of colours&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* FFmpeg codes&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Cmd and Powershell codes&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  King:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Define colour&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Define colour parameters setting&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  ZYB:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Design formulas&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Create images&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Route parameters setting&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Complex class&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:12pt;&quot;&gt;* Sample writing&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'SimSun'; font-size:9.07563pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.1.8 (2021/03/13)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * CSDN          : &lt;/span&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_50012998&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Qt Forum      : &lt;/span&gt;&lt;a href=&quot;https://forum.qt.io/user/teddy-van-jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Stack Overflow: &lt;/span&gt;&lt;a href=&quot;https://stackoverflow.com/users/15080514/teddy-van-jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Bilibili      : &lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/631883409&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy_van_Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * E-mail        : &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;teddy-van-jerry@foxmail.com&lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#000000;&quot;&gt; or &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;teddy-jerry@qq.com&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt; color:#000000;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="openExternalLinks">
              <bool>true</bool>
@@ -2554,6 +2539,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionGitHub_Repository">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/GitHub.png</normaloff>:/icon/Menu Icon/GitHub.png</iconset>
+   </property>
    <property name="text">
     <string>GitHub Repository</string>
    </property>
@@ -2578,8 +2567,8 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
-  <include location="EXE_Icons.qrc"/>
   <include location="Icon.qrc"/>
+  <include location="EXE_Icons.qrc"/>
   <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
