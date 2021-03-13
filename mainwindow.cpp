@@ -293,7 +293,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114097695"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114767519"));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -2467,7 +2467,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114097618"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114767480"));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2822,6 +2822,8 @@ void MainWindow::on_actionGitHub_Repository_triggered()
 
 void MainWindow::on_actionCheck_Images_triggered()
 {
+    if(!ui->actionCheck_Images->isEnabled()) return;
+
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
     QList<int> Missed_Images;
     for(int i = 0; i != total_image; i++)
