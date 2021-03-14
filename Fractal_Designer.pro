@@ -12,6 +12,7 @@ SOURCES += \
     Complex.cpp \
     build_thread.cpp \
     create_image_info.cpp \
+    create_image_task.cpp \
     create_images_range.cpp \
     frd_4_help.cpp \
     help.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     Complex.h \
     build_thread.h \
     create_image_info.h \
+    create_image_task.h \
     create_images_range.h \
     frd_4_help.h \
     help.h \

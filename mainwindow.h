@@ -18,6 +18,8 @@
 #include <QDoubleSpinBox>
 #include <QStyledItemDelegate>
 #include <QButtonGroup>
+#include <QThreadPool>
+#include <QtConcurrent/QtConcurrent>
 #include "login.h"
 #include "new_file.h"
 #include "open_file.h"
@@ -34,6 +36,7 @@
 #include "frd_4_help.h"
 #include "new_features.h"
 #include "create_images_range.h"
+#include "create_image_task.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -54,7 +57,7 @@
     for(int it__ = 0; it__ != 4; it__++) { \
         for(int jt__ = 0; jt__ != 29; jt__++) {
 #endif
-#ifdef End_All_Colour
+#ifndef End_All_Colour
 #define End_All_Colour }}
 #endif
 
@@ -67,6 +70,9 @@ class PeciseDoubleFactory : public QItemEditorFactory
     {
         if(userType == QVariant::Double)
         {
+#ifndef DBL_MAX
+#define DBL_MAX 1E10
+#endif
             QDoubleSpinBox *sb = new QDoubleSpinBox(parent);
             sb->setFrame(false);
             sb->setMinimum(-DBL_MAX);
@@ -164,6 +170,16 @@ public:
 
     void deleteImage(int);
 
+public slots:
+
+    void getImage(QImage img);
+
+    void updateProgressBar(double p);
+
+    void build_image_finished_deal();
+
+    void build_image_one_ok();
+
 private slots:
 
     void getUserName(QString);
@@ -212,11 +228,7 @@ private slots:
 
     void on_actionPreview_Refresh_triggered();
 
-    void getImage(QImage img);
-
     void dealClose(QObject* sd);
-
-    void updateProgressBar(double p);
 
     void closeEvent(QCloseEvent* Event);
 
@@ -255,10 +267,6 @@ private slots:
     void on_Slider_t_sliderReleased();
 
     void on_actionStop_triggered();
-
-    void build_image_finished_deal();
-
-    void build_image_one_ok();
 
     void on_toolButton_imagePath_clicked();
 
@@ -392,6 +400,8 @@ signals:
 
     void shareData(double C1[4][29][2], double C2[4][29][2], int, double, double, int);
 
+    void createImageStop();
+
 private:
     Ui::MainWindow *ui;
 
@@ -407,17 +417,19 @@ private:
 
     QImage image_preview, image_T1, image_T2, image_T3, image_T4;
 
-    Build_Thread *build_thread_ctrl; // = new Build_Thread;
+    Build_Thread *build_thread_ctrl;
 
     QThread *work_thread;
-
-    Route_Tool* route_tool_window;
 
     Route_info* route_info;
 
     Create_Image_Info* create_image_info;
 
     PeciseDoubleFactory m_factory;
+
+public:
+
+    Route_Tool* route_tool_window;
 
 //    Build_Thread *bld_thread;
 };

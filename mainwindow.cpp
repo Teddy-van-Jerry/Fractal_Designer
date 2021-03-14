@@ -568,20 +568,24 @@ void MainWindow::on_Template_Choice_4_toggled(bool checked)
 void MainWindow::on_actionPreview_Refresh_triggered()
 {
     work_thread->start();
-    if(Version_Higher_Than_4)
-    {
-        emit shareVersion(true);
-        emit shareData(curr_info.Colour_Data_1,
-                       curr_info.Colour_Data_2,
-                       curr_info.template_,
-                       curr_info.min_class_v,
-                       curr_info.max_class_v,
-                       curr_info.max_loop_t);
-    }
-    else
-    {
-        emit pathShare(Project_Name);
-    }
+    Create_Image_Task* preview = new Create_Image_Task(this);
+
+    //if(Version_Higher_Than_4)
+    //{
+    //    preview->setVersion(true);
+    //    preview->setData(curr_info.Colour_Data_1,
+    //                     curr_info.Colour_Data_2,
+    //                     curr_info.template_,
+    //                     curr_info.min_class_v,
+    //                     curr_info.max_class_v,
+    //                     curr_info.max_loop_t);
+    //}
+    //else
+    //{
+    //    preview->setPath(Project_Name);
+    //}
+
+    Create_Images_Task_Pre(preview);
 
     QString Pre_Img_Dir;
     if(Version_Higher_Than_4)
@@ -591,14 +595,14 @@ void MainWindow::on_actionPreview_Refresh_triggered()
         {
             ck.mkdir(ck.absolutePath());
         }
-        // qDebug() << "alive";
         Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
     }
     else
     {
         Pre_Img_Dir = Project_Name;
     }
-    emit build_signal(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
 }
 
@@ -831,20 +835,26 @@ void MainWindow::on_actionCreate_Images_triggered()
         return;
     }
 
+    QString image_format = "png";
+    QString path = ui->lineEdit_imagePath->text();
+    QString name = ui->lineEdit_imagePrefix->text();
+    if(!QDir(path).exists())
+    {
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        return;
+    }
+
     ui->actionStop->setDisabled(false);
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
     ui->actionCheck_Images->setDisabled(true);
-    on_actionPreview_Refresh_triggered();
-    work_thread->start();
+    // on_actionPreview_Refresh_triggered();
+    // work_thread->start();
     qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
     int current_index = 0;
     int X = ui->Image_size_X->value();
     int Y = ui->Image_size_Y->value();
-    QString image_format = "png";
-    QString path = ui->lineEdit_imagePath->text();
-    QString name = ui->lineEdit_imagePrefix->text();
 
     create_image_info = new Create_Image_Info;
     connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
@@ -882,6 +892,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     */
 
     // New version with the normal speed
+
     for(int i = 0; i < total_image - 1; i++)
     {
         double T = static_cast<double>(i) / total_image;
@@ -917,17 +928,28 @@ void MainWindow::on_actionCreate_Images_triggered()
             y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
         }
 
-        qDebug() << t << current_index << x << y << width << angle;
-        emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+        // qDebug() << t << current_index << x << y << width << angle;
+        Create_Image_Task* create_images = new Create_Image_Task(this);
+        // create_images->setAutoDelete(false);
+        Create_Images_Task_Pre(create_images);
+        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+        QThreadPool::globalInstance()->start(create_images);
     }
 
-    emit build_signal(Tb(model->rowCount() - 1, 1),
-                      Tb(model->rowCount() - 1, 2),
-                      Tb(model->rowCount() - 1, 4),
-                      Tb(model->rowCount() - 1, 4) * Y / X,
-                      X, Y,
-                      Tb(model->rowCount() - 1, 3),
-                      1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last");
+    Create_Image_Task* create_images = new Create_Image_Task(this);
+    // create_images->setAutoDelete(false);
+    Create_Images_Task_Pre(create_images);
+    create_images->setImage(Tb(model->rowCount() - 1, 1),
+                            Tb(model->rowCount() - 1, 2),
+                            Tb(model->rowCount() - 1, 4),
+                            Tb(model->rowCount() - 1, 4) * Y / X,
+                            X, Y,
+                            Tb(model->rowCount() - 1, 3),
+                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last");
+    QThreadPool::globalInstance()->start(create_images);
+    qDebug() << "Here Here !!!!";
+
+    // delete create_images;
 }
 
 void MainWindow::on_commandLinkButton_Image_clicked()
@@ -950,11 +972,12 @@ void MainWindow::on_actionStop_triggered()
         QMessageBox::information(this, "Information", "You have not created images.");
         return;
     }
+    emit createImageStop();
     work_thread->terminate();
     // work_thread->wait();
 
     MainWindow::newThread();
-    MainWindow::on_actionPreview_Refresh_triggered();
+   //  MainWindow::on_actionPreview_Refresh_triggered();
 
 //    create_image_info->close_create_image_info();
     create_image_info->close();
@@ -2662,8 +2685,6 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
     ui->actionCheck_Images->setDisabled(true);
-    on_actionPreview_Refresh_triggered();
-    work_thread->start();
 
     qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
@@ -2721,14 +2742,18 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         }
 
         qDebug() << t << current_index << x << y << width << angle;
+
+        Create_Image_Task* create_images = new Create_Image_Task(this);
+        Create_Images_Task_Pre(create_images);
         if(i != to_i)
         {
-            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
         }
         else
         {
-            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
         }
+        QThreadPool::globalInstance()->start(create_images);
     }
 
     from_i = 0;
@@ -2740,8 +2765,6 @@ void MainWindow::createImagesInList(const QList<int>& list)
     ui->actionStop->setDisabled(false);
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
-    on_actionPreview_Refresh_triggered();
-    work_thread->start();
 
     qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
@@ -2798,15 +2821,19 @@ void MainWindow::createImagesInList(const QList<int>& list)
             y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
         }
 
+        Create_Image_Task* create_images = new Create_Image_Task(this);
+        Create_Images_Task_Pre(create_images);
+
         // qDebug() << t << current_index << x << y << width << angle;
         if(i != *(--list.end()))
         {
-            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
         }
         else
         {
-            emit build_signal(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
         }
+        QThreadPool::globalInstance()->start(create_images);
     }
 }
 
@@ -2832,11 +2859,18 @@ void MainWindow::on_actionCheck_Images_triggered()
         {
             Missed_Images.push_back(i);
         }
+        // else
+        // {
+        //     if(QImage(ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text() + QString::number(i) + ".png").isNull())
+        //     {
+        //         Missed_Images.push_back(i);
+        //     }
+        // }
     }
     QString content;
     if(Missed_Images.size() == 0)
     {
-        content = "No missing inages!";
+        content = "No missing images!";
         QMessageBox::information(this, "Check Finished", content, QMessageBox::Ok);
     }
     else if(Missed_Images.size() < 10)
