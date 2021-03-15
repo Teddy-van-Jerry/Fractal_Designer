@@ -44,7 +44,7 @@ private:
 
     QTime time_left = QTime::fromString("1", "h");
 
-    QTime time_one = QTime::fromString("0", "s");
+    QTime time_ten = QTime::fromString("0", "s");
 
     QString name, format;
 

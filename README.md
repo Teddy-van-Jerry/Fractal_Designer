@@ -1,8 +1,8 @@
 # Fractal_Designer
-This is an application to make fractal videos based on Qt, C++ and FFmpeg.
+This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
 
 ## Version Information
-This is version 5.1.8 updated in 2021/03/13.
+This is version 5.2.5 updated in 2021/03/15.
 The code is known to work properly in Win 10. But it may have severe problems in Linux or Mac.
 
 ## Main Features
