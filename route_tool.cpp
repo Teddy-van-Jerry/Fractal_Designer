@@ -67,6 +67,9 @@ void Route_Tool::on_pushButton_view_clicked()
     preCentreY = ui->doubleSpinBox_centreY->value();
     qDebug() << pa->Version_Higher_Than_4;
 
+    Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
+    Create_Image_Task* route_tool_img = new Create_Image_Task(pa);
+
     if(pa->Version_Higher_Than_4)
     {
         QDir ck(QCoreApplication::applicationDirPath() + "/temp");
@@ -75,20 +78,25 @@ void Route_Tool::on_pushButton_view_clicked()
             ck.mkdir(ck.absolutePath());
         }
 
-        Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
-        emit pa->shareVersion(true);
-        emit pa->shareData(pa->pre_info[pa->current_info_v].Colour_Data_1,
-                           pa->pre_info[pa->current_info_v].Colour_Data_2,
-                           pa->pre_info[pa->current_info_v].template_,
-                           pa->pre_info[pa->current_info_v].min_class_v,
-                           pa->pre_info[pa->current_info_v].max_class_v,
-                           pa->pre_info[pa->current_info_v].max_loop_t);
+        route_tool_img->setVersion(true);
+        route_tool_img->setData(pa->pre_info[pa->current_info_v].Colour_Data_1,
+                                pa->pre_info[pa->current_info_v].Colour_Data_2,
+                                pa->pre_info[pa->current_info_v].template_,
+                                pa->pre_info[pa->current_info_v].min_class_v,
+                                pa->pre_info[pa->current_info_v].max_class_v,
+                                pa->pre_info[pa->current_info_v].max_loop_t);
+    }
+    else
+    {
+        route_tool_img->setVersion(false);
+        route_tool_img->setPath(pa->Project_Name);
     }
     qDebug() << "alive";
-    emit build_signal(ui->doubleSpinBox_centreX->value(), ui->doubleSpinBox_centreY->value(),
-                      ui->doubleSpinBox_size->value(), ui->doubleSpinBox_size->value(), 600, 600,
-                      ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),
-                      "png", Img_Dir, "Route_Tool Image", "Route");
+    route_tool_img->setImage(ui->doubleSpinBox_centreX->value(), ui->doubleSpinBox_centreY->value(),
+                             ui->doubleSpinBox_size->value(), ui->doubleSpinBox_size->value(), 600, 600,
+                             ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),
+                             "png", Img_Dir, "Route_Tool Image", "Route");
+    QThreadPool::globalInstance()->start(route_tool_img);
 }
 
 void Route_Tool::updateProgressBar(double p)
@@ -277,7 +285,6 @@ void Route_Tool::paintEvent(QPaintEvent* event)
     painter.setTransform(translation);
     view_image.scroll(dx, dy, 0, 0, 600, 600);
     painter.drawPixmap(350, 25, 600 , 600 , QPixmap(view_image), dx, dy, 600, 600);
-    //
 }
 
 void Route_Tool::on_actionBack_to_main_window_triggered()

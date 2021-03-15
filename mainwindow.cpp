@@ -87,10 +87,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(routeEdit(QStandardItem*)));
     connect(ui->tableView_Route->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(dealRouteSort(int)));
 
-    MainWindow::newThread();
-
-//    qDebug() << "alive";
     ui->actionStop->setDisabled(true);
+
+    route_tool_window = new Route_Tool(this);
 
     show_preview_image();
     showColourFormula();
@@ -100,28 +99,6 @@ MainWindow::~MainWindow()
 {
     //delete image;
     delete ui;
-}
-
-void MainWindow::newThread()
-{
-    build_thread_ctrl = new Build_Thread;
-    work_thread = new QThread(this);
-    build_thread_ctrl->moveToThread(work_thread);
-    connect(this, &MainWindow::build_signal, build_thread_ctrl, &Build_Thread::drawImage);
-    connect(build_thread_ctrl, &Build_Thread::updateImage_preview, this, &MainWindow::getImage);
-    connect(build_thread_ctrl, &Build_Thread::progressInform_preview, this, &MainWindow::updateProgressBar);
-    connect(this, &MainWindow::pathShare, build_thread_ctrl, &Build_Thread::setPath);
-    connect(this, &MainWindow::destroyed, this, &MainWindow::dealClose);
-    connect(build_thread_ctrl, &Build_Thread::finished, this, &MainWindow::build_image_finished_deal);
-    connect(build_thread_ctrl, &Build_Thread::one_ok, this, &MainWindow::build_image_one_ok);
-    connect(this, &MainWindow::shareVersion, build_thread_ctrl, &Build_Thread::setVersion);
-    connect(this, &MainWindow::shareData, build_thread_ctrl, &Build_Thread::setData);
-
-    route_tool_window = new Route_Tool(this);
-    connect(route_tool_window, &Route_Tool::build_signal, build_thread_ctrl, &Build_Thread::drawImage);
-    connect(build_thread_ctrl, &Build_Thread::updateImage_route, route_tool_window, &Route_Tool::getImage);
-    connect(build_thread_ctrl, &Build_Thread::progressInform_route, route_tool_window, &Route_Tool::updateProgressBar);
-    connect(this, &MainWindow::pathShare, route_tool_window, &Route_Tool::setPath);
 }
 
 void MainWindow::setOpenLocation(QString str)
@@ -293,7 +270,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114767519"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821562"));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -425,7 +402,6 @@ void MainWindow::show_preview_image()
 
 void MainWindow::on_actionRoute_Tool_triggered()
 {
-    work_thread->start();
     //Route_Tool* route_tool = new Route_Tool;
     route_tool_window->show();
 }
@@ -567,23 +543,7 @@ void MainWindow::on_Template_Choice_4_toggled(bool checked)
 
 void MainWindow::on_actionPreview_Refresh_triggered()
 {
-    work_thread->start();
     Create_Image_Task* preview = new Create_Image_Task(this);
-
-    //if(Version_Higher_Than_4)
-    //{
-    //    preview->setVersion(true);
-    //    preview->setData(curr_info.Colour_Data_1,
-    //                     curr_info.Colour_Data_2,
-    //                     curr_info.template_,
-    //                     curr_info.min_class_v,
-    //                     curr_info.max_class_v,
-    //                     curr_info.max_loop_t);
-    //}
-    //else
-    //{
-    //    preview->setPath(Project_Name);
-    //}
 
     Create_Images_Task_Pre(preview);
 
@@ -644,14 +604,6 @@ void MainWindow::dealClose(QObject* sd)
     Q_UNUSED(sd);
 
     qDebug() << "dealClose";
-    // work_thread->terminate();
-
-    work_thread->quit();
-    work_thread->wait();
-    work_thread->exit();
-    // delete create_image_info;
-    delete build_thread_ctrl;
-    delete work_thread;
     exit(0);
 }
 
@@ -973,13 +925,7 @@ void MainWindow::on_actionStop_triggered()
         return;
     }
     emit createImageStop();
-    work_thread->terminate();
-    // work_thread->wait();
 
-    MainWindow::newThread();
-   //  MainWindow::on_actionPreview_Refresh_triggered();
-
-//    create_image_info->close_create_image_info();
     create_image_info->close();
 
     qDebug() << "Build Thread quit";
@@ -1047,22 +993,9 @@ void MainWindow::on_actionCreate_Video_triggered()
     PowerShell_arg1.append("%d.png\" -vcodec libx264 -crf ");
     PowerShell_arg1.append(QString::number(crf_value));
     PowerShell_arg1.append(" -pix_fmt yuv420p ");
-    PowerShell_arg1.append(video_file_name + "_temp." + video_format);
-
-    /*
-    QString Project_Name_For_cmd = Project_Name;
-    int end_length = Project_Name.length();
-    for(int i = 1; i != end_length; i++)
-    {
-        if(Project_Name_For_cmd[i] == ' ')
-        {
-            Project_Name_For_cmd.insert(i + 1, "\"");
-            Project_Name_For_cmd.insert(i, "\"");
-            i += 2;
-            end_length += 2;
-        }
-    }
-    */
+    PowerShell_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
+                               video_file_name + "." + video_format
+                             : video_file_name + "_temp." + video_format);
 
     if(Version_Higher_Than_4)
     {
@@ -1091,6 +1024,19 @@ void MainWindow::on_actionCreate_Video_triggered()
             QTextStream out1(&create_video_ps);
             out1 << PowerShell_arg1;
             create_video_ps.close();
+        }
+
+        if(ui->textBrowser_music->toPlainText().isEmpty())
+        {
+            if(Alive[0])
+            {
+                QMessageBox::information(this, "Information", "Video Creating Finished!");
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video.ps1 code instead.");
+            }
+            return;
         }
 
         QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
@@ -2490,7 +2436,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114767480"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821632"));
 }
 
 void MainWindow::on_actionVersion_triggered()

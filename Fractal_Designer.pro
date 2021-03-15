@@ -10,7 +10,6 @@ CONFIG += c++11
 
 SOURCES += \
     Complex.cpp \
-    build_thread.cpp \
     create_image_info.cpp \
     create_image_task.cpp \
     create_images_range.cpp \
@@ -31,7 +30,6 @@ SOURCES += \
 
 HEADERS += \
     Complex.h \
-    build_thread.h \
     create_image_info.h \
     create_image_task.h \
     create_images_range.h \
@@ -92,7 +90,7 @@ RC_ICONS += \
 RC_FILE += \
     icon.rc
 
-VERSION = 5.0
+VERSION = 5.2
 
 QMAKE_TARGET_PRODUCT = Fractal Designer
 QMAKE_TARGET_COMPANY = TVJ

@@ -26,7 +26,6 @@
 #include "route_tool.h"
 #include "set_colour.h"
 #include "Complex.h"
-#include "build_thread.h"
 #include "create_image_info.h"
 #include "help.h"
 #include "search_result.h"
@@ -112,7 +111,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 0, 27, 0};
+    uint8_t FRD_Version[4] = {5, 2, 5, 0};
 
     QString Open_Location = "";
 
@@ -137,8 +136,6 @@ public:
     void setOpenLocation(QString);
 
     bool High_Version_Open(int type = 0);
-
-    void newThread();
 
     void set_Colour_Dlg(int n);
 
@@ -416,10 +413,6 @@ private:
     QPushButton* Button_Login_MainWindow;
 
     QImage image_preview, image_T1, image_T2, image_T3, image_T4;
-
-    Build_Thread *build_thread_ctrl;
-
-    QThread *work_thread;
 
     Route_info* route_info;
 
