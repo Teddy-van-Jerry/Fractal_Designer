@@ -60,8 +60,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setStyleSheet("background-color: ");
     //qDebug() << QCoreApplication::applicationDirPath();
-    QString filename(":/Template_1.bmp");
-    if(!(image_T1.load(filename))) // load the image
+    QString filename1(":/Templates/Template_1.bmp");
+    if(!(image_T1.load(filename1))) // load the image
+    {
+        QMessageBox::information(this,
+                     tr("Build Error"),
+                     tr("Fail to open the image"));
+    }
+    QString filename2(":/Templates/Template_2.jpg");
+    if(!(image_T2.load(filename2))) // load the image
     {
         QMessageBox::information(this,
                      tr("Build Error"),
@@ -450,6 +457,21 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     {
         ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
     }
+
+    ui->label_Template_2->resize(ui->widget_T2->size());
+    int T2_w_width(ui->label_Template_2->width());
+    int T2_w_height(ui->label_Template_2->height());
+    double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
+    double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
+    if(rate_i_T2 > rate_w_T2)
+    {
+
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
+    }
+    else
+    {
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
+    }
 }
 
 void MainWindow::on_Tab_currentChanged(int index)
@@ -484,6 +506,21 @@ void MainWindow::on_Tab_currentChanged(int index)
         else
         {
             ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
+        }
+
+        ui->label_Template_2->resize(ui->widget_T2->size());
+        int T2_w_width(ui->label_Template_2->width());
+        int T2_w_height(ui->label_Template_2->height());
+        double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
+        double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
+        if(rate_i_T2 > rate_w_T2)
+        {
+
+            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
+        }
+        else
+        {
+            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
         }
     }
 }

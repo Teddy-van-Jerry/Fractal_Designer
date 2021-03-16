@@ -71,8 +71,8 @@ RESOURCES += \
     EXE_Icons.qrc \
     Icon.qrc \
     Icon_resources.qrc \
-    Other_Images.qrc \
-    StyleSheet.qrc
+    StyleSheet.qrc \
+    Templates.qrc
 
 DISTFILES += \
     C:/Users/Teddy van Jerry/Desktop/1.jpg \
