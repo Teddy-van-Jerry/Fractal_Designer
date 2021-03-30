@@ -46,7 +46,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -110,7 +110,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.2 is focused on higher efficiency of creating images. Now, it can make the most of the CPU capacity.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.2.5 (2021/03/15)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.3.1 (2021/03/31)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -1726,12 +1726,26 @@ p, li { white-space: pre-wrap; }
      <addaction name="separator"/>
      <addaction name="actionWatermark"/>
     </widget>
+    <widget class="QMenu" name="menuThread_Control">
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
+     <property name="title">
+      <string>Thread Control</string>
+     </property>
+     <addaction name="actionMost"/>
+     <addaction name="actionMore"/>
+     <addaction name="actionNormal"/>
+     <addaction name="actionLess"/>
+     <addaction name="actionLeast"/>
+    </widget>
     <addaction name="actionCreate_Images"/>
     <addaction name="actionCreate_Images_in_Range"/>
     <addaction name="actionStop"/>
     <addaction name="actionCheck_Images"/>
     <addaction name="actionDelete_Images"/>
     <addaction name="separator"/>
+    <addaction name="menuThread_Control"/>
     <addaction name="actionColour_Definition_Auto_Save"/>
     <addaction name="actionHigh_Quailty_Mode"/>
     <addaction name="separator"/>
@@ -2581,6 +2595,49 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Check Images</string>
+   </property>
+  </action>
+  <action name="actionMost">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Most</string>
+   </property>
+  </action>
+  <action name="actionMore">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>More</string>
+   </property>
+  </action>
+  <action name="actionNormal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Normal</string>
+   </property>
+  </action>
+  <action name="actionLess">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Less</string>
+   </property>
+  </action>
+  <action name="actionLeast">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Least</string>
    </property>
   </action>
  </widget>

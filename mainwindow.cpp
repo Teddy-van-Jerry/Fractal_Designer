@@ -2966,3 +2966,61 @@ void MainWindow::on_actionDelete_Images_triggered()
     }
     QMessageBox::information(this, "Information", "Deleting Images Finished!");
 }
+
+void MainWindow::on_actionMost_triggered()
+{
+    ui->actionMost->setChecked(true);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
+}
+
+void MainWindow::on_actionMore_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(true);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 3 / 4 < 2 ? 2 : total_thread * 3 / 4;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionNormal_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(true);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 1 / 2 < 2 ? 2 : total_thread * 1 / 2;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionLess_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(true);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 1 / 3 < 2 ? 2 : total_thread * 1 / 3;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionLeast_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(true);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread == 1 ? 1 : 2;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}

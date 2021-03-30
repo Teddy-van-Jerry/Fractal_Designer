@@ -373,6 +373,16 @@ private slots:
 
     void on_actionDelete_Images_triggered();
 
+    void on_actionMost_triggered();
+
+    void on_actionMore_triggered();
+
+    void on_actionNormal_triggered();
+
+    void on_actionLess_triggered();
+
+    void on_actionLeast_triggered();
+
 signals:
 
     void Search_clicked(QString);
