@@ -26,6 +26,7 @@ SOURCES += \
     route_tool.cpp \
     search_result.cpp \
     set_colour.cpp \
+    template_2_settings.cpp \
     version.cpp
 
 HEADERS += \
@@ -45,6 +46,7 @@ HEADERS += \
     route_tool.h \
     search_result.h \
     set_colour.h \
+    template_2_settings.h \
     version.h
 
 FORMS += \
@@ -60,6 +62,7 @@ FORMS += \
     route_tool.ui \
     search_result.ui \
     set_colour.ui \
+    template_2_settings.ui \
     version.ui
 
 # Default rules for deployment.

@@ -36,6 +36,7 @@
 #include "new_features.h"
 #include "create_images_range.h"
 #include "create_image_task.h"
+#include "template_2_settings.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -382,6 +383,8 @@ private slots:
     void on_actionLess_triggered();
 
     void on_actionLeast_triggered();
+
+    void on_actionTemplate_2_triggered();
 
 signals:
 

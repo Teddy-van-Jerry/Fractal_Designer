@@ -3024,3 +3024,9 @@ void MainWindow::on_actionLeast_triggered()
     total_thread = total_thread == 1 ? 1 : 2;
     QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
 }
+
+void MainWindow::on_actionTemplate_2_triggered()
+{
+    Template_2_Settings* dialog = new Template_2_Settings(this);
+    dialog->show();
+}

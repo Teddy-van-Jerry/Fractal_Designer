@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDebug>
 #include "route_info.h"
+#include "Complex.h"
 
 #define _ROUTE_SIZE_ 48
 
@@ -53,6 +54,12 @@ public:
     QString video_path;
     QString video_name;
     QList<QString> music_list;
+
+    ////////// Template 2 Only //////////
+    Complex Julia_c1, Julia_c2;
+    double Julia_c_rate = 0;
+    /////////////////////////////////////
+
     //////// Only Valid in Print ////////
     char config1 = 0;
     /////////////////////////////////////
