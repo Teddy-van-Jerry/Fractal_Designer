@@ -951,13 +951,40 @@ void MainWindow::on_actionCreate_Images_triggered()
         Create_Image_Task* create_images = new Create_Image_Task(this);
         // create_images->setAutoDelete(false);
         Create_Images_Task_Pre(create_images);
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
         create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
         QThreadPool::globalInstance()->start(create_images);
     }
 
     Create_Image_Task* create_images = new Create_Image_Task(this);
     // create_images->setAutoDelete(false);
+
     Create_Images_Task_Pre(create_images);
+    if(curr_info.template_ == 2)
+    {
+        if(Version_Higher_Than_4)
+        {
+            create_images->setTemplate2(curr_info.Julia_c2);
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
     create_images->setImage(Tb(model->rowCount() - 1, 1),
                             Tb(model->rowCount() - 1, 2),
                             Tb(model->rowCount() - 1, 4),
@@ -2758,6 +2785,20 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
         Create_Images_Task_Pre(create_images);
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
         if(i != to_i)
         {
             create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
@@ -2836,6 +2877,21 @@ void MainWindow::createImagesInList(const QList<int>& list)
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
         Create_Images_Task_Pre(create_images);
+
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
 
         // qDebug() << t << current_index << x << y << width << angle;
         if(i != *(--list.end()))
