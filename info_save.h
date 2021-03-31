@@ -31,6 +31,7 @@ struct info
 class Info_Save
 {
     info Template {'T', 'E', 1};
+    info Template_2 {'T', '2', 40}; // 16*2+8=40
     info ImageValue {'I', 'V', 20}; // 8+8+4=20
     info Colour1 {'C', '1', 1856}; // 29*2*4*8=1856
     info Colour2 {'C', '2', 1856}; // 29*2*4*8=1856

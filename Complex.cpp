@@ -7,6 +7,10 @@
  *
  * @author Wuqiong Zhao, Junhao Wang, Pengfei Xie, Yaobing Zheng
  *
+ * @version 2021/03/31
+ * - simplify the return statement
+ * - add function setReal and setImaginary
+ * - add inline
  * @version 2020/12/29
  * - modift to fit Qt
  * @version 2020/12/28
@@ -48,6 +52,16 @@
 
 Complex::Complex(double a, double b): Real(a), Imaginary(b) {}
 
+void Complex::setReal(const double& real_)
+{
+    this->Real = real_;
+}
+
+void Complex::setImaginary(const double& imag_)
+{
+    this->Imaginary = imag_;
+}
+
 Complex Complex::add(const Complex& a) const
 {
     // *this refers to the initial Complex number
@@ -55,23 +69,21 @@ Complex Complex::add(const Complex& a) const
     // (*this).member equals to this->member
     double new_Real = this->Real + a.Real;
     double new_Imaginary = this->Imaginary + a.Imaginary;
-    Complex result(new_Real, new_Imaginary);
-    return result;
+    return Complex(new_Real, new_Imaginary);
 }
+
 Complex Complex::minus(const Complex& a) const
 {
     double new_Real = this->Real - a.Real;
     double new_Imaginary = this->Imaginary - a.Imaginary;
-    Complex result(new_Real, new_Imaginary);
-    return result;
+    return Complex(new_Real, new_Imaginary);
 }
 
 Complex Complex::multiply(const Complex& a) const
 {
     double new_Real = this->Real * a.Real - this->Imaginary * a.Imaginary;
     double new_Imaginary = this->Real * a.Imaginary + a.Real * this->Imaginary;
-    Complex result(new_Real, new_Imaginary);
-    return result;
+    return Complex(new_Real, new_Imaginary);
 }
 
 Complex Complex::divide(const Complex& a) const
@@ -90,8 +102,7 @@ Complex Complex::divide(const Complex& a) const
     {
         double new_Real = (A * C + B * D) / (C * C + D * D);
         double new_Imaginary = (C * B - A * D) / (C * C + D * D);
-        Complex result(new_Real, new_Imaginary);
-        return result;
+        return Complex(new_Real, new_Imaginary);
     }
 }
 
@@ -100,8 +111,7 @@ Complex Complex::power(const double& n) const
     // De Moivre's formula
     double Argz = n * this->argz();
     double r = std::pow(this->modulus().Real, n);
-    Complex result(r * cos(Argz), r * sin(Argz));
-    return result;
+    return Complex(r * cos(Argz), r * sin(Argz));
 }
 
 Complex Complex::power(const Complex& a) const
@@ -133,36 +143,33 @@ Complex Complex::conjugate() const
 {
     double new_Real = this->Real;
     double new_Imaginary = -this->Imaginary;
-    Complex result(new_Real, new_Imaginary);
-    return result;
+    return Complex(new_Real, new_Imaginary);
 }
 
 Complex Complex::modulus() const
 {
     double mod = std::sqrt(pow(this->Real, 2) + pow(this->Imaginary, 2));
-    Complex result(mod, 0);
-    return result;
+    return Complex(mod, 0);
 }
 
-double Complex::getReal() const
+ double Complex::getReal() const
 {
     return this->Real;
 }
 
-double Complex::getImaginary() const
+ double Complex::getImaginary() const
 {
     return this->Imaginary;
 }
 
-double Complex::argz() const
+ double Complex::argz() const
 {
     return atan2(this->Imaginary, this->Real);
 }
 
 Complex Complex::operator-()
 {
-    Complex ret(-this->Real, -this->Imaginary);
-    return ret;
+    return Complex(-this->Real, -this->Imaginary);
 }
 
 Complex Complex::operator+()
@@ -277,8 +284,7 @@ Complex exp(const Complex& n)
 
 Complex log(const Complex& n)
 {
-    Complex ret(log(static_cast<double>(n.modulus())), n.argz());
-    return ret;
+    return Complex(log(static_cast<double>(n.modulus())), n.argz());
 }
 
 Complex cos(const Complex& a)

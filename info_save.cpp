@@ -29,6 +29,12 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     out << Template.name[0] << Template.name[1] << Template.length;
     out << template_;
 
+    // Template2
+    out << Template_2.name[0] << Template_2.name[1] << Template_2.length;
+    out << Julia_c1.getReal() << Julia_c1.getImaginary()
+        << Julia_c2.getReal() << Julia_c2.getImaginary()
+        << Julia_c_rate;
+
     // Image Value
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;
     out << min_class_v << max_class_v << max_loop_t;

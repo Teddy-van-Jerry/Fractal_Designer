@@ -161,6 +161,16 @@ bool MainWindow::High_Version_Open(int type)
             if(curr_info.template_ == 0) redo_max_depth++;
             qDebug() << "TE succeeds!";
         }
+        else if NameIs('T', '2')
+        {
+            FRD_R.skip(4);
+            double t1, t2, t3, t4;
+            in >> t1 >> t2 >> t3 >> t4 >> curr_info.Julia_c_rate;
+            curr_info.Julia_c1.setReal(t1);
+            curr_info.Julia_c1.setImaginary(t2);
+            curr_info.Julia_c2.setReal(t3);
+            curr_info.Julia_c2.setImaginary(t4);
+        }
         else if NameIs('I', 'V')
         {
             FRD_R.skip(4);
@@ -225,6 +235,8 @@ bool MainWindow::High_Version_Open(int type)
             FRD_R.skip(length_);
         }
     }
+
+    buff_info = curr_info;
 
     FRD_R.close();
     qDebug() << "High Version Open succeed!";
@@ -593,12 +605,30 @@ void MainWindow::on_actionPreview_Refresh_triggered()
             ck.mkdir(ck.absolutePath());
         }
         Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
+
     }
     else
     {
         Pre_Img_Dir = Project_Name;
     }
-    preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    if(curr_info.template_ == 2)
+    {
+        if(Version_Higher_Than_4)
+        {
+            double t = ui->doubleSpinBox_t->value();
+            Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            double k = curr_info.Julia_c_rate;
+            preview->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
+    if(curr_info.template_ == 1)
+        preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
 }

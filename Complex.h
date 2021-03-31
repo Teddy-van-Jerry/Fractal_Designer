@@ -4,8 +4,12 @@
  * Platform: Qt 6.0.0
  * -----------------
  *
- * @author Wuqiong Zhao
+ * @author Teddy van Jerry
  *
+ * @version 2021/03/31
+ * - simplify the return statement
+ * - add function setReal and setImaginary
+ * - add inline
  * @version 2020/12/29
  * - modift to fit Qt
  * @version 2020/12/28
@@ -54,20 +58,34 @@ class Complex {
 
 public:
 
+    // function prototype(declaration)
+
     /**
      * Constructor list
      * used to initialize members Real and Inaginary
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex(double a = 0, double b = 0);
 
-    // function prototype(declaration)
+    /**
+     * SetReal function
+     * return void
+     * @ written by Teddy van Jerry
+     */
+    void setReal(const double& real_);
+
+    /**
+     * SetImaginary function
+     * return void
+     * @ written by Teddy van Jerry
+     */
+    void setImaginary(const double& imag_);
 
     /**
      * Add function
      * used to add two Complex numbers
      * return the sum of the two numbers
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex add(const Complex& a) const;
 
@@ -75,7 +93,7 @@ public:
      * Minus function
      * used to minus two Complex numbers
      * return the difference of the two numbers
-     * @ written by Junhao Wang
+     * @ written by WJH
      */
     Complex minus(const Complex& a) const;
 
@@ -83,7 +101,7 @@ public:
      * Multiply function
      * used to multiply two Complex numbers
      * return the difference of the two numbers
-     * @ written by Junhao Wang
+     * @ written by WJH
      */
     Complex multiply(const Complex& a) const;
 
@@ -91,7 +109,7 @@ public:
      * Divide function
      * used to divide two Complex numbers
      * return the product of the two numbers
-     * @ written by Yapbing Zheng
+     * @ written by ZYB
      */
     Complex divide(const Complex& a) const;
 
@@ -99,114 +117,114 @@ public:
      * Power function(double)
      * used to power one Complex number
      * return the power of it
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex power(const double& n) const;
 
     /**
      * Power function(Complex)
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex power(const Complex& a) const;
 
     /**
      * Sqrt function
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex sqrt(const Complex& a) const;
 
     /**
      * Conjugate function
      * return the conjugate of a Complex number
-     * @ written by Pengfei Xie
+     * @ written by Panoan
      */
     Complex conjugate() const;
 
     /**
      * Modulus function
      * return the modulus of a Complex number
-     * @ written by Pengfei Xie
+     * @ written by Panoan
      */
     Complex modulus() const;
 
     /**
      * GetReal function
      * return the real part of a Complex number
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     double getReal() const;
 
     /**
      * GetImaginary function
      * return the imaginary part of a Complex number
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     double getImaginary() const;
 
     /**
      * argz function
      * return the principle argument angle
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     double argz() const;
 
     /**
      * unary plus function
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator+();
 
     /**
      * unary minus function
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator-();
 
     /**
      * plus
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator+=(const Complex& a);
 
     /**
      * minus
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator-=(const Complex& a);
 
     /**
      * multiply
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator*=(const Complex& a);
 
     /**
      * divide
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator/=(const Complex& a);
 
     /**
      * power
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator^(const double& n);
 
     /**
      * power
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator^=(const double& n);
 
     /**
      * power
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator^(const Complex& n);
 
     /**
      * power
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     Complex operator^=(const Complex& n);
 
@@ -214,7 +232,7 @@ public:
      * isequal
      * return true if equal
      * return false if unequal
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     bool operator==(const Complex& a);
 
@@ -222,19 +240,19 @@ public:
      * !isequal
      * return true if unequal
      * return false if equal
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     bool operator!=(const Complex& a);
 
     /**
      * assign
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     void operator=(const Complex& a);
 
     /**
      * assign from other types
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     template<typename T_>
     void operator=(const T_& a);
@@ -242,14 +260,14 @@ public:
     /**
      * Convertion
      * return the real part of the complex
-     * @ written by Wuqiong Zhao
+     * @ written by Teddy van Jerry
      */
     operator double();
 
 private:
     /**
     * Private members
-    * @ written by Wuqiong Zhao
+    * @ written by Teddy van Jerry
     */
     double Real;
     double Imaginary;
@@ -257,55 +275,55 @@ private:
 
 /**
  * binary plus function
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex operator+(const Complex& a, const Complex& b);
 
 /**
  * binary minus function
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex operator-(const Complex& a, const Complex& b);
 
 /**
  * multiply function
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex operator*(const Complex& a, const Complex& b);
 
 /**
  * divide function
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex operator/(const Complex& a, const Complex& b);
 
 /**
  * exp that takes a Complex
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex exp(const Complex& n);
 
 /**
  * log that takes a Complex
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex log(const Complex& n);
 
 /**
  * sin that takes a Complex
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex sin(const Complex& a);
 
 /**
  * cos that takes a Complex
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
 Complex cos(const Complex& a);
 
 /**
  * Error information
- * @ written by Wuqiong Zhao
+ * @ written by Teddy van Jerry
  */
  //void error(const QString& error_info);
 

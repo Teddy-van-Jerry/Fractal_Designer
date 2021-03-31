@@ -44,7 +44,7 @@
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_C1I">
         <property name="decimals">
          <number>10</number>
         </property>
@@ -78,7 +78,7 @@
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_C2I">
         <property name="decimals">
          <number>10</number>
         </property>
@@ -105,7 +105,7 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_Rate">
         <property name="decimals">
          <number>10</number>
         </property>
@@ -118,7 +118,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_C2R">
         <property name="decimals">
          <number>10</number>
         </property>
@@ -131,7 +131,7 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_C1R">
         <property name="decimals">
          <number>10</number>
         </property>

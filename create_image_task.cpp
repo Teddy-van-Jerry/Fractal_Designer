@@ -105,18 +105,23 @@ void Create_Image_Task::run()
                 }
                 else if ((double)this_point.modulus() < min_class_v)
                 {
-                    test = true;
+                    // test = true;
                     break;
                 }
                 else
                 {
-                    if(template_ == 1) this_point = (this_point ^ 2.0) + z0;
+                    switch(template_)
+                    {
+                    case 1: this_point = (this_point ^ 2.0) + z0; break;
+                    case 2: this_point = (this_point ^ 2.0) + c0; break;
+                    default: break;
+                    }
                 }
             }
 
             if(test)
             {
-                double RGBA1[4];
+                double RGBA1[4] = {0, 0, 0, 0};
                 for(int m = 0; m != 4; m++)
                 {
                     RGBA1[m] = (Colour_Data[0][m][0][0]  * t + Colour_Data[0][m][0][1])  * k +
@@ -134,24 +139,28 @@ void Create_Image_Task::run()
                                (Colour_Data[0][m][12][0] * t + Colour_Data[0][m][12][1]) * z0.argz() +
                                (Colour_Data[0][m][13][0] * t + Colour_Data[0][m][13][1]) * sin(z0.argz()) +
                                (Colour_Data[0][m][14][0] * t + Colour_Data[0][m][14][1]) * (double)(this_point - z0).modulus() +
-                               (Colour_Data[0][m][15][0] * t + Colour_Data[0][m][15][1]) * exp(k) +
-                               (Colour_Data[0][m][16][0] * t + Colour_Data[0][m][16][1]) * exp(log(10) * k) +
+                               (Colour_Data[0][m][15][0] * t + Colour_Data[0][m][15][1]) * exp((k > 10) ? 10 : k) +
+                               (Colour_Data[0][m][16][0] * t + Colour_Data[0][m][16][1]) * exp(log(10) * ((k > 10) ? 10 : k)) +
                                (Colour_Data[0][m][17][0] * t + Colour_Data[0][m][17][1]) * log(1 + (double)this_point.modulus()) +
                                (Colour_Data[0][m][18][0] * t + Colour_Data[0][m][18][1]) * log(1 + (double)z0.modulus()) +
                                (Colour_Data[0][m][19][0] * t + Colour_Data[0][m][19][1]) * log(1 + (double)(this_point - z0).modulus()) +
-                               (Colour_Data[0][m][20][0] * t + Colour_Data[0][m][20][1]) * exp((double)this_point.modulus()) +
-                               (Colour_Data[0][m][21][0] * t + Colour_Data[0][m][21][1]) * exp((double)z0.modulus()) +
-                               (Colour_Data[0][m][22][0] * t + Colour_Data[0][m][22][1]) * exp((double)(this_point - z0).modulus()) +
-                               (Colour_Data[0][m][23][0] * t + Colour_Data[0][m][23][1]) * exp(log(10) * (double)this_point.modulus()) +
-                               (Colour_Data[0][m][24][0] * t + Colour_Data[0][m][24][1]) * exp(log(10) * (double)z0.modulus()) +
+                               (Colour_Data[0][m][20][0] * t + Colour_Data[0][m][20][1]) * exp((double)this_point.modulus() > 10 ? 10 : (double)this_point.modulus() > 10) +
+                               (Colour_Data[0][m][21][0] * t + Colour_Data[0][m][21][1]) * exp((double)z0.modulus() > 10 ? 10 : (double)z0.modulus()) +
+                               (Colour_Data[0][m][22][0] * t + Colour_Data[0][m][22][1]) * exp((double)(this_point - z0).modulus() > 10 ? 10 : (double)this_point.modulus()) +
+                               (Colour_Data[0][m][23][0] * t + Colour_Data[0][m][23][1]) * exp(log(10) * (double)this_point.modulus() > 10 ? 10 : log(10) * (double)this_point.modulus()) +
+                               (Colour_Data[0][m][24][0] * t + Colour_Data[0][m][24][1]) * exp(log(10) * (double)z0.modulus() > 10 ? 10 : log(10) * (double)z0.modulus()) +
                                (Colour_Data[0][m][25][0] * t + Colour_Data[0][m][25][1]) * exp(log(10) * (double)(this_point - z0).modulus()) +
-                               (Colour_Data[0][m][26][0] * t + Colour_Data[0][m][26][1]) * exp((double)this_point.modulus() / min_class_v) +
-                               (Colour_Data[0][m][27][0] * t + Colour_Data[0][m][27][1]) * exp((double)z0.modulus() / min_class_v) +
+                               (Colour_Data[0][m][26][0] * t + Colour_Data[0][m][26][1]) * exp((double)this_point.modulus() / min_class_v > 10 ? 10 : (double)this_point.modulus() / min_class_v) +
+                               (Colour_Data[0][m][27][0] * t + Colour_Data[0][m][27][1]) * exp((double)z0.modulus() / min_class_v > 10 ? 10 : (double)z0.modulus() / min_class_v) +
                                (Colour_Data[0][m][28][0] * t + Colour_Data[0][m][28][1]);
                     if(RGBA1[m] < 0) RGBA1[m] = 0;
-                    if(RGBA1[m] > 255) RGBA1[m] = 255;
+                    else if(RGBA1[m] > 255) RGBA1[m] = 255;
                 }
                 image_build.setPixel(i, j, qRgba(RGBA1[0], RGBA1[1], RGBA1[2], RGBA1[3]));
+                //if(RGBA1[0] != 255) qDebug() << "R (" << i << "," << j << ")" << RGBA1[0];
+                //if(RGBA1[1] != 0)   qDebug() << "G (" << i << "," << j << ")" << RGBA1[1];
+                //if(RGBA1[2] != 0)   qDebug() << "B (" << i << "," << j << ")" << RGBA1[2];
+                //if(RGBA1[3] != 255) qDebug() << "A (" << i << "," << j << ")" << RGBA1[3];
                 //qDebug() << RGBA1[0] << " " << RGBA1[1] << " " << RGBA1[2] << " "<<RGBA1[3];
             }
             else
@@ -174,24 +183,28 @@ void Create_Image_Task::run()
                                (Colour_Data[1][m][12][0] * t + Colour_Data[1][m][12][1]) * z0.argz() +
                                (Colour_Data[1][m][13][0] * t + Colour_Data[1][m][13][1]) * sin(z0.argz()) +
                                (Colour_Data[1][m][14][0] * t + Colour_Data[1][m][14][1]) * (double)(this_point - z0).modulus() +
-                               (Colour_Data[1][m][15][0] * t + Colour_Data[1][m][15][1]) * exp(k) +
-                               (Colour_Data[1][m][16][0] * t + Colour_Data[1][m][16][1]) * exp(log(10) * k) +
+                               (Colour_Data[1][m][15][0] * t + Colour_Data[1][m][15][1]) * exp((k > 10) ? 10 : k) +
+                               (Colour_Data[1][m][16][0] * t + Colour_Data[1][m][16][1]) * exp(log(10) * ((k > 10) ? 10 : k)) +
                                (Colour_Data[1][m][17][0] * t + Colour_Data[1][m][17][1]) * log(1 + (double)this_point.modulus()) +
                                (Colour_Data[1][m][18][0] * t + Colour_Data[1][m][18][1]) * log(1 + (double)z0.modulus()) +
                                (Colour_Data[1][m][19][0] * t + Colour_Data[1][m][19][1]) * log(1 + (double)(this_point - z0).modulus()) +
-                               (Colour_Data[1][m][20][0] * t + Colour_Data[1][m][20][1]) * exp((double)this_point.modulus()) +
-                               (Colour_Data[1][m][21][0] * t + Colour_Data[1][m][21][1]) * exp((double)z0.modulus()) +
-                               (Colour_Data[1][m][22][0] * t + Colour_Data[1][m][22][1]) * exp((double)(this_point - z0).modulus()) +
-                               (Colour_Data[1][m][23][0] * t + Colour_Data[1][m][23][1]) * exp(log(10) * (double)this_point.modulus()) +
-                               (Colour_Data[1][m][24][0] * t + Colour_Data[1][m][24][1]) * exp(log(10) * (double)z0.modulus()) +
+                               (Colour_Data[1][m][20][0] * t + Colour_Data[1][m][20][1]) * exp((double)this_point.modulus() > 10 ? 10 : (double)this_point.modulus() > 10) +
+                               (Colour_Data[1][m][21][0] * t + Colour_Data[1][m][21][1]) * exp((double)z0.modulus() > 10 ? 10 : (double)z0.modulus()) +
+                               (Colour_Data[1][m][22][0] * t + Colour_Data[1][m][22][1]) * exp((double)(this_point - z0).modulus() > 10 ? 10 : (double)this_point.modulus()) +
+                               (Colour_Data[1][m][23][0] * t + Colour_Data[1][m][23][1]) * exp(log(10) * (double)this_point.modulus() > 10 ? 10 : log(10) * (double)this_point.modulus()) +
+                               (Colour_Data[1][m][24][0] * t + Colour_Data[1][m][24][1]) * exp(log(10) * (double)z0.modulus() > 10 ? 10 : log(10) * (double)z0.modulus()) +
                                (Colour_Data[1][m][25][0] * t + Colour_Data[1][m][25][1]) * exp(log(10) * (double)(this_point - z0).modulus()) +
-                               (Colour_Data[1][m][26][0] * t + Colour_Data[1][m][26][1]) * exp((double)this_point.modulus() / max_class_v) +
-                               (Colour_Data[1][m][27][0] * t + Colour_Data[1][m][27][1]) * exp((double)z0.modulus() / max_class_v) +
+                               (Colour_Data[1][m][26][0] * t + Colour_Data[1][m][26][1]) * exp((double)this_point.modulus() / max_class_v > 10 ? 10 : (double)this_point.modulus() / max_class_v) +
+                               (Colour_Data[1][m][27][0] * t + Colour_Data[1][m][27][1]) * exp((double)z0.modulus() / max_class_v > 10 ? 10 : (double)z0.modulus() / max_class_v) +
                                (Colour_Data[1][m][28][0] * t + Colour_Data[1][m][28][1]);
                     if(RGBA2[m] < 0) RGBA2[m] = 0;
-                    if(RGBA2[m] > 255) RGBA2[m] = 255;
+                    else if(RGBA2[m] > 255) RGBA2[m] = 255;
                 }
                 image_build.setPixel(i, j, qRgba(RGBA2[0], RGBA2[1], RGBA2[2], RGBA2[3]));
+                //if(RGBA2[0] != 0) qDebug() << "-R (" << i << "," << j << ")" << RGBA2[0];
+                //if(RGBA2[1] != 0)   qDebug() << "-G (" << i << "," << j << ")" << RGBA2[1];
+                //if(RGBA2[2] != 255)   qDebug() << "-B (" << i << "," << j << ")" << RGBA2[2];
+                //if(RGBA2[3] != 255) qDebug() << "-A (" << i << "," << j << ")" << RGBA2[3];
                 //if(i == 20 && j == 20) qDebug() << RGBA2[0] << " " << RGBA2[1] << " " << RGBA2[2] << " "<<RGBA2[3];
                 //image_build.setPixel(20, 20, qRgba(10, 10, 10, 10));
             }
@@ -241,9 +254,14 @@ void Create_Image_Task::setData(double C1[4][29][2], double C2[4][29][2], int te
     End_All_Colour
 
     template_   = temp;
-    min_class_v = min;
-    max_class_v = max;
+    min_class_v = min < 1E-10 ? 1E-10 : min;
+    max_class_v = max < 1E-10 ? 1E-10 : max;
     max_loop_t  = lpt;
+}
+
+void Create_Image_Task::setTemplate2(const Complex& c)
+{
+    c0 = c;
 }
 
 void Create_Image_Task::setVersion(bool v)
