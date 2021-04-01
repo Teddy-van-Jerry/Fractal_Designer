@@ -93,7 +93,7 @@ RC_ICONS += \
 RC_FILE += \
     icon.rc
 
-VERSION = 5.2
+VERSION = 5.3
 
 QMAKE_TARGET_PRODUCT = Fractal Designer
 QMAKE_TARGET_COMPANY = TVJ

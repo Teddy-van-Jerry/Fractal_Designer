@@ -112,7 +112,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 2, 5, 0};
+    uint8_t FRD_Version[4] = {5, 3, 6, 0};
 
     QString Open_Location = "";
 
@@ -367,6 +367,8 @@ private slots:
     void on_actionCreate_Images_in_Range_triggered();
 
     void on_actionVersion_3_triggered();
+
+    void on_actionVersion_4_triggered();
 
     void on_actionGitHub_Repository_triggered();
 

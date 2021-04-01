@@ -289,7 +289,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821562"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371293"));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -1074,7 +1074,7 @@ void MainWindow::on_actionCreate_Video_triggered()
         return;
     }
 
-//    QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
+    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
 
     int crf_value = 18;
     QString video_file_name = ui->lineEdit_videoName->text();
@@ -2530,7 +2530,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821632"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371302"));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2909,6 +2909,11 @@ void MainWindow::createImagesInList(const QList<int>& list)
 void MainWindow::on_actionVersion_3_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV17K4y1J7XM"));
+}
+
+void MainWindow::on_actionVersion_4_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV1wB4y1N7pU"));
 }
 
 void MainWindow::on_actionGitHub_Repository_triggered()
