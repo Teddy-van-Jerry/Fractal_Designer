@@ -21,6 +21,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setApplicationVersion("5.3.6");
+    a.setApplicationName("Fractal Designer");
+    a.setApplicationDisplayName("Fractal Designer");
+    a.setOrganizationName("Teddy van Jerry");
+    a.setOrganizationDomain("https://github.com/Teddy-van-Jerry");
+
     QSettings lastopen(QCoreApplication::applicationDirPath() + "LastOpen.ini", QSettings::IniFormat);
     QString Last_Open_Time = lastopen.value("LASTOPEN/Time", "").toString();
 

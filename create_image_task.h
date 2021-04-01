@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QObject>
 #include <QImage>
+#include "Complex.h"
 
 #ifndef Create_Images_Task_Pre
 #define Create_Images_Task_Pre(task__)       \
@@ -43,6 +44,8 @@ private:
 
     int template_, max_loop_t;
 
+    Complex c0;
+
     double min_class_v, max_class_v;
 
     double x, y, x_width, y_height, rotate_angle, t;
@@ -74,6 +77,8 @@ public: // function
     void setData(double[4][29][2], double[4][29][2], int, double, double, int);
 
     void setVersion(bool);
+
+    void setTemplate2(const Complex& c);
 
 public slots:
 

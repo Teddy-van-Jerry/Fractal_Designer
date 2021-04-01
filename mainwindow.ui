@@ -110,7 +110,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.2 is focused on higher efficiency of creating images. Now, it can make the most of the CPU capacity.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.2.5 (2021/03/15)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.3 supports Julia Set in addition to Mandelbrot Set.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.3.6 (2021/04/01)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -388,13 +390,29 @@ p, li { white-space: pre-wrap; }
         <item row="1" column="3">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QLabel" name="label_Template_2">
-            <property name="text">
-             <string>Template 2</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
+           <widget class="QWidget" name="widget_T2" native="true">
+            <widget class="QLabel" name="label_Template_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>101</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Template 2</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </widget>
           </item>
           <item>
@@ -587,7 +605,7 @@ p, li { white-space: pre-wrap; }
                 <item row="7" column="1">
                  <widget class="QSpinBox" name="Max_loop_time">
                   <property name="maximum">
-                   <number>9999</number>
+                   <number>99999</number>
                   </property>
                   <property name="value">
                    <number>50</number>
@@ -1710,12 +1728,26 @@ p, li { white-space: pre-wrap; }
      <addaction name="separator"/>
      <addaction name="actionWatermark"/>
     </widget>
+    <widget class="QMenu" name="menuThread_Control">
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
+     <property name="title">
+      <string>Thread Control</string>
+     </property>
+     <addaction name="actionMost"/>
+     <addaction name="actionMore"/>
+     <addaction name="actionNormal"/>
+     <addaction name="actionLess"/>
+     <addaction name="actionLeast"/>
+    </widget>
     <addaction name="actionCreate_Images"/>
     <addaction name="actionCreate_Images_in_Range"/>
     <addaction name="actionStop"/>
     <addaction name="actionCheck_Images"/>
     <addaction name="actionDelete_Images"/>
     <addaction name="separator"/>
+    <addaction name="menuThread_Control"/>
     <addaction name="actionColour_Definition_Auto_Save"/>
     <addaction name="actionHigh_Quailty_Mode"/>
     <addaction name="separator"/>
@@ -1754,8 +1786,14 @@ p, li { white-space: pre-wrap; }
       <addaction name="actionVersion_2"/>
       <addaction name="actionVersion_3"/>
      </widget>
+     <widget class="QMenu" name="menuTemplate_2">
+      <property name="title">
+       <string>Template 2</string>
+      </property>
+      <addaction name="actionVersion_4"/>
+     </widget>
      <addaction name="menuTemplate_1"/>
-     <addaction name="actionTemplate_3"/>
+     <addaction name="menuTemplate_2"/>
      <addaction name="actionTemplate_4"/>
      <addaction name="actionTemplate_5"/>
     </widget>
@@ -1801,7 +1839,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <widget class="QMenu" name="menuAdditional_template_settings">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Additional template settings</string>
@@ -2354,11 +2392,6 @@ p, li { white-space: pre-wrap; }
     <string>From Python</string>
    </property>
   </action>
-  <action name="actionTemplate_3">
-   <property name="text">
-    <string>Template 2</string>
-   </property>
-  </action>
   <action name="actionTemplate_4">
    <property name="text">
     <string>Template 3</string>
@@ -2567,11 +2600,59 @@ p, li { white-space: pre-wrap; }
     <string>Check Images</string>
    </property>
   </action>
+  <action name="actionMost">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Most</string>
+   </property>
+  </action>
+  <action name="actionMore">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>More</string>
+   </property>
+  </action>
+  <action name="actionNormal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Normal</string>
+   </property>
+  </action>
+  <action name="actionLess">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Less</string>
+   </property>
+  </action>
+  <action name="actionLeast">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Least</string>
+   </property>
+  </action>
+  <action name="actionVersion_4">
+   <property name="text">
+    <string>Version 1</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Icon_resources.qrc"/>
-  <include location="Icon.qrc"/>
   <include location="EXE_Icons.qrc"/>
+  <include location="Icon.qrc"/>
  </resources>
  <connections/>
 </ui>

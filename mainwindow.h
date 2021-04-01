@@ -36,6 +36,7 @@
 #include "new_features.h"
 #include "create_images_range.h"
 #include "create_image_task.h"
+#include "template_2_settings.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -111,7 +112,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 2, 5, 0};
+    uint8_t FRD_Version[4] = {5, 3, 6, 0};
 
     QString Open_Location = "";
 
@@ -367,11 +368,25 @@ private slots:
 
     void on_actionVersion_3_triggered();
 
+    void on_actionVersion_4_triggered();
+
     void on_actionGitHub_Repository_triggered();
 
     void on_actionCheck_Images_triggered();
 
     void on_actionDelete_Images_triggered();
+
+    void on_actionMost_triggered();
+
+    void on_actionMore_triggered();
+
+    void on_actionNormal_triggered();
+
+    void on_actionLess_triggered();
+
+    void on_actionLeast_triggered();
+
+    void on_actionTemplate_2_triggered();
 
 signals:
 

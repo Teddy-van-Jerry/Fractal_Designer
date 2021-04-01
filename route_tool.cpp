@@ -92,6 +92,21 @@ void Route_Tool::on_pushButton_view_clicked()
         route_tool_img->setPath(pa->Project_Name);
     }
     qDebug() << "alive";
+    if(pa->pre_info[pa->current_info_v].template_ == 2)
+    {
+        if(pa->Version_Higher_Than_4)
+        {
+            double t = ui->doubleSpinBox_t->value();
+            Complex c1 = pa->pre_info[pa->current_info_v].Julia_c1, c2 = pa->pre_info[pa->current_info_v].Julia_c2;
+            double k = pa->pre_info[pa->current_info_v].Julia_c_rate;
+            route_tool_img->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
     route_tool_img->setImage(ui->doubleSpinBox_centreX->value(), ui->doubleSpinBox_centreY->value(),
                              ui->doubleSpinBox_size->value(), ui->doubleSpinBox_size->value(), 600, 600,
                              ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),

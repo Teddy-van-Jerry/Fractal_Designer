@@ -60,8 +60,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setStyleSheet("background-color: ");
     //qDebug() << QCoreApplication::applicationDirPath();
-    QString filename(":/Template_1.bmp");
-    if(!(image_T1.load(filename))) // load the image
+    QString filename1(":/Templates/Template_1.bmp");
+    if(!(image_T1.load(filename1))) // load the image
+    {
+        QMessageBox::information(this,
+                     tr("Build Error"),
+                     tr("Fail to open the image"));
+    }
+    QString filename2(":/Templates/Template_2.jpg");
+    if(!(image_T2.load(filename2))) // load the image
     {
         QMessageBox::information(this,
                      tr("Build Error"),
@@ -154,6 +161,16 @@ bool MainWindow::High_Version_Open(int type)
             if(curr_info.template_ == 0) redo_max_depth++;
             qDebug() << "TE succeeds!";
         }
+        else if NameIs('T', '2')
+        {
+            FRD_R.skip(4);
+            double t1, t2, t3, t4;
+            in >> t1 >> t2 >> t3 >> t4 >> curr_info.Julia_c_rate;
+            curr_info.Julia_c1.setReal(t1);
+            curr_info.Julia_c1.setImaginary(t2);
+            curr_info.Julia_c2.setReal(t3);
+            curr_info.Julia_c2.setImaginary(t4);
+        }
         else if NameIs('I', 'V')
         {
             FRD_R.skip(4);
@@ -219,6 +236,8 @@ bool MainWindow::High_Version_Open(int type)
         }
     }
 
+    buff_info = curr_info;
+
     FRD_R.close();
     qDebug() << "High Version Open succeed!";
 
@@ -270,7 +289,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821562"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371293"));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -450,6 +469,21 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     {
         ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
     }
+
+    ui->label_Template_2->resize(ui->widget_T2->size());
+    int T2_w_width(ui->label_Template_2->width());
+    int T2_w_height(ui->label_Template_2->height());
+    double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
+    double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
+    if(rate_i_T2 > rate_w_T2)
+    {
+
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
+    }
+    else
+    {
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
+    }
 }
 
 void MainWindow::on_Tab_currentChanged(int index)
@@ -484,6 +518,21 @@ void MainWindow::on_Tab_currentChanged(int index)
         else
         {
             ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
+        }
+
+        ui->label_Template_2->resize(ui->widget_T2->size());
+        int T2_w_width(ui->label_Template_2->width());
+        int T2_w_height(ui->label_Template_2->height());
+        double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
+        double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
+        if(rate_i_T2 > rate_w_T2)
+        {
+
+            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
+        }
+        else
+        {
+            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
         }
     }
 }
@@ -556,12 +605,30 @@ void MainWindow::on_actionPreview_Refresh_triggered()
             ck.mkdir(ck.absolutePath());
         }
         Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
+
     }
     else
     {
         Pre_Img_Dir = Project_Name;
     }
-    preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    if(curr_info.template_ == 2)
+    {
+        if(Version_Higher_Than_4)
+        {
+            double t = ui->doubleSpinBox_t->value();
+            Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            double k = curr_info.Julia_c_rate;
+            preview->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
+    if(curr_info.template_ == 1)
+        preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
 }
@@ -717,7 +784,7 @@ void MainWindow::iniTotalTime(QString arg)
 
 void MainWindow::iniMusicAdded(QVector<QString> vec)
 {
-    for(auto line : vec)
+    for(const auto& line : vec)
     {
         ui->textBrowser_music->append(line + "\n");
     }
@@ -884,13 +951,40 @@ void MainWindow::on_actionCreate_Images_triggered()
         Create_Image_Task* create_images = new Create_Image_Task(this);
         // create_images->setAutoDelete(false);
         Create_Images_Task_Pre(create_images);
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
         create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
         QThreadPool::globalInstance()->start(create_images);
     }
 
     Create_Image_Task* create_images = new Create_Image_Task(this);
     // create_images->setAutoDelete(false);
+
     Create_Images_Task_Pre(create_images);
+    if(curr_info.template_ == 2)
+    {
+        if(Version_Higher_Than_4)
+        {
+            create_images->setTemplate2(curr_info.Julia_c2);
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
     create_images->setImage(Tb(model->rowCount() - 1, 1),
                             Tb(model->rowCount() - 1, 2),
                             Tb(model->rowCount() - 1, 4),
@@ -980,7 +1074,7 @@ void MainWindow::on_actionCreate_Video_triggered()
         return;
     }
 
-//    QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
+    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
 
     int crf_value = 18;
     QString video_file_name = ui->lineEdit_videoName->text();
@@ -2436,7 +2530,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/114821632"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371302"));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2691,6 +2785,20 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
         Create_Images_Task_Pre(create_images);
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
         if(i != to_i)
         {
             create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
@@ -2770,6 +2878,21 @@ void MainWindow::createImagesInList(const QList<int>& list)
         Create_Image_Task* create_images = new Create_Image_Task(this);
         Create_Images_Task_Pre(create_images);
 
+        if(curr_info.template_ == 2)
+        {
+            if(Version_Higher_Than_4)
+            {
+                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                double k = curr_info.Julia_c_rate;
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
+
         // qDebug() << t << current_index << x << y << width << angle;
         if(i != *(--list.end()))
         {
@@ -2786,6 +2909,11 @@ void MainWindow::createImagesInList(const QList<int>& list)
 void MainWindow::on_actionVersion_3_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV17K4y1J7XM"));
+}
+
+void MainWindow::on_actionVersion_4_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV1wB4y1N7pU"));
 }
 
 void MainWindow::on_actionGitHub_Repository_triggered()
@@ -2928,4 +3056,68 @@ void MainWindow::on_actionDelete_Images_triggered()
         }
     }
     QMessageBox::information(this, "Information", "Deleting Images Finished!");
+}
+
+void MainWindow::on_actionMost_triggered()
+{
+    ui->actionMost->setChecked(true);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
+}
+
+void MainWindow::on_actionMore_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(true);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 3 / 4 < 2 ? 2 : total_thread * 3 / 4;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionNormal_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(true);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 1 / 2 < 2 ? 2 : total_thread * 1 / 2;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionLess_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(true);
+    ui->actionLeast->setChecked(false);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread * 1 / 3 < 2 ? 2 : total_thread * 1 / 3;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionLeast_triggered()
+{
+    ui->actionMost->setChecked(false);
+    ui->actionMore->setChecked(false);
+    ui->actionNormal->setChecked(false);
+    ui->actionLess->setChecked(false);
+    ui->actionLeast->setChecked(true);
+    int total_thread = QThread::idealThreadCount();
+    total_thread = total_thread == 1 ? 1 : 2;
+    QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
+}
+
+void MainWindow::on_actionTemplate_2_triggered()
+{
+    Template_2_Settings* dialog = new Template_2_Settings(this);
+    dialog->show();
 }

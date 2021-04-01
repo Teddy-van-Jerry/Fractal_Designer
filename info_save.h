@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDebug>
 #include "route_info.h"
+#include "Complex.h"
 
 #define _ROUTE_SIZE_ 48
 
@@ -30,6 +31,7 @@ struct info
 class Info_Save
 {
     info Template {'T', 'E', 1};
+    info Template_2 {'T', '2', 40}; // 16*2+8=40
     info ImageValue {'I', 'V', 20}; // 8+8+4=20
     info Colour1 {'C', '1', 1856}; // 29*2*4*8=1856
     info Colour2 {'C', '2', 1856}; // 29*2*4*8=1856
@@ -53,6 +55,12 @@ public:
     QString video_path;
     QString video_name;
     QList<QString> music_list;
+
+    ////////// Template 2 Only //////////
+    Complex Julia_c1, Julia_c2;
+    double Julia_c_rate = 0;
+    /////////////////////////////////////
+
     //////// Only Valid in Print ////////
     char config1 = 0;
     /////////////////////////////////////
