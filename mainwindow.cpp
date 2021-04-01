@@ -784,7 +784,7 @@ void MainWindow::iniTotalTime(QString arg)
 
 void MainWindow::iniMusicAdded(QVector<QString> vec)
 {
-    for(auto line : vec)
+    for(const auto& line : vec)
     {
         ui->textBrowser_music->append(line + "\n");
     }
