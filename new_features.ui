@@ -34,6 +34,28 @@
      </column>
      <item>
       <property name="text">
+       <string>Platform</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <item>
+       <property name="text">
+        <string>Linux</string>
+       </property>
+       <property name="text">
+        <string>5.4</string>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
        <string>Infomation Storage</string>
       </property>
       <property name="font">
