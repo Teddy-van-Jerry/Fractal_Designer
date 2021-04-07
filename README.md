@@ -2,8 +2,11 @@
 This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
 
 ## Version Information
-This is version 5.3.6 updated in 2021/04/01.
-The code is known to work properly in Win 10. But it may have severe problems in Linux or Mac.
+This is version 5.4.3 updated in 2021/04/07.
+There are release versions for Windows and Linux.
+The code is known to work properly in Win 10 and Ubuntu.
+- For Windows, just run the exe file
+- For Linux, run Fractal_Designer.sh
 
 ## Main Features
 - You can create fractal images and videos at your command, with the freedom of designing colours and routes.
@@ -25,4 +28,4 @@ You can use any of them to log in the application:
 |SEU|SEU615205|
 
 ## Download Release
-Now there is only release versions for Windows.
+Now there is only release versions for Windows and Linux.

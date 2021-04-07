@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *permanent = new QLabel(this);
     permanent->setText(tr("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry"));
     ui->statusbar->addPermanentWidget(permanent);
-    ui->statusbar->showMessage(tr("Welcome to the Fractal Designer!"), 20000);
+    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.4!"), 20000);
     show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
@@ -1055,7 +1055,7 @@ void MainWindow::on_toolButton_imagePath_clicked()
         }
         default_dir.chop(1);
     }
-    QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Open Project"), QDir::fromNativeSeparators(default_dir)));
+    QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     ui->lineEdit_imagePath->setText(Pro_Path);
 }

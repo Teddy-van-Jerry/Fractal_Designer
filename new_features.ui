@@ -49,6 +49,24 @@
        <property name="text">
         <string>Linux</string>
        </property>
+       <property name="background">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
        <property name="text">
         <string>5.4</string>
        </property>
@@ -367,6 +385,23 @@
        </property>
        <property name="text">
         <string>5.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Save Point</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>5.4</string>
        </property>
       </item>
      </item>
@@ -777,6 +812,9 @@
           <blue>0</blue>
          </color>
         </brush>
+       </property>
+       <property name="text">
+        <string>5.3</string>
        </property>
       </item>
      </item>
