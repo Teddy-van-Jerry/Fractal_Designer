@@ -311,3 +311,85 @@ void Route_Tool::on_actionView_triggered()
 {
     on_pushButton_view_clicked();
 }
+
+void Route_Tool::on_pushButton_Save_clicked()
+{
+    MainWindow* p = (MainWindow*)parentWidget();
+    p->on_pushButton_routeAdd_clicked();
+    p->model->item(p->model->rowCount() - 1, 0)->setData(QVariant(ui->doubleSpinBox_t->value()), Qt::EditRole);
+    p->model->item(p->model->rowCount() - 1, 1)->setData(QVariant(ui->doubleSpinBox_centreX->value()), Qt::EditRole);
+    p->model->item(p->model->rowCount() - 1, 2)->setData(QVariant(ui->doubleSpinBox_centreY->value()), Qt::EditRole);
+    p->model->item(p->model->rowCount() - 1, 3)->setData(QVariant(ui->doubleSpinBox_angle->value()), Qt::EditRole);
+    p->model->item(p->model->rowCount() - 1, 4)->setData(QVariant(ui->doubleSpinBox_size->value() * width_to_size), Qt::EditRole);
+}
+
+void Route_Tool::on_actionSave_Point_triggered()
+{
+    on_pushButton_Save_clicked();
+}
+
+void Route_Tool::on_action0_5_triggered()
+{
+    width_to_size = 0.5;
+    ui->action0_5->setChecked(true);
+    ui->action0_8->setChecked(false);
+    ui->action1  ->setChecked(false);
+    ui->action1_2->setChecked(false);
+    ui->action1_5->setChecked(false);
+    ui->action2_0->setChecked(false);
+}
+
+void Route_Tool::on_action0_8_triggered()
+{
+    width_to_size = 0.8;
+    ui->action0_5->setChecked(false);
+    ui->action0_8->setChecked(true);
+    ui->action1  ->setChecked(false);
+    ui->action1_2->setChecked(false);
+    ui->action1_5->setChecked(false);
+    ui->action2_0->setChecked(false);
+}
+
+void Route_Tool::on_action1_triggered()
+{
+    width_to_size = 1;
+    ui->action0_5->setChecked(false);
+    ui->action0_8->setChecked(false);
+    ui->action1  ->setChecked(true);
+    ui->action1_2->setChecked(false);
+    ui->action1_5->setChecked(false);
+    ui->action2_0->setChecked(false);
+}
+
+void Route_Tool::on_action1_2_triggered()
+{
+    width_to_size = 1.2;
+    ui->action0_5->setChecked(false);
+    ui->action0_8->setChecked(false);
+    ui->action1  ->setChecked(false);
+    ui->action1_2->setChecked(true);
+    ui->action1_5->setChecked(false);
+    ui->action2_0->setChecked(false);
+}
+
+void Route_Tool::on_action1_5_triggered()
+{
+    width_to_size = 1.5;
+    ui->action0_5->setChecked(false);
+    ui->action0_8->setChecked(false);
+    ui->action1  ->setChecked(false);
+    ui->action1_2->setChecked(false);
+    ui->action1_5->setChecked(true);
+    ui->action2_0->setChecked(false);
+}
+
+void Route_Tool::on_action2_0_triggered()
+{
+    width_to_size = 2;
+    ui->action0_5->setChecked(false);
+    ui->action0_8->setChecked(false);
+    ui->action1  ->setChecked(false);
+    ui->action1_2->setChecked(false);
+    ui->action1_5->setChecked(false);
+    ui->action2_0->setChecked(true);
+}

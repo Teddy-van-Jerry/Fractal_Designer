@@ -12,7 +12,7 @@ void defaultOpen(QString appPath, QString className, QString ext, QString extDes
     QSettings settingClasses(baseUrl, QSettings::NativeFormat);
     settingClasses.setValue("/" + className + "/Shell/Open/Command/.", "\"" + appPath + "\" \"%1\"");
     settingClasses.setValue("/" + className + "/.", extDes);
-    settingClasses.setValue("/" + className + "/DefaultIcon/.", appPath + ",0");
+    settingClasses.setValue("/" + className + "/DefaultIcon/.", appPath + ",1");
     settingClasses.setValue("/" + ext + "/OpenWithProgIds/" + className, "");
     settingClasses.sync();
 }
@@ -23,11 +23,11 @@ int main(int argc, char *argv[])
 
     a.setApplicationVersion("5.3.6");
     a.setApplicationName("Fractal Designer");
-    a.setApplicationDisplayName("Fractal Designer");
+    // a.setApplicationDisplayName("Fractal Designer");
     a.setOrganizationName("Teddy van Jerry");
     a.setOrganizationDomain("https://github.com/Teddy-van-Jerry");
 
-    QSettings lastopen(QCoreApplication::applicationDirPath() + "LastOpen.ini", QSettings::IniFormat);
+    QSettings lastopen(QCoreApplication::applicationDirPath() + "/LastOpen.ini", QSettings::IniFormat);
     QString Last_Open_Time = lastopen.value("LASTOPEN/Time", "").toString();
 
     if(Last_Open_Time.isEmpty())
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         qDebug() << "Default setting";
     }
 
-    QSettings setting(QCoreApplication::applicationDirPath() + "LastOpen.ini", QSettings::IniFormat);
+    QSettings setting(QCoreApplication::applicationDirPath() + "/LastOpen.ini", QSettings::IniFormat);
     setting.beginGroup("LASTOPEN");
     setting.setValue("Time", QTime::currentTime());
     setting.endGroup();

@@ -57,8 +57,14 @@
     for(int it__ = 0; it__ != 4; it__++) { \
         for(int jt__ = 0; jt__ != 29; jt__++) {
 #endif
+
 #ifndef End_All_Colour
 #define End_All_Colour }}
+#endif
+
+#ifndef UNSUPPORTED_PLATFORM
+#define UNSUPPORTED_PLATFORM \
+    QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
 #endif
 
 class PeciseDoubleFactory : public QItemEditorFactory

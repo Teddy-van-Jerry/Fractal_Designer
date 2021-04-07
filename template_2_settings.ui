@@ -146,7 +146,7 @@
       <item row="3" column="0" colspan="6">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Tip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The complex is used in Julia Set iteration.&lt;/p&gt;&lt;p&gt;Z(x) = Z(x)^2 + C&lt;/p&gt;&lt;p&gt;Now set the start and end &lt;span style=&quot; font-weight:600;&quot;&gt;C&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;The rate of speed is normally from -1 to 1,&lt;/p&gt;&lt;p&gt;which indicates the changing speed of C in relation to time.&lt;/p&gt;&lt;p&gt;The positive value means slow to fast and vise versa.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Tip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The complex is used in Julia Set iteration.&lt;/p&gt;&lt;p&gt;Z(n+1) = Z(n)^2 + C&lt;/p&gt;&lt;p&gt;Now set the start and end &lt;span style=&quot; font-weight:600;&quot;&gt;C&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;The rate of speed is normally from -1 to 1,&lt;/p&gt;&lt;p&gt;which indicates the changing speed of C in relation to time.&lt;/p&gt;&lt;p&gt;The positive value means slow to fast and vise versa.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>

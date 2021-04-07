@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *permanent = new QLabel(this);
     permanent->setText(tr("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry"));
     ui->statusbar->addPermanentWidget(permanent);
-    ui->statusbar->showMessage(tr("Welcome to the Fractal Designer!"), 20000);
+    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.4!"), 20000);
     show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
@@ -289,7 +289,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371293"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115490835"));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -329,7 +329,7 @@ void MainWindow::on_actionOpen_O_triggered()
     QString New_Open_Location = QFileDialog::getOpenFileName(this,
                                                  tr("Open Project"),
                                                  QDir::currentPath(),
-                                                 tr("FRD Files(*frd);"));
+                                                 tr("FRD Files(*.frd)"));
     qDebug() << New_Open_Location;
     QFile check(New_Open_Location);
     if(check.exists())
@@ -1055,13 +1055,19 @@ void MainWindow::on_toolButton_imagePath_clicked()
         }
         default_dir.chop(1);
     }
-    QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Open Project"), QDir::fromNativeSeparators(default_dir)));
+    QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     ui->lineEdit_imagePath->setText(Pro_Path);
 }
 
 void MainWindow::on_actionCreate_Video_triggered()
 {
+
+#if !(defined (WIN32) || defined (_WIN64) || defined (__linux__))
+    UNSUPPORTED_PLATFORM;
+    return;
+#endif
+
     if(User_Name.isEmpty())
     {
         QMessageBox::information(this, "Information", "You have not logged in.");
@@ -1091,6 +1097,8 @@ void MainWindow::on_actionCreate_Video_triggered()
                                video_file_name + "." + video_format
                              : video_file_name + "_temp." + video_format);
 
+    ui->statusbar->showMessage(tr("Creating Video..."), 300000);
+
     if(Version_Higher_Than_4)
     {
         bool Alive[3] {false, false, false};
@@ -1102,36 +1110,81 @@ void MainWindow::on_actionCreate_Video_triggered()
             {
                 video.remove();
             }
-            else return;
+            else
+            {
+                ui->statusbar->showMessage("", 30000);
+                return;
+            }
         }
-        QProcess* create_video = new QProcess;
-        create_video->setWorkingDirectory(video_file_path);
+
+        qDebug() << "Creating Video...";
+
+        QProcess* create_video = new QProcess(this);
+        create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
         QString cmd("powershell");
         QStringList parameters1{PowerShell_arg1};
+#if defined (WIN32) || defined (_WIN64)
         create_video->start(cmd, parameters1);
-        Alive[0] = create_video->waitForFinished(60000);
+        QString file_suffix = "ps1";
+#elif defined(__linux__)
+        create_video->start(parameters1[0]);
+        QString file_suffix = "sh";
+#endif
+        Alive[0] = create_video->waitForFinished(300000);
+        qDebug() << create_video->readAllStandardOutput();
 
         if(!Alive[0])
         {
-            QFile create_video_ps(video_file_path + "/Create_Video.ps1");
+            QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
             create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out1(&create_video_ps);
             out1 << PowerShell_arg1;
             create_video_ps.close();
+
+            // Retry running shell file
+            QProcess* run_sh = new QProcess(this);
+            run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || (_WIN64)
+            run_sh->start("powershell", QStringList() << "Create_Video.ps1");
+#elif defined (__linux__)
+            run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
+#endif
+            Alive[0] = run_sh->waitForFinished(300000);
+            if(Alive[0])
+            {
+                QFile ck(video_file_path + "/" +
+                            (ui->textBrowser_music->toPlainText().isEmpty() ?
+                             video_file_name + "." + video_format
+                           : video_file_name + "_temp." + video_format));
+                if(ck.exists())
+                {
+                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+                }
+                else
+                {
+                    Alive[0] = false;
+                }
+            }
         }
 
         if(ui->textBrowser_music->toPlainText().isEmpty())
         {
             if(Alive[0])
             {
-                QMessageBox::information(this, "Information", "Video Creating Finished!");
+                QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                               + "\nVideo Creating Finished!");
+                ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+                return;
             }
             else
             {
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video.ps1 code instead.");
+                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video." + file_suffix + " code instead.");                
             }
             return;
         }
+
+        ui->statusbar->showMessage(tr("Processing Music..."), 300000);
 
         QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
         Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -1152,7 +1205,9 @@ void MainWindow::on_actionCreate_Video_triggered()
         QString PowerShell_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
         QStringList parameters2{PowerShell_arg2};
         create_video->start(cmd, parameters2);
-        Alive[1] = create_video->waitForFinished(60000);
+        Alive[1] = create_video->waitForFinished(300000);
+
+        ui->statusbar->showMessage(tr("Adding Music..."), 300000);
 
         QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
         PowerShell_arg3.append(video_file_name + "_temp." + video_format);
@@ -1182,28 +1237,70 @@ void MainWindow::on_actionCreate_Video_triggered()
 
         if(!Alive[2])
         {
-            QFile add_music_ps(video_file_path + "/Add_Music.ps1");
+            QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
             add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out2(&add_music_ps);
             out2 << PowerShell_arg2 << Qt::endl;
             out2 << PowerShell_arg3;
             add_music_ps.close();
+            // Retry running shell file
+            QProcess* run_sh = new QProcess(this);
+            run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+
             if(Alive[0])
             {
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music.ps1 code instead.");
+#if defined (WIN32) || (_WIN64)
+                run_sh->start("powershell", QStringList() << "Add_Music.ps1");
+#elif defined (__linux__)
+                run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
+#endif
+                Alive[2] = run_sh->waitForFinished(300000);
+                if(Alive[2])
+                {
+                    QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
+                    if(ck.exists())
+                    {
+                        QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+                        QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+                        QFile::remove(video_file_path + "/BGM.mp3");
+                        QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+                        for(int i = 1; i <= curr_info.music_list.size(); i++)
+                        {
+                            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+                        }
+                    }
+                    else
+                    {
+                        Alive[2] = false;
+                    }
+                }
+                if(!Alive[2])
+                {
+                    ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                    QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music." + file_suffix + " code instead.");
+                }
             }
             else
             {
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video.ps1,\nsecond run Add_Music.ps1.");
+                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video." + file_suffix
+                                           + ",\nsecond run Add_Music." + file_suffix + ".");                
             }
         }
-        else
+
+        if(Alive[2])
         {
-            QMessageBox::information(this, "Information", "Video Creation Finished!");
+            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                           + "\nVideo Creating Finished!");
         }
     }
     else
     {
+#if !(defined (WIN32) || (_WIN64))
+        QMessageBox::warning(this, "Can not create video", "Compatibility mode only supports Windows.");
+        return;
+#endif
         QFile video(Project_Name + "/" + video_file_name + "." + video_format);
         if(video.exists())
         {
@@ -1234,7 +1331,6 @@ void MainWindow::on_actionCreate_Video_triggered()
         if(music_bro.exists())
         {
             int cnt = 1;
-            QVector<QString> contents;
             QString str;
             QTextStream in(&music_bro);
             music_bro.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -1288,7 +1384,7 @@ void MainWindow::on_actionCreate_Video_triggered()
         QMessageBox::information(this, "Information", "Video Creating Finished!");
     }
 
-    qDebug() << "Create Video:" << PowerShell_arg1;
+    // qDebug() << "Create Video:" << PowerShell_arg1;
 
 }
 
@@ -1318,7 +1414,7 @@ void MainWindow::on_pushButton_addMusic_clicked()
     QString Music_File_Name = QFileDialog::getOpenFileName(this,
                                                     tr("Choose Music File"),
                                                     QDir::currentPath(),
-                                                    tr("Music Files(*mp3);"));
+                                                    tr("Music Files(*mp3)"));
     QFile check(Music_File_Name);
     if(check.exists())
     {
@@ -1449,6 +1545,7 @@ void MainWindow::on_pushButton_UniformMotion_clicked()
 
 void MainWindow::on_actionFFmpeg_triggered()
 {
+#if defined (WIN32) || defined (_WIN64)
     QProcess FFmpeg_Process(this);
     QString programme = "Resources/ffmpeg.exe";
     // run the programme FFmpeg
@@ -1461,11 +1558,22 @@ void MainWindow::on_actionFFmpeg_triggered()
     {
         QMessageBox::warning(this, "Information", "Failed to install FFmpeg!");
     }
+#elif defined (__linux__)
+    if (!QDesktopServices::openUrl(QUrl("http://www.ffmpeg.org/download.html#build-linux")))
+    {
+        QMessageBox::warning(this, "Information", "Can not access the web site.");
+    }
+#else
+    UNSUPPORTED_PLATFORM;
+#endif
 }
 
 void MainWindow::on_actionCheck_Update_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/113389239"));
+    if (!QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/113389239")))
+    {
+        QMessageBox::warning(this, "Information", "Can not access the web site.");
+    }
 }
 
 void MainWindow::on_actionAuto_Refresh_triggered()
@@ -2530,7 +2638,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115371302"));
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115490874"));
 }
 
 void MainWindow::on_actionVersion_triggered()

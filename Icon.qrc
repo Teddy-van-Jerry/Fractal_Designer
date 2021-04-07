@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>EXE Icons/FRD.ico</file>
         <file>Menu Icon/Close.svg</file>
+        <file>EXE Icons/FRD_File.ico</file>
     </qresource>
 </RCC>
