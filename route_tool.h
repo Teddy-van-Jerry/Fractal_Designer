@@ -23,6 +23,8 @@ public:
     explicit Route_Tool(QWidget *parent = nullptr);
     ~Route_Tool();
 
+    double width_to_size = 1;
+
 private:
     Ui::Route_Tool *ui;
 
@@ -60,6 +62,22 @@ private slots:
     void on_actionBack_to_main_window_triggered();
 
     void on_actionView_triggered();
+
+    void on_pushButton_Save_clicked();
+
+    void on_actionSave_Point_triggered();
+
+    void on_action0_5_triggered();
+
+    void on_action0_8_triggered();
+
+    void on_action1_triggered();
+
+    void on_action1_2_triggered();
+
+    void on_action1_5_triggered();
+
+    void on_action2_0_triggered();
 
 protected:
     void mouseMoveEvent(QMouseEvent* e);

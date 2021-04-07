@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         qDebug() << "Default setting";
     }
 
-    QSettings setting(QCoreApplication::applicationDirPath() + "LastOpen.ini", QSettings::IniFormat);
+    QSettings setting(QCoreApplication::applicationDirPath() + "/LastOpen.ini", QSettings::IniFormat);
     setting.beginGroup("LASTOPEN");
     setting.setValue("Time", QTime::currentTime());
     setting.endGroup();
