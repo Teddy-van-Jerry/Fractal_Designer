@@ -74,20 +74,6 @@ MainWindow::MainWindow(QWidget *parent)
                      tr("Build Error"),
                      tr("Fail to open the image"));
     }
-    QString filename3(":/Templates/Template_3.jpg");
-    if(!(image_T3.load(filename3))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename4(":/Templates/Template_4.png");
-    if(!(image_T4.load(filename4))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
     //ui->progressBar_Preview->setVisible(false);
 
     model->setColumnCount(6);
@@ -492,47 +478,17 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     if(rate_i_T2 > rate_w_T2)
     {
 
-        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T2_w_height));
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
     }
     else
     {
-        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T2_w_width));
-    }
-
-    ui->label_Template_3->resize(ui->widget_T3->size());
-    int T3_w_width(ui->label_Template_3->width());
-    int T3_w_height(ui->label_Template_3->height());
-    double rate_w_T3 = static_cast<double>(T3_w_height) /T3_w_width;
-    double rate_i_T3 = static_cast<double>(image_T3.height()) / image_T3.width();
-    if(rate_i_T3 > rate_w_T3)
-    {
-
-        ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToHeight(T3_w_height));
-    }
-    else
-    {
-        ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToWidth(T3_w_width));
-    }
-
-    ui->label_Template_4->resize(ui->widget_T4->size());
-    int T4_w_width(ui->label_Template_4->width());
-    int T4_w_height(ui->label_Template_4->height());
-    double rate_w_T4 = static_cast<double>(T4_w_height) /T4_w_width;
-    double rate_i_T4 = static_cast<double>(image_T4.height()) / image_T4.width();
-    if(rate_i_T4 > rate_w_T4)
-    {
-
-        ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToHeight(T4_w_height));
-    }
-    else
-    {
-        ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
+        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
     }
 }
 
 void MainWindow::on_Tab_currentChanged(int index)
 {
-    if(index == 2) // Image
+    if(index == 2)
     {
         ui->Label_Preview_Image->resize(ui->Preview_Image->size());
         int preview_w_width(ui->Preview_Image->width());
@@ -548,8 +504,7 @@ void MainWindow::on_Tab_currentChanged(int index)
             ui->Label_Preview_Image->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width));
         }
     }
-
-    if(index == 1) // Template
+    if(index == 1)
     {
         ui->label_Template_1->resize(ui->widget_T1->size());
         int T1_w_width(ui->label_Template_1->width());
@@ -578,37 +533,6 @@ void MainWindow::on_Tab_currentChanged(int index)
         else
         {
             ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
-        }
-
-
-        ui->label_Template_3->resize(ui->widget_T3->size());
-        int T3_w_width(ui->label_Template_3->width());
-        int T3_w_height(ui->label_Template_3->height());
-        double rate_w_T3 = static_cast<double>(T3_w_height) /T3_w_width;
-        double rate_i_T3 = static_cast<double>(image_T3.height()) / image_T3.width();
-        if(rate_i_T3 > rate_w_T3)
-        {
-
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToHeight(T3_w_height));
-        }
-        else
-        {
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToWidth(T3_w_width));
-        }
-
-        ui->label_Template_4->resize(ui->widget_T4->size());
-        int T4_w_width(ui->label_Template_4->width());
-        int T4_w_height(ui->label_Template_4->height());
-        double rate_w_T4 = static_cast<double>(T4_w_height) /T4_w_width;
-        double rate_i_T4 = static_cast<double>(image_T4.height()) / image_T4.width();
-        if(rate_i_T4 > rate_w_T4)
-        {
-
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToHeight(T4_w_height));
-        }
-        else
-        {
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
         }
     }
 }

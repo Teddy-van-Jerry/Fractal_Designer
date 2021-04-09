@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Teddy van Jerry");
     a.setOrganizationDomain("https://github.com/Teddy-van-Jerry");
 
-#if defined (WIN32) || defined (_WIN64)
-
     QSettings lastopen(QCoreApplication::applicationDirPath() + "/LastOpen.ini", QSettings::IniFormat);
     QString Last_Open_Time = lastopen.value("LASTOPEN/Time", "").toString();
 
@@ -46,8 +44,6 @@ int main(int argc, char *argv[])
     setting.beginGroup("LASTOPEN");
     setting.setValue("Time", QTime::currentTime());
     setting.endGroup();
-
-#endif
 
     MainWindow w;
     w.setOpenLocation(argc > 1 ? argv[1] : "");

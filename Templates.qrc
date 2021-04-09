@@ -2,7 +2,5 @@
     <qresource prefix="/">
         <file>Templates/Template_1.bmp</file>
         <file>Templates/Template_2.jpg</file>
-        <file>Templates/Template_3.jpg</file>
-        <file>Templates/Template_4.png</file>
     </qresource>
 </RCC>
