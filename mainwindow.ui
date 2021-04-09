@@ -539,7 +539,7 @@ p, li { white-space: pre-wrap; }
              <string>Burning Ship Fractal</string>
             </property>
             <property name="statusTip">
-             <string>Choose Template 3: This needs additional settings in Menu Template.</string>
+             <string>Choose Template 3.</string>
             </property>
             <widget class="QLabel" name="label_Template_3">
              <property name="geometry">

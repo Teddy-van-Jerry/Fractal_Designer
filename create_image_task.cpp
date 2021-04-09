@@ -114,6 +114,9 @@ void Create_Image_Task::run()
                     {
                     case 1: this_point = (this_point ^ 2.0) + z0; break;
                     case 2: this_point = (this_point ^ 2.0) + c0; break;
+                    case 3:
+                        this_point = (Complex(fabs(this_point.getReal()), fabs(this_point.getImaginary())) ^ 2.0) + z0;
+                    break;
                     default: break;
                     }
                 }

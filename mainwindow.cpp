@@ -705,6 +705,8 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     if(curr_info.template_ == 1)
         preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    if(curr_info.template_ == 3)
+        preview->setImage(-0.4, 0.6, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
 }
