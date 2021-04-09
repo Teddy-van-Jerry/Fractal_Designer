@@ -99,7 +99,7 @@
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Welcome!&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:20pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is an application that enables you to draw fractals and make videos at your command!&lt;/span&gt;&lt;/p&gt;
@@ -371,17 +371,42 @@ p, li { white-space: pre-wrap; }
         <item row="2" column="3">
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <widget class="QLabel" name="label_Template_4">
-            <property name="text">
-             <string>Template 4</string>
+           <widget class="QWidget" name="widget_T4" native="true">
+            <property name="toolTip">
+             <string>Generalized Newton Fractal</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="statusTip">
+             <string>Choose Template 4: This needs additional settings in Menu Template.</string>
             </property>
+            <widget class="QLabel" name="label_Template_4">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>101</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Template 4</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="Template_Choice_4">
+            <property name="toolTip">
+             <string>Template 4</string>
+            </property>
             <property name="text">
              <string>Template 4</string>
             </property>
@@ -393,6 +418,12 @@ p, li { white-space: pre-wrap; }
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QWidget" name="widget_T2" native="true">
+            <property name="toolTip">
+             <string>Julia Set</string>
+            </property>
+            <property name="statusTip">
+             <string>Choose Template 2: This needs additional settings in Menu Template.</string>
+            </property>
             <widget class="QLabel" name="label_Template_2">
              <property name="geometry">
               <rect>
@@ -419,6 +450,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QRadioButton" name="Template_Choice_2">
+            <property name="statusTip">
+             <string>Template 2</string>
+            </property>
             <property name="text">
              <string>Template 2</string>
             </property>
@@ -452,6 +486,12 @@ p, li { white-space: pre-wrap; }
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
            <widget class="QWidget" name="widget_T1" native="true">
+            <property name="toolTip">
+             <string>Mandelbrot Set</string>
+            </property>
+            <property name="statusTip">
+             <string>Choose Template 1.</string>
+            </property>
             <widget class="QLabel" name="label_Template_1">
              <property name="geometry">
               <rect>
@@ -478,6 +518,12 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QRadioButton" name="Template_Choice_1">
+            <property name="toolTip">
+             <string>Template 1</string>
+            </property>
+            <property name="statusTip">
+             <string/>
+            </property>
             <property name="text">
              <string>Template 1</string>
             </property>
@@ -488,17 +534,42 @@ p, li { white-space: pre-wrap; }
         <item row="2" column="0" colspan="3">
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <widget class="QLabel" name="label_Template_3">
-            <property name="text">
-             <string>Template 3</string>
+           <widget class="QWidget" name="widget_T3" native="true">
+            <property name="toolTip">
+             <string>Burning Ship Fractal</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="statusTip">
+             <string>Choose Template 3: This needs additional settings in Menu Template.</string>
             </property>
+            <widget class="QLabel" name="label_Template_3">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>101</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Template 3</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="Template_Choice_3">
+            <property name="toolTip">
+             <string>Template 3</string>
+            </property>
             <property name="text">
              <string>Template 3</string>
             </property>
@@ -531,8 +602,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>366</width>
-               <height>437</height>
+               <width>389</width>
+               <height>417</height>
               </rect>
              </property>
              <attribute name="label">
@@ -698,8 +769,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>272</width>
-               <height>276</height>
+               <width>314</width>
+               <height>321</height>
               </rect>
              </property>
              <attribute name="label">
@@ -719,7 +790,7 @@ p, li { white-space: pre-wrap; }
                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
@@ -798,7 +869,7 @@ p, li { white-space: pre-wrap; }
                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
@@ -815,8 +886,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>321</width>
-               <height>152</height>
+               <width>358</width>
+               <height>181</height>
               </rect>
              </property>
              <attribute name="label">
@@ -879,8 +950,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>385</width>
-               <height>443</height>
+               <width>422</width>
+               <height>439</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1595,7 +1666,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile_F">
@@ -1847,6 +1918,8 @@ p, li { white-space: pre-wrap; }
       <string>Additional template settings</string>
      </property>
      <addaction name="actionTemplate_2"/>
+     <addaction name="actionTemplate_3"/>
+     <addaction name="actionTemplate_6"/>
     </widget>
     <widget class="QMenu" name="menuMore_Templates">
      <property name="title">
@@ -2650,11 +2723,21 @@ p, li { white-space: pre-wrap; }
     <string>Version 1</string>
    </property>
   </action>
+  <action name="actionTemplate_3">
+   <property name="text">
+    <string>Template 3</string>
+   </property>
+  </action>
+  <action name="actionTemplate_6">
+   <property name="text">
+    <string>Template 4</string>
+   </property>
+  </action>
  </widget>
  <resources>
+  <include location="Icon.qrc"/>
   <include location="EXE_Icons.qrc"/>
   <include location="Icon_resources.qrc"/>
-  <include location="Icon.qrc"/>
  </resources>
  <connections/>
 </ui>
