@@ -46,7 +46,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -602,7 +602,7 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>389</width>
+               <width>413</width>
                <height>417</height>
               </rect>
              </property>
@@ -698,7 +698,7 @@ p, li { white-space: pre-wrap; }
                    <number>6</number>
                   </property>
                   <property name="maximum">
-                   <double>10000000.000000000000000</double>
+                   <double>10000000000.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -717,16 +717,19 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item row="4" column="0">
-                 <widget class="QLabel" name="label_24">
+                 <widget class="QLabel" name="label_Maxium_Unclassified_Value">
                   <property name="text">
                    <string>Maximum unclassified value</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item row="7" column="0">
                  <widget class="QLabel" name="label_25">
                   <property name="text">
-                   <string>Maximum loop time</string>
+                   <string>Iteration limit</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -741,9 +744,12 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLabel" name="label_23">
+                 <widget class="QLabel" name="label_Minimum_Unclassified_Value">
                   <property name="text">
                    <string>Minimum unclassified value</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -1865,9 +1871,15 @@ p, li { white-space: pre-wrap; }
       </property>
       <addaction name="actionVersion_4"/>
      </widget>
+     <widget class="QMenu" name="menuTemplate_3">
+      <property name="title">
+       <string>Template 3</string>
+      </property>
+      <addaction name="actionVersion_5"/>
+     </widget>
      <addaction name="menuTemplate_1"/>
      <addaction name="menuTemplate_2"/>
-     <addaction name="actionTemplate_4"/>
+     <addaction name="menuTemplate_3"/>
      <addaction name="actionTemplate_5"/>
     </widget>
     <addaction name="menuView_Help"/>
@@ -1918,7 +1930,6 @@ p, li { white-space: pre-wrap; }
       <string>Additional template settings</string>
      </property>
      <addaction name="actionTemplate_2"/>
-     <addaction name="actionTemplate_3"/>
      <addaction name="actionTemplate_6"/>
     </widget>
     <widget class="QMenu" name="menuMore_Templates">
@@ -2467,11 +2478,6 @@ p, li { white-space: pre-wrap; }
     <string>From Python</string>
    </property>
   </action>
-  <action name="actionTemplate_4">
-   <property name="text">
-    <string>Template 3</string>
-   </property>
-  </action>
   <action name="actionTemplate_5">
    <property name="text">
     <string>Template 4</string>
@@ -2733,11 +2739,16 @@ p, li { white-space: pre-wrap; }
     <string>Template 4</string>
    </property>
   </action>
+  <action name="actionVersion_5">
+   <property name="text">
+    <string>Version 1</string>
+   </property>
+  </action>
  </widget>
  <resources>
+  <include location="Icon_resources.qrc"/>
   <include location="Icon.qrc"/>
   <include location="EXE_Icons.qrc"/>
-  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>

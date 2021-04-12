@@ -32,6 +32,7 @@ class Info_Save
 {
     info Template {'T', 'E', 1};
     info Template_2 {'T', '2', 40}; // 16*2+8=40
+    info Template_4 {'T', '4', 456}; // 16*28+8=456
     info ImageValue {'I', 'V', 20}; // 8+8+4=20
     info Colour1 {'C', '1', 1856}; // 29*2*4*8=1856
     info Colour2 {'C', '2', 1856}; // 29*2*4*8=1856
@@ -59,6 +60,20 @@ public:
     ////////// Template 2 Only //////////
     Complex Julia_c1, Julia_c2;
     double Julia_c_rate = 0;
+    /////////////////////////////////////
+
+    ////////// Template 4 Only //////////
+    Complex Newton_a_1 = 1;
+    Complex Newton_a_2 = 1;
+    Complex Newton_xn_1[10] {0};
+    Complex Newton_xn_2[10] {0};
+    Complex Newton_sin_1 = 0;
+    Complex Newton_sin_2 = 0;
+    Complex Newton_cos_1 = 0;
+    Complex Newton_cos_2 = 0;
+    Complex Newton_ex_1 = 0;
+    Complex Newton_ex_2 = 0;
+    double Newton_c_rate = 0;
     /////////////////////////////////////
 
     //////// Only Valid in Print ////////

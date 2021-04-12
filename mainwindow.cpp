@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *permanent = new QLabel(this);
     permanent->setText(tr("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry"));
     ui->statusbar->addPermanentWidget(permanent);
-    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.4!"), 20000);
+    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.5!"), 20000);
     show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
@@ -137,8 +137,17 @@ void MainWindow::setOpenLocation(QString str)
     }
 }
 
+inline void _complex_in(QDataStream& in, Complex& c)
+{
+    double r = 0, i = 0;
+    in >> r >> i;
+    c.setReal(r);
+    c.setImaginary(i);
+}
+
 bool MainWindow::High_Version_Open(int type)
 {
+
     ui->actionClose->setEnabled(true);
 
     QFile FRD_R(Open_Location);
@@ -184,6 +193,21 @@ bool MainWindow::High_Version_Open(int type)
             curr_info.Julia_c1.setImaginary(t2);
             curr_info.Julia_c2.setReal(t3);
             curr_info.Julia_c2.setImaginary(t4);
+        }
+        else if NameIs('T', '4')
+        {
+            FRD_R.skip(4);
+            _complex_in(in, curr_info.Newton_a_1);
+            _complex_in(in, curr_info.Newton_a_2);
+            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_1[i]);
+            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_2[i]);
+            _complex_in(in, curr_info.Newton_sin_1);
+            _complex_in(in, curr_info.Newton_sin_2);
+            _complex_in(in, curr_info.Newton_cos_1);
+            _complex_in(in, curr_info.Newton_cos_2);
+            _complex_in(in, curr_info.Newton_ex_1);
+            _complex_in(in, curr_info.Newton_ex_2);
+            in >> curr_info.Newton_c_rate;
         }
         else if NameIs('I', 'V')
         {
@@ -632,38 +656,55 @@ void MainWindow::on_actionSave_S_triggered()
 
 void MainWindow::on_Template_Choice_1_toggled(bool checked)
 {
-    if(checked == true)
+    if(checked)
     {
         Project_Template = "1";
-        //edit();
+        ui->label_Minimum_Unclassified_Value->setText("Minimum unclassified value");
+        ui->Min_class_value->setDecimals(6);
+        ui->Min_class_value->setToolTip("");
+        ui->label_Minimum_Unclassified_Value->setToolTip("");
     }
 }
 
 void MainWindow::on_Template_Choice_2_toggled(bool checked)
 {
-    if(checked == true)
+    if(checked)
     {
         Project_Template = "2";
-        //edit();
+        ui->label_Minimum_Unclassified_Value->setText("Minimum unclassified value");
+        ui->Min_class_value->setDecimals(6);
+        ui->Min_class_value->setToolTip("");
+        ui->label_Minimum_Unclassified_Value->setToolTip("");
     }
 }
 
 void MainWindow::on_Template_Choice_3_toggled(bool checked)
 {
-    if(checked == true)
+    if(checked)
     {
         Project_Template = "3";
-        //edit();
+        ui->label_Minimum_Unclassified_Value->setText("Minimum unclassified value");
+        ui->Min_class_value->setDecimals(6);
+        ui->Min_class_value->setToolTip("");
+        ui->label_Minimum_Unclassified_Value->setToolTip("");
     } 
 }
 
 void MainWindow::on_Template_Choice_4_toggled(bool checked)
 {
-    if(checked == true)
+    if(checked)
     {
         Project_Template = "4";
-        //edit();
+        ui->label_Minimum_Unclassified_Value->setText("Solution accuracy");
+        ui->Min_class_value->setDecimals(10);
+        ui->Min_class_value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
+        ui->label_Minimum_Unclassified_Value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
     }    
+}
+
+inline Complex MainWindow::_curr_complex(const Complex& c1, const Complex& c2, double t, double k)
+{
+    return c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t);
 }
 
 void MainWindow::on_actionPreview_Refresh_triggered()
@@ -693,8 +734,8 @@ void MainWindow::on_actionPreview_Refresh_triggered()
         {
             double t = ui->doubleSpinBox_t->value();
             Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-            double k = curr_info.Julia_c_rate;
-            preview->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            double& k = curr_info.Julia_c_rate;
+            preview->setTemplate2(_curr_complex(c1, c2, t, k));
             preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
         }
         else
@@ -703,10 +744,38 @@ void MainWindow::on_actionPreview_Refresh_triggered()
             return;
         }
     }
+    if(curr_info.template_ == 4)
+    {
+        if(Version_Higher_Than_4)
+        {
+            double t = ui->doubleSpinBox_t->value();
+
+            double& k = curr_info.Newton_c_rate;
+
+            Complex arr[10];
+            for(int i = 0; i != 10; i++)
+            {
+                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
+            }
+
+            preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
+                                  arr,
+                                  _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
+                                  _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
+                                  _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
+            preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
+            return;
+        }
+    }
     if(curr_info.template_ == 1)
         preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     if(curr_info.template_ == 3)
         preview->setImage(-0.4, 0.6, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
 }
@@ -1035,11 +1104,35 @@ void MainWindow::on_actionCreate_Images_triggered()
             {
                 Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
                 double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
             }
             else
             {
                 QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
+        if(curr_info.template_ == 4)
+        {
+            if(Version_Higher_Than_4)
+            {
+                double& k = curr_info.Newton_c_rate;
+
+                Complex arr[10];
+                for(int i = 0; i != 10; i++)
+                {
+                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
+                }
+
+                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                            arr,
+                                            _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                            _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                            _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
                 return;
             }
         }
@@ -1060,6 +1153,22 @@ void MainWindow::on_actionCreate_Images_triggered()
         else
         {
             QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
+    if(curr_info.template_ == 4)
+    {
+        if(Version_Higher_Than_4)
+        {
+            create_images->setTemplate4(curr_info.Newton_a_2,
+                                        curr_info.Newton_xn_2,
+                                        curr_info.Newton_sin_2,
+                                        curr_info.Newton_cos_2,
+                                        curr_info.Newton_ex_2);
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
             return;
         }
     }
@@ -2977,11 +3086,35 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
             {
                 Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
                 double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
             }
             else
             {
                 QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
+        if(curr_info.template_ == 4)
+        {
+            if(Version_Higher_Than_4)
+            {
+                double& k = curr_info.Newton_c_rate;
+
+                Complex arr[10];
+                for(int i = 0; i != 10; i++)
+                {
+                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
+                }
+
+                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                      arr,
+                                      _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                      _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                      _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
                 return;
             }
         }
@@ -3070,11 +3203,35 @@ void MainWindow::createImagesInList(const QList<int>& list)
             {
                 Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
                 double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
             }
             else
             {
                 QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+                return;
+            }
+        }
+        if(curr_info.template_ == 4)
+        {
+            if(Version_Higher_Than_4)
+            {
+                double& k = curr_info.Newton_c_rate;
+
+                Complex arr[10];
+                for(int i = 0; i != 10; i++)
+                {
+                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
+                }
+
+                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                      arr,
+                                      _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                      _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                      _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
                 return;
             }
         }
@@ -3286,7 +3443,7 @@ void MainWindow::on_actionLess_triggered()
     ui->actionLess->setChecked(true);
     ui->actionLeast->setChecked(false);
     int total_thread = QThread::idealThreadCount();
-    total_thread = total_thread * 1 / 3 < 2 ? 2 : total_thread * 1 / 3;
+    total_thread = total_thread * 1 / 3 < 2 ? 2 : total_thread / 3;
     QThreadPool::globalInstance()->setMaxThreadCount(total_thread);
 }
 
@@ -3306,4 +3463,15 @@ void MainWindow::on_actionTemplate_2_triggered()
 {
     Template_2_Settings* dialog = new Template_2_Settings(this);
     dialog->show();
+}
+
+void MainWindow::on_actionTemplate_6_triggered() // Template 4 in Menu Additional Template Settings
+{
+    Template_4_Settings* dialog = new Template_4_Settings(this);
+    dialog->show();
+}
+
+void MainWindow::on_actionVersion_5_triggered() // Version 1 of Sample Video Template 3
+{
+    QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV1RA41157kJ"));
 }

@@ -2,6 +2,11 @@
 #include "ui_route_tool.h"
 #include "mainwindow.h"
 
+inline Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k)
+{
+    return c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t);
+}
+
 class Paint_Event : public QDialog
 {
 public:
@@ -104,6 +109,32 @@ void Route_Tool::on_pushButton_view_clicked()
         else
         {
             QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
+            return;
+        }
+    }
+    if(pa->pre_info[pa->current_info_v].template_ == 4)
+    {
+        if(pa->Version_Higher_Than_4)
+        {
+            double t = ui->doubleSpinBox_t->value();
+
+            double& k = pa->pre_info[pa->current_info_v].Newton_c_rate;
+
+            Complex arr[10];
+            for(int i = 0; i != 10; i++)
+            {
+                arr[i] = _curr_complex(pa->pre_info[pa->current_info_v].Newton_xn_1[i], pa->pre_info[pa->current_info_v].Newton_xn_2[i], t, k);
+            }
+
+            route_tool_img->setTemplate4(_curr_complex(pa->pre_info[pa->current_info_v].Newton_a_1, pa->pre_info[pa->current_info_v].Newton_a_2, t, k),
+                                         arr,
+                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_sin_1, pa->pre_info[pa->current_info_v].Newton_sin_2, t, k),
+                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_cos_1, pa->pre_info[pa->current_info_v].Newton_cos_2, t, k),
+                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_ex_1, pa->pre_info[pa->current_info_v].Newton_ex_2, t, k));
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
             return;
         }
     }

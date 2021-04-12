@@ -37,6 +37,7 @@
 #include "create_images_range.h"
 #include "create_image_task.h"
 #include "template_2_settings.h"
+#include "template_4_settings.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -173,6 +174,8 @@ public:
     bool existImage(int) const;
 
     void deleteImage(int);
+
+    Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k = 0);
 
 public slots:
 
@@ -393,6 +396,10 @@ private slots:
     void on_actionLeast_triggered();
 
     void on_actionTemplate_2_triggered();
+
+    void on_actionTemplate_6_triggered();
+
+    void on_actionVersion_5_triggered();
 
 signals:
 
