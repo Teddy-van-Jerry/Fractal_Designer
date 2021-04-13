@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>StyleSheet/Button_Login_MainWindow.qss</file>
         <file>StyleSheet/Button_Search_Result.qss</file>
+        <file>StyleSheet/Button_Quick_Option.qss</file>
     </qresource>
 </RCC>

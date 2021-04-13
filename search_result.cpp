@@ -51,12 +51,12 @@ void Search_Result::getSearch(QString search)
     {
         already_open = true;
     }
-    Possible_Result All_P[27];
+    Possible_Result All_P[29];
     All_P[0]  = {0,  "Create Images", "Action to create images based on the parameters you have set.", {"create", "image", "images", "生成", "图片", "生成图片"}};
     All_P[1]  = {1,  "Create Images in Range", "Action to create images in a specific range you set.", {"create", "image", "images", "range", "生成", "图片", "生成图片", "范围", "范围内生成图片"}};
     All_P[2]  = {2,  "Create Video", "Action to create video based on images and music if added.", {"create", "video", "生成", "视频", "生成视频"}};
-    All_P[3]  = {3,  "Help(English)", "English version of help.", {"help", "english", "帮助", "查看帮助"}};
-    All_P[4]  = {4,  "Help(Chinese)", "Chinese version of help. (Please make sure your computer is connected to the Internet.)", {"help", "chinese", "帮助", "查看帮助"}};
+    All_P[3]  = {3,  "Help (English)", "English version of help.", {"help", "english", "帮助", "查看帮助"}};
+    All_P[4]  = {4,  "Help (Chinese)", "Chinese version of help. (Please make sure your computer is connected to the Internet.)", {"help", "chinese", "帮助", "查看帮助"}};
     All_P[5]  = {5,  "Exit", "Exit the application.", {"exit", "close", "退出", "关闭"}};
     All_P[6]  = {6,  "About Teddy van Jerry", "View the homepage of Teddy van Jerry in CSDN.",{"about", "teddy", "van", "jerry", "tvj", "关于", "作者"}};
     All_P[7]  = {7,  "New", "Create a new project.", {"new", "新建", "新建项目"}};
@@ -79,6 +79,8 @@ void Search_Result::getSearch(QString search)
     All_P[24] = {24, "GitHub Repository", "View the GitHub repository of Fractal Designer.", {"update", "check", "github", "repository", "git", "查看", "最新", "版本", "最新版", "最新版本", "查看最新版", "查看最新版本", "更新", "查看更新", "仓库"}};
     All_P[25] = {25, "Check Images", "Check if images are created or missed. You can choose to recreate missed ones.", {"create", "image", "images", "check", "检查", "图片", "检查图片"}};
     All_P[26] = {26, "Delete Images", "Delete Images that have already been created.", {"delete", "image", "images", "删除", "图片", "删除图片", "删除所有图片"}};
+    All_P[27] = {27, "Template 2 Settings", "Additional Settings for Template 2 (Julia Set).", {"template", "2", "setting", "settings", "set", "julia", "set", "模板", "二", "设置", "模板二设置"}};
+    All_P[28] = {28, "Template 4 Settings", "Additional Settings for Template 4 (Generalized Newton Fractal).", {"template", "4", "setting", "settings", "set", "newton", "fractal", "模板", "四", "设置", "模板四设置"}};
     QFile Button_qss(":/StyleSheet/Button_Search_Result.qss");
     Button_qss.open(QFile::ReadOnly);
     QString Button_qss_str = QLatin1String(Button_qss.readAll());
@@ -102,7 +104,7 @@ void Search_Result::getSearch(QString search)
         }
     }
 
-    sort_possible_result(All_P, 27);
+    sort_possible_result(All_P, 29);
 
     //connect(btn, SIGNAL(clicked()), this, SLOT(search_result_clicked()));
 
@@ -144,6 +146,8 @@ void Search_Result::getSearch(QString search)
         Btn_Con(24, on_actionGitHub_Repository_triggered());
         Btn_Con(25, on_actionCheck_Images_triggered());
         Btn_Con(26, on_actionDelete_Images_triggered());
+        Btn_Con(27, on_actionTemplate_2_triggered());
+        Btn_Con(28, on_actionTemplate_6_triggered());
         default: break;
         }
         ui->gridLayout_search->addWidget(new_btn);

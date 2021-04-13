@@ -1,6 +1,11 @@
 #include "info_save.h"
 #include "mainwindow.h"
 
+void _complex_out(QDataStream& out, const Complex& c)
+{
+    out << c.getReal() << c.getImaginary();
+}
+
 void Info_Save::print(QString path, uint8_t FRD_Version[4])
 {
     /// Preparation for Print Only Info ///
@@ -30,10 +35,30 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     out << template_;
 
     // Template2
-    out << Template_2.name[0] << Template_2.name[1] << Template_2.length;
-    out << Julia_c1.getReal() << Julia_c1.getImaginary()
-        << Julia_c2.getReal() << Julia_c2.getImaginary()
-        << Julia_c_rate;
+    if (template_ == 2)
+    {
+        out << Template_2.name[0] << Template_2.name[1] << Template_2.length;
+        out << Julia_c1.getReal() << Julia_c1.getImaginary()
+            << Julia_c2.getReal() << Julia_c2.getImaginary()
+            << Julia_c_rate;
+    }
+
+    // Template4
+    if (template_ == 4)
+    {
+        out << Template_4.name[0] << Template_4.name[1] << Template_4.length;
+        _complex_out(out, Newton_a_1);
+        _complex_out(out, Newton_a_2);
+        for(int i = 0; i != 10; i++) _complex_out(out, Newton_xn_1[i]);
+        for(int i = 0; i != 10; i++) _complex_out(out, Newton_xn_2[i]);
+        _complex_out(out, Newton_sin_1);
+        _complex_out(out, Newton_sin_2);
+        _complex_out(out, Newton_cos_1);
+        _complex_out(out, Newton_cos_2);
+        _complex_out(out, Newton_ex_1);
+        _complex_out(out, Newton_ex_2);
+        out << Newton_c_rate;
+    }
 
     // Image Value
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;

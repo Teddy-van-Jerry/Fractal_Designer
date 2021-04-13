@@ -2,7 +2,7 @@
 This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
 
 ## Version Information
-This is version 5.4.3 updated in 2021/04/07.
+This is version 5.5.3 updated in 2021/04/13.
 There are release versions for Windows and Linux.
 The code is known to work properly in Win 10 and Ubuntu.
 - For Windows, just run the exe file

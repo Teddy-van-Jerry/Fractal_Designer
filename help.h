@@ -2,6 +2,7 @@
 #define HELP_H
 
 #include <QMainWindow>
+#include <QDesktopServices>
 
 namespace Ui {
 class Help;
@@ -19,6 +20,8 @@ private slots:
     void on_actionBack_to_main_window_triggered();
 
     void on_actionNew_Features_triggered();
+
+    void on_actionChinese_Version_triggered();
 
 private:
     Ui::Help *ui;

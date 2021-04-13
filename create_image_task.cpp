@@ -93,7 +93,7 @@ void Create_Image_Task::run()
             double theta = atan2(dy, dx) + rotate_angle / 180 * Pi;
             Complex this_point(x + mod * cos(theta),
                                y + mod * sin(theta));
-            Complex z0(this_point);
+            Complex z0(this_point), last_point(-this_point);
             bool test = true;
             int k = 0;
             for (k = 0; k < max_loop_t; k++)
@@ -103,17 +103,40 @@ void Create_Image_Task::run()
                     test = false;
                     break;
                 }
-                else if ((double)this_point.modulus() < min_class_v)
+                else if (template_ != 4 && (double)this_point.modulus() < min_class_v)
+                {
+                    // test = true;
+                    break;
+                }
+                else if (template_ == 4 && (double)(this_point - last_point).modulus() / (double)(this_point.modulus()) < min_class_v)
                 {
                     // test = true;
                     break;
                 }
                 else
                 {
+                    if (template_ == 4) last_point = this_point;
                     switch(template_)
                     {
                     case 1: this_point = (this_point ^ 2.0) + z0; break;
                     case 2: this_point = (this_point ^ 2.0) + c0; break;
+                    case 3: this_point = (Complex(fabs(this_point.getReal()), fabs(this_point.getImaginary())) ^ 2.0) + z0; break;
+                    case 4:
+                    {
+                        Complex p = 0, p_ = 0;
+                        for(int i = 0; i != 10; i++)
+                        {
+                            p += Newton_xn[i] * (this_point ^ double(i));
+                            p_ += Newton_xn[i] * (this_point ^ double(i - 1)) * Complex(i);
+                        }
+                        p += Newton_ex * exp(this_point);
+                        p += Newton_sin * sin(this_point);
+                        p += Newton_cos * cos(this_point);
+                        p_ += Newton_ex * exp(this_point);
+                        p_ += Newton_sin * cos(this_point);
+                        p_ -= Newton_cos * sin(this_point);
+                        this_point = this_point - Newton_a * p / p_;
+                    }
                     default: break;
                     }
                 }
@@ -157,11 +180,6 @@ void Create_Image_Task::run()
                     else if(RGBA1[m] > 255) RGBA1[m] = 255;
                 }
                 image_build.setPixel(i, j, qRgba(RGBA1[0], RGBA1[1], RGBA1[2], RGBA1[3]));
-                //if(RGBA1[0] != 255) qDebug() << "R (" << i << "," << j << ")" << RGBA1[0];
-                //if(RGBA1[1] != 0)   qDebug() << "G (" << i << "," << j << ")" << RGBA1[1];
-                //if(RGBA1[2] != 0)   qDebug() << "B (" << i << "," << j << ")" << RGBA1[2];
-                //if(RGBA1[3] != 255) qDebug() << "A (" << i << "," << j << ")" << RGBA1[3];
-                //qDebug() << RGBA1[0] << " " << RGBA1[1] << " " << RGBA1[2] << " "<<RGBA1[3];
             }
             else
             {
@@ -201,12 +219,6 @@ void Create_Image_Task::run()
                     else if(RGBA2[m] > 255) RGBA2[m] = 255;
                 }
                 image_build.setPixel(i, j, qRgba(RGBA2[0], RGBA2[1], RGBA2[2], RGBA2[3]));
-                //if(RGBA2[0] != 0) qDebug() << "-R (" << i << "," << j << ")" << RGBA2[0];
-                //if(RGBA2[1] != 0)   qDebug() << "-G (" << i << "," << j << ")" << RGBA2[1];
-                //if(RGBA2[2] != 255)   qDebug() << "-B (" << i << "," << j << ")" << RGBA2[2];
-                //if(RGBA2[3] != 255) qDebug() << "-A (" << i << "," << j << ")" << RGBA2[3];
-                //if(i == 20 && j == 20) qDebug() << RGBA2[0] << " " << RGBA2[1] << " " << RGBA2[2] << " "<<RGBA2[3];
-                //image_build.setPixel(20, 20, qRgba(10, 10, 10, 10));
             }
         }
     }
@@ -262,6 +274,15 @@ void Create_Image_Task::setData(double C1[4][29][2], double C2[4][29][2], int te
 void Create_Image_Task::setTemplate2(const Complex& c)
 {
     c0 = c;
+}
+
+void Create_Image_Task::setTemplate4(const Complex& c1, Complex* c2, const Complex& c3, const Complex& c4, const Complex& c5)
+{
+    Newton_a = c1;
+    for(int i = 0; i != 10; i++) Newton_xn[i] = c2[i];
+    Newton_sin = c3;
+    Newton_cos = c4;
+    Newton_ex = c5;
 }
 
 void Create_Image_Task::setVersion(bool v)

@@ -44,7 +44,15 @@ private:
 
     int template_, max_loop_t;
 
+    // Template 2
     Complex c0;
+
+    // Template 4
+    Complex Newton_a = 1;
+    Complex Newton_xn[10] {0};
+    Complex Newton_sin = 0;
+    Complex Newton_cos = 0;
+    Complex Newton_ex = 0;
 
     double min_class_v, max_class_v;
 
@@ -70,8 +78,8 @@ signals:
     void one_ok();
 
 public: // function
-    void setImage(double, double, double, double, int, int, double, double,
-                                    QString, QString, QString, QString);
+    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString);
+
     void setPath(QString);
 
     void setData(double[4][29][2], double[4][29][2], int, double, double, int);
@@ -79,6 +87,8 @@ public: // function
     void setVersion(bool);
 
     void setTemplate2(const Complex& c);
+
+    void setTemplate4(const Complex& c1, Complex* c2, const Complex& c3, const Complex& c4, const Complex& c5);
 
 public slots:
 

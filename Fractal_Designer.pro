@@ -27,6 +27,7 @@ SOURCES += \
     search_result.cpp \
     set_colour.cpp \
     template_2_settings.cpp \
+    template_4_settings.cpp \
     version.cpp
 
 HEADERS += \
@@ -47,6 +48,7 @@ HEADERS += \
     search_result.h \
     set_colour.h \
     template_2_settings.h \
+    template_4_settings.h \
     version.h
 
 FORMS += \
@@ -63,6 +65,7 @@ FORMS += \
     search_result.ui \
     set_colour.ui \
     template_2_settings.ui \
+    template_4_settings.ui \
     version.ui
 
 # Default rules for deployment.
@@ -78,7 +81,6 @@ RESOURCES += \
     Templates.qrc
 
 DISTFILES += \
-    C:/Users/Teddy van Jerry/Desktop/1.jpg \
     EXE Icons/FRD_icon.png \
     EXE Icons/FRD_icon.png \
     Menu Icon/Preview.png \
@@ -93,7 +95,7 @@ RC_ICONS += \
 RC_FILE += \
     icon.rc
 
-VERSION = 5.3
+VERSION = 5.5
 
 QMAKE_TARGET_PRODUCT = Fractal Designer
 QMAKE_TARGET_COMPANY = TVJ
