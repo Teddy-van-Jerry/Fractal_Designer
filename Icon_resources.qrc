@@ -20,6 +20,7 @@
         <file>Menu Icon/DeleteImage.svg</file>
         <file>Menu Icon/Check Images.svg</file>
         <file>Menu Icon/GitHub.png</file>
+        <file>Menu Icon/Wizard.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>Menu Icon/Next.svg</file>

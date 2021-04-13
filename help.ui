@@ -17,8 +17,14 @@
    <iconset resource="Icon_resources.qrc">
     <normaloff>:/icon/Menu Icon/Help.svg</normaloff>:/icon/Menu Icon/Help.svg</iconset>
   </property>
+  <property name="toolTip">
+   <string/>
+  </property>
+  <property name="statusTip">
+   <string/>
+  </property>
   <property name="locale">
-   <locale language="English" country="Zimbabwe"/>
+   <locale language="English" country="UnitedKingdom"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -55,11 +61,11 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Before you set out to click the green create image button, you have to set parameters which are critical to the project.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;First, choose the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;template&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;This version only provides Mandelbrot Set (Template 1) and Julia Set (Template 2). If you choose Template 2, you need to set additional information in Template -&amp;gt; Additional template settings -&amp;gt; Template 2.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;This version provides Mandelbrot Set (Template 1), Julia Set (Template 2), Burning Ship Fractal (Template 3) and Generalized Newton Fractal (Template 4). If you choose Template 2/4, you need to set additional information in Template -&amp;gt; Additional template settings -&amp;gt; Template 2/4.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Second, define &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;the value in terms of the iteration calculation&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. You can use the default value by clicking on the button &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Default&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Second, define &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;the value in terms of the iteration calculation&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. You can use the default value by clicking on the button &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Default&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. In template 1, 2 and 3, if the iterated point has the modulus greater than Maximum unclassified value, we conclude it as unconvergent point, else if it is less than Minimum unclassified value, we conclude it as convergent point, otherwise, the iteration keeps going until it reaches the Iteration limit. If it still can not be concluded, it is classified into unconvergent points. In Template 4, if the iterated point has the modulus greater than Maximum unclassified value, we conclude it as unconvergent point, else if it is close to the root limit (the extent of being close is set by Solution accuracy, which is mormally a very small positive number), it is classified into unconvergent points. If it still can not be concluded, it is classified into unconvergent points.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Third, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;define colours&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, click the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Customize&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; button and you can define the RGB value of both convergent points and unconvergent points. There are four channels, Red, Green, Blue, Alpha (Note that the video form mp4 DO NOT support the alpha channel and define alpha to 255 as Opaque, 0 as Transparent.) The &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;t&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; here is a parameter indicating the time with the range of 0 to 1.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Third, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;define colours&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, click the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Customize&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; button and you can define the RGB value of both convergent points and unconvergent points. There are four channels, Red, Green, Blue, Alpha (Note that the video form mp4 DO NOT support the alpha channel and define alpha to 255 as Opaque, 0 as Transparent.) The &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;t&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; here is a parameter indicating the time with the range of 0 to 1. (Tip: In Template 4, Zn.X and Zn.Y should be major parameters as they are related to the roots of the formula.)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Fourth, define the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;route information&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. Click the Add and Remove or Clear button to edit. Click the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Uniform Motion&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; button to change t automatically to match the coordinates you have defined so the movement will be in a uniform motion.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;t&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;      time (0 to 1)&lt;/span&gt;&lt;/p&gt;
@@ -76,7 +82,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;4. Use the sorting function well so you can add and remove rows easily.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;5. You can use the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;Route Tool&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; (&lt;/span&gt;&lt;img src=&quot;:/Menu Icon/Route_Tool.svg&quot; /&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#aa00ff;&quot;&gt;Ctrl + T&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;) which has the icon of a hammer to assist you. You can drag the image to move, and use the wheel to change the size of the image (the centre point remains the same and this needs additional click of the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;View&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; button). Double click to set this point as the the centre point (this needs additional click of the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#0000ff;&quot;&gt;View&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; button). Clicking the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Save Point&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; (&lt;/span&gt;&lt;img src=&quot;:/icon/Menu Icon/Save.svg&quot; /&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#aa00ff;&quot;&gt;Strl + S&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;) to add Route Tool information to the main window Route Info table. Besides, you can set the relationship between Size and Width.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Please note that in this version (v 5.4), the v rate only supports angle.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Please note that in this version (v 5.5), the v rate only supports angle.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Fifth, define &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;other information&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; related to the project.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -116,9 +122,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;10. Delete Images (&lt;/span&gt;&lt;img src=&quot;:/icon/Menu Icon/DeleteImage.svg&quot; /&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;) can delete images already created.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;11. Be careful that finishing editing a line or a combo box (i.e. the focus is removed) can the information be recognized or saved.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;12. To close a project (&lt;/span&gt;&lt;img src=&quot;:/Menu Icon/Close.svg&quot; /&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;), &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#aa00ff;&quot;&gt;Ctrl + W&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. To exit the application (&lt;/span&gt;&lt;img src=&quot;:/icon/Menu Icon/Exit.svg&quot; /&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;), &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#aa00ff;&quot;&gt;Crtl + E&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;13. Fractal Designer 5.4 is licenced under &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; text-decoration: underline;&quot;&gt;The MIT Licence&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. © 2021 Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;13. Fractal Designer 5.5 is licenced under &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; text-decoration: underline;&quot;&gt;The MIT Licence&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;. © 2021 Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  &lt;/p&gt;
-&lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#828282;&quot;&gt;Fractal Designer - Version 5.4.3 - 2021/04/07&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#828282;&quot;&gt;Fractal Designer - Version 5.5.3 - 2021/04/13&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </item>
@@ -130,7 +136,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">
@@ -143,6 +149,7 @@ p, li { white-space: pre-wrap; }
      <string>More(&amp;M)</string>
     </property>
     <addaction name="actionNew_Features"/>
+    <addaction name="actionChinese_Version"/>
    </widget>
    <widget class="QMenu" name="menuAction_A">
     <property name="title">
@@ -170,6 +177,14 @@ p, li { white-space: pre-wrap; }
   <action name="actionNew_Features">
    <property name="text">
     <string>New Features</string>
+   </property>
+  </action>
+  <action name="actionChinese_Version">
+   <property name="text">
+    <string>Chinese Version</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
    </property>
   </action>
  </widget>

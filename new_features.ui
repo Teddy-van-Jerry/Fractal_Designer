@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>New Features</string>
   </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QTreeWidget" name="treeWidget">
@@ -213,6 +216,40 @@
         <string>5.3</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Burning Ship Fractal</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>5.5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Generalized Newton Fractal</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>5.5</string>
+       </property>
+      </item>
      </item>
      <item>
       <property name="text">
@@ -348,22 +385,6 @@
         <bold>true</bold>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>Drag Event</string>
-       </property>
-       <property name="text">
-        <string>4.8</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Mouse Event</string>
-       </property>
-       <property name="text">
-        <string>4.8</string>
-       </property>
-      </item>
       <item>
        <property name="text">
         <string>Tool Bar</string>
@@ -511,6 +532,40 @@
         <string>5.0</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Template 2 Settings Window</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>5.3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Template 4 Settings Window</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>5.5</string>
+       </property>
+      </item>
      </item>
      <item>
       <property name="text">
@@ -645,14 +700,6 @@
       </property>
       <item>
        <property name="text">
-        <string>Search Function</string>
-       </property>
-       <property name="text">
-        <string>4.8</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Extended Search</string>
        </property>
        <property name="foreground">
@@ -671,34 +718,6 @@
      </item>
      <item>
       <property name="text">
-       <string>Log In Module</string>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>Main Window Login</string>
-       </property>
-       <property name="foreground">
-        <brush brushstyle="NoBrush">
-         <color alpha="255">
-          <red>0</red>
-          <green>0</green>
-          <blue>0</blue>
-         </color>
-        </brush>
-       </property>
-       <property name="text">
-        <string>4.8</string>
-       </property>
-      </item>
-     </item>
-     <item>
-      <property name="text">
        <string>Maintaince Module</string>
       </property>
       <property name="font">
@@ -707,14 +726,6 @@
         <bold>true</bold>
        </font>
       </property>
-      <item>
-       <property name="text">
-        <string>Check Update</string>
-       </property>
-       <property name="text">
-        <string>4.8</string>
-       </property>
-      </item>
       <item>
        <property name="text">
         <string>GitHub Repository</string>

@@ -89,6 +89,17 @@ MainWindow::MainWindow(QWidget *parent)
                      tr("Fail to open the image"));
     }
     //ui->progressBar_Preview->setVisible(false);
+    QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
+    Button_Quick_Option_qss.open(QFile::ReadOnly);
+    QString Button_Quick_Option_qss_str = QLatin1String(Button_Quick_Option_qss.readAll());
+    Button_Quick_Option_qss.close();
+    ui->MainWindow_AboutFD->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->MainWindow_AboutTVJ->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->MainWindow_HelpEnglish->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->pushButton->setStyleSheet(Button_Quick_Option_qss_str);
 
     model->setColumnCount(6);
     model->setHeaderData(0, Qt::Horizontal, "t");
@@ -327,7 +338,7 @@ void MainWindow::on_actionExit_E_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115490835"));
+    QDesktopServices::openUrl(QUrl(Chinese_Help_Url));
 }
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
@@ -2825,7 +2836,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/115490874"));
+    QDesktopServices::openUrl(QUrl(Bug_Report_CSDN));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2868,6 +2879,21 @@ void MainWindow::on_pushButton_Min_class_default_clicked()
         ui->Min_class_value->setValue(0.25);
         edit();
         break;
+    case 2:
+        if(curr_info.min_class_v == 0.105) return;
+        ui->Min_class_value->setValue(0.105);
+        edit();
+        break;
+    case 4:
+        if(curr_info.min_class_v == 1E-6) return;
+        ui->Min_class_value->setValue(1E-6);
+        edit();
+        break;
+    case 3:
+        if(curr_info.min_class_v == 1E-3) return;
+        ui->Min_class_value->setValue(1E-3);
+        edit();
+        break;
     default:
         break;
     }
@@ -2878,9 +2904,14 @@ void MainWindow::on_pushButton_Max_value_default_clicked()
     HIGH_V_ONLY
     switch(curr_info.template_)
     {
-    case 1:
+    case 1: case 2: case 3:
         if(curr_info.max_class_v == 2) return;
         ui->Max_class_value->setValue(2);
+        edit();
+        break;
+    case 4:
+        if(curr_info.max_class_v == 1E7) return;
+        ui->Max_class_value->setValue(1E7);
         edit();
         break;
     default:
@@ -2893,9 +2924,19 @@ void MainWindow::on_pushButton_Max_loop_default_clicked()
     HIGH_V_ONLY
     switch(curr_info.template_)
     {
-    case 1:
+    case 1: case 3:
         if(curr_info.max_loop_t == 50) return;
         ui->Max_loop_time->setValue(50);
+        edit();
+        break;
+    case 2:
+        if(curr_info.max_loop_t == 250) return;
+        ui->Max_loop_time->setValue(250);
+        edit();
+        break;
+    case 4:
+        if(curr_info.max_loop_t == 2500) return;
+        ui->Max_loop_time->setValue(2500);
         edit();
         break;
     default:
@@ -3474,4 +3515,14 @@ void MainWindow::on_actionTemplate_6_triggered() // Template 4 in Menu Additiona
 void MainWindow::on_actionVersion_5_triggered() // Version 1 of Sample Video Template 3
 {
     QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV1RA41157kJ"));
+}
+
+void MainWindow::on_actionVersion_6_triggered() // Version 1 of Sample Video Template 4
+{
+    QDesktopServices::openUrl(QUrl("https://www.bilibili.com/video/BV1Tb4y1D7oN"));
+}
+
+void MainWindow::on_MainWindow_AboutFD_clicked()
+{
+    on_actionGitHub_Repository_triggered();
 }

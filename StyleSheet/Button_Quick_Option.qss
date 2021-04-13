@@ -1,0 +1,31 @@
+QPushButton
+{
+    border: 3px solid orange;
+    background-color: seashell;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+QPushButton:hover
+{
+    border: 3px transparent;
+    background-color: mintcream;
+    color: blue;
+    background-color:mintcream;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+QPushButton:pressed
+{
+    border: 3px solid green;
+    background-color: mintcream;
+    color: blue;
+    background-color:mintcream;
+    padding: 10px;
+    font-size: 16px;
+    border-style: inset;
+    border-radius: 15px;
+}

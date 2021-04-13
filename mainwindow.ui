@@ -46,7 +46,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -108,13 +108,13 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  For more information, please refer to Help (Ctrl + H) or view the Chinese version with Ctrl + Shift + H.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.2 is focused on higher efficiency of creating images. Now, it can make the most of the CPU capacity.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.3 supports Julia Set in addition to Mandelbrot Set.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.4 supports Linux (tested on Ubuntu) in addition some other minor changes.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.4.3 (2021/04/07)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.5 supports two more templates: Burning Ship Fractal and Generalized Newton Fractal.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.5.3 (2021/04/13)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -156,7 +156,7 @@ p, li { white-space: pre-wrap; }
             <property name="font">
              <font>
               <family>Sitka Heading</family>
-              <pointsize>12</pointsize>
+              <pointsize>16</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -184,6 +184,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QPushButton" name="MainWindow_Newfile">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="text">
              <string>New File(N)</string>
             </property>
@@ -1877,10 +1880,30 @@ p, li { white-space: pre-wrap; }
       </property>
       <addaction name="actionVersion_5"/>
      </widget>
+     <widget class="QMenu" name="menuTemplate_4">
+      <property name="title">
+       <string>Template 4</string>
+      </property>
+      <addaction name="actionVersion_6"/>
+     </widget>
      <addaction name="menuTemplate_1"/>
      <addaction name="menuTemplate_2"/>
      <addaction name="menuTemplate_3"/>
-     <addaction name="actionTemplate_5"/>
+     <addaction name="menuTemplate_4"/>
+    </widget>
+    <widget class="QMenu" name="menuWizard">
+     <property name="title">
+      <string>Wizard</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Icon_resources.qrc">
+       <normaloff>:/icon/Menu Icon/Wizard.svg</normaloff>:/icon/Menu Icon/Wizard.svg</iconset>
+     </property>
+     <addaction name="actionFor_Programmers"/>
+     <addaction name="actionFor_Artists"/>
+     <addaction name="actionFor_Mathematicians"/>
+     <addaction name="actionFor_Students"/>
+     <addaction name="actionFor_the_Public"/>
     </widget>
     <addaction name="menuView_Help"/>
     <addaction name="actionVersion"/>
@@ -1892,6 +1915,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAbout_Teddy_van_Jerry"/>
     <addaction name="separator"/>
     <addaction name="menuSample_Video"/>
+    <addaction name="separator"/>
+    <addaction name="menuWizard"/>
    </widget>
    <widget class="QMenu" name="menuVideo_D">
     <property name="title">
@@ -2478,11 +2503,6 @@ p, li { white-space: pre-wrap; }
     <string>From Python</string>
    </property>
   </action>
-  <action name="actionTemplate_5">
-   <property name="text">
-    <string>Template 4</string>
-   </property>
-  </action>
   <action name="actionVersion_1">
    <property name="text">
     <string>Version 1</string>
@@ -2744,11 +2764,41 @@ p, li { white-space: pre-wrap; }
     <string>Version 1</string>
    </property>
   </action>
+  <action name="actionVersion_6">
+   <property name="text">
+    <string>Version 1</string>
+   </property>
+  </action>
+  <action name="actionFor_Programmers">
+   <property name="text">
+    <string>For Programmers</string>
+   </property>
+  </action>
+  <action name="actionFor_Artists">
+   <property name="text">
+    <string>For Artists</string>
+   </property>
+  </action>
+  <action name="actionFor_Mathematicians">
+   <property name="text">
+    <string>For Mathematicians</string>
+   </property>
+  </action>
+  <action name="actionFor_Students">
+   <property name="text">
+    <string>For Students</string>
+   </property>
+  </action>
+  <action name="actionFor_the_Public">
+   <property name="text">
+    <string>For the Public</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Icon_resources.qrc"/>
-  <include location="Icon.qrc"/>
   <include location="EXE_Icons.qrc"/>
+  <include location="Icon.qrc"/>
  </resources>
  <connections/>
 </ui>

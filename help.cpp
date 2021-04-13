@@ -24,3 +24,8 @@ void Help::on_actionNew_Features_triggered()
     MainWindow* p = (MainWindow*)parentWidget();
     p->NewFeatures();
 }
+
+void Help::on_actionChinese_Version_triggered()
+{
+    QDesktopServices::openUrl(QUrl(Chinese_Help_Url));
+}

@@ -68,9 +68,12 @@
     QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
 #endif
 
+const QString Chinese_Help_Url = "https://blog.csdn.net/weixin_50012998/article/details/115678983";
+const QString Bug_Report_CSDN  = "https://blog.csdn.net/weixin_50012998/article/details/115679067";
+
 class PeciseDoubleFactory : public QItemEditorFactory
 {
-    public:
+public:
     PeciseDoubleFactory() = default;
     virtual ~PeciseDoubleFactory() = default;
     virtual QWidget* createEditor(int userType, QWidget *parent) const override
@@ -119,7 +122,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 5, 1, 0};
+    uint8_t FRD_Version[4] = {5, 5, 3, 0};
 
     QString Open_Location = "";
 
@@ -400,6 +403,10 @@ private slots:
     void on_actionTemplate_6_triggered();
 
     void on_actionVersion_5_triggered();
+
+    void on_actionVersion_6_triggered();
+
+    void on_MainWindow_AboutFD_clicked();
 
 signals:
 
