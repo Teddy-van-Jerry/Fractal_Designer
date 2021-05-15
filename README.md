@@ -4,7 +4,7 @@ This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg
 ## Version Information
 This is version 5.5.3 updated in 2021/04/13.
 There are release versions for Windows and Linux.
-The code is known to work properly in Win 10 and Ubuntu.
+The code is known to work properly in Win 10 and Ubuntu 20.
 - For Windows, just run the exe file
 - For Linux, run Fractal_Designer.sh
 
@@ -15,7 +15,7 @@ The code is known to work properly in Win 10 and Ubuntu.
 
 ## Tips
 - Try not to use the compatibility mode with Fractal Designer 4 as it is error-prone.
-- In this version, Fractal Designer only supports Mandelbrot Set.
+- In this version, Fractal Designer supports 4 templates, two of which require additional settings.
 - You can report bugs if any.
 
 ## Username and Passcode
