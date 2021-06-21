@@ -27,5 +27,18 @@ You can use any of them to log in the application:
 |GitHub|Southeast61|
 |SEU|SEU615205|
 
+## Sample Videos
+
+| Video Name              | Watch on YouTube             | Watch on Bilibili                           |
+| :-:                     | :-:                          | :-:                                         |
+| Mandelbrot Set 1        | https://youtu.be/LU9eL1-9V0E | https://www.bilibili.com/video/BV1TU4y147ta |
+| Mandelbrot Set 2        | -                            | https://www.bilibili.com/video/BV1qX4y1P74d |
+| Mandelbrot Set 3        | -                            | https://www.bilibili.com/video/BV17K4y1J7XM |
+| Julia Set 1             | -                            | https://www.bilibili.com/video/BV1wB4y1N7pU |
+| Burning Ship Fractal 1  | -                            | https://www.bilibili.com/video/BV1RA41157kJ |
+| Newton Fractal 1        | -                            | https://www.bilibili.com/video/BV1Tb4y1D7oN |
+
+> More videos are being uploaded.
+
 ## Download Release
-Now there is only release versions for Windows and Linux.
+Now there are only release versions for Windows and Linux.
