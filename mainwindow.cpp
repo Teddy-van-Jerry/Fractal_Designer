@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
-    permanent->setText(tr("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry"));
+    permanent->setText("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry");
     ui->statusbar->addPermanentWidget(permanent);
     ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.5!"), 20000);
     show_template_graph();
@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolBar->insertWidget(NULL, Label_Spacer);
 
     Button_Login_MainWindow = new QPushButton();
-    Button_Login_MainWindow->setText("Log In");
+    Button_Login_MainWindow->setText(tr("Log In"));
     QFile Button_Login_MainWindow_qss(":/StyleSheet/Button_Login_MainWindow.qss");
     Button_Login_MainWindow_qss.open(QFile::ReadOnly);
     QString Button_Login_MainWindow_qss_str = QLatin1String(Button_Login_MainWindow_qss.readAll());
@@ -166,7 +166,7 @@ bool MainWindow::High_Version_Open(int type)
     FRD_R.skip(16);
     if(FRD_R.read(8) != "FRD\xEFTvJ*")
     {
-        QMessageBox::critical(this, "Fail to open", "The file may be damaged or should not be opened with Fractal Designer.");
+        QMessageBox::critical(this, tr("Fail to open"), tr("The file may be damaged or should not be opened with Fractal Designer."));
         if(type) // OPEN_FILE_OUT
         {
             exit(1);
@@ -526,7 +526,6 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
     if(rate_i_T2 > rate_w_T2)
     {
-
         ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T2_w_height));
     }
     else
@@ -1284,14 +1283,18 @@ void MainWindow::on_actionCreate_Video_triggered()
     QString video_file_name = ui->lineEdit_videoName->text();
     QString video_file_path = ui->lineEdit_videoPath->text(); // only used in high version
     QString video_format = "mp4";
+#if defined (WIN32) || defined (WIN64)
+    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -r ";
+#elif defined (__linux__)
     QString PowerShell_arg1 = "ffmpeg -r ";
-    PowerShell_arg1.append(ui->comboBox_fps->currentText());
-    PowerShell_arg1.append(" -f image2 -i ");
-    PowerShell_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
-    PowerShell_arg1.append("%d.png\" -vcodec libx264 -crf ");
-    PowerShell_arg1.append(QString::number(crf_value));
-    PowerShell_arg1.append(" -pix_fmt yuv420p ");
-    PowerShell_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
+#endif
+    ffmpeg_arg1.append(ui->comboBox_fps->currentText());
+    ffmpeg_arg1.append(" -f image2 -i ");
+    ffmpeg_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
+    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
+    ffmpeg_arg1.append(QString::number(crf_value));
+    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
+    ffmpeg_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
                                video_file_name + "." + video_format
                              : video_file_name + "_temp." + video_format);
 
@@ -1319,13 +1322,12 @@ void MainWindow::on_actionCreate_Video_triggered()
 
         QProcess* create_video = new QProcess(this);
         create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-        QString cmd("powershell");
-        QStringList parameters1{PowerShell_arg1};
 #if defined (WIN32) || defined (_WIN64)
-        create_video->start(cmd, parameters1);
-        QString file_suffix = "ps1";
+        qDebug() << ffmpeg_arg1;
+        create_video->start(ffmpeg_arg1);
+        QString file_suffix = "cmd";
 #elif defined(__linux__)
-        create_video->start(parameters1[0]);
+        create_video->start(ffmpeg_arg1);
         QString file_suffix = "sh";
 #endif
         Alive[0] = create_video->waitForFinished(300000);
@@ -1336,14 +1338,14 @@ void MainWindow::on_actionCreate_Video_triggered()
             QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
             create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out1(&create_video_ps);
-            out1 << PowerShell_arg1;
+            out1 << ffmpeg_arg1;
             create_video_ps.close();
 
             // Retry running shell file
             QProcess* run_sh = new QProcess(this);
             run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
 #if defined (WIN32) || (_WIN64)
-            run_sh->start("powershell", QStringList() << "Create_Video.ps1");
+            run_sh->start("Create_Video.cmd");
 #elif defined (__linux__)
             run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
 #endif
@@ -1399,22 +1401,29 @@ void MainWindow::on_actionCreate_Video_triggered()
             }
             Music_Added_NoEnd_.close();
         }
-
-        QString PowerShell_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-        QStringList parameters2{PowerShell_arg2};
-        create_video->start(cmd, parameters2);
+#if defined (WIN32) || (WIN64)
+        QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#elif defined (__linux__)
+        QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#endif
+        qDebug() << ffmpeg_arg2;
+        create_video->start(ffmpeg_arg2);
         Alive[1] = create_video->waitForFinished(300000);
 
         ui->statusbar->showMessage(tr("Adding Music..."), 300000);
 
+#if defined (WIN32) || (WIN64)
+        QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
+#elif defined (__linux__)
         QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-        PowerShell_arg3.append(video_file_name + "_temp." + video_format);
-        PowerShell_arg3.append(" -shortest -f mp4 ");
-        PowerShell_arg3.append(video_file_name + "." + video_format);
+#endif
+        ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
+        ffmpeg_arg3.append(" -shortest -f mp4 ");
+        ffmpeg_arg3.append(video_file_name + "." + video_format);
         if(Alive[0] && Alive[1])
         {
-            QStringList parameters3(PowerShell_arg3);
-            create_video->start(cmd, parameters3);
+            qDebug() << ffmpeg_arg3;
+            create_video->start(ffmpeg_arg3);
             Alive[2] = create_video->waitForFinished(60000);
             QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
             if(ck_result.exists())
@@ -1438,8 +1447,8 @@ void MainWindow::on_actionCreate_Video_triggered()
             QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
             add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out2(&add_music_ps);
-            out2 << PowerShell_arg2 << Qt::endl;
-            out2 << PowerShell_arg3;
+            out2 << ffmpeg_arg2 << Qt::endl;
+            out2 << ffmpeg_arg3;
             add_music_ps.close();
             // Retry running shell file
             QProcess* run_sh = new QProcess(this);
@@ -1448,7 +1457,7 @@ void MainWindow::on_actionCreate_Video_triggered()
             if(Alive[0])
             {
 #if defined (WIN32) || (_WIN64)
-                run_sh->start("powershell", QStringList() << "Add_Music.ps1");
+                run_sh->start("Add_Music.cmd");
 #elif defined (__linux__)
                 run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
 #endif
@@ -1512,14 +1521,14 @@ void MainWindow::on_actionCreate_Video_triggered()
         QProcess* create_video = new QProcess;
         create_video->setWorkingDirectory(Project_Name);
         QString cmd("powershell");
-        QStringList parameters1{PowerShell_arg1};
+        QStringList parameters1{ffmpeg_arg1};
         create_video->start(cmd, parameters1);
         create_video->waitForFinished();
 
         QFile create_video_ps(Project_Name + "/Create_Video.ps1");
         create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream out1(&create_video_ps);
-        out1 << PowerShell_arg1;
+        out1 << ffmpeg_arg1;
         create_video_ps.close();
 
         QFile Music_Added_NoEnd_(Project_Name + "/Music_Added_NoEnd.txt");
@@ -3525,4 +3534,85 @@ void MainWindow::on_actionVersion_6_triggered() // Version 1 of Sample Video Tem
 void MainWindow::on_MainWindow_AboutFD_clicked()
 {
     on_actionGitHub_Repository_triggered();
+}
+
+void MainWindow::on_actionChinese_2_triggered() // language Chinese
+{
+    if (app_language == LANGUAGE_ENGLISH)
+    {
+        app_language = LANGUAGE_CHINESE;
+        translator = new QTranslator(qApp);
+        if (translator->load(":/Languages/FRD_zh_CN.qm"))
+        {
+            qApp->installTranslator(translator);
+            ui->retranslateUi(this);
+            QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+            setting.beginGroup("LANGUAGE");
+            setting.setValue("Language", "CHINESE");
+            setting.endGroup();
+            QMessageBox::information(this, "提示", "语言已切换至中文，\n重启软件可以看到语言改变。");
+
+        }
+        else
+        {
+            qDebug() << "Fail to switch to Chinese";
+            return;
+        }
+    }
+    else
+    {
+        return;
+    }
+    ui->actionEnglish_2->setChecked(false);
+}
+
+void MainWindow::on_actionEnglish_2_triggered() // language English
+{
+    if (language_setting_no_change_now) return;
+    language_setting_no_change_now = true;
+    if (app_language == LANGUAGE_CHINESE)
+    {
+        app_language = LANGUAGE_ENGLISH;
+        translator = new QTranslator(qApp);
+        if (translator->load(":/Languages/FRD_en_UK.qm"))
+        {
+            qApp->installTranslator(translator);
+            ui->retranslateUi(this);
+            QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+            setting.beginGroup("LANGUAGE");
+            setting.setValue("Language", "ENGLISH");
+            setting.endGroup();
+            QMessageBox::information(this, "Information", "The language has been switched into English.\nRestart the programme to change the language.");
+        }
+        else
+        {
+            qDebug() << "Fail to switch to English";
+            return;
+        }
+    }
+    else
+    {
+        return;
+    }
+    ui->actionChinese_2->setChecked(false);
+    language_setting_no_change_now = false;
+}
+
+void MainWindow::setLanguage(App_Language la)
+{
+    if (language_setting_no_change_now) return;
+    language_setting_no_change_now = true;
+    if(la == LANGUAGE_CHINESE)
+    {
+        app_language = LANGUAGE_CHINESE;
+        ui->actionEnglish_2->setChecked(false);
+        ui->actionChinese_2->setChecked(true);
+    }
+    else
+    {
+        app_language = LANGUAGE_ENGLISH;
+        ui->actionEnglish_2->setChecked(true);
+        ui->actionChinese_2->setChecked(false);
+    }
+    language_setting_no_change_now = false;
 }

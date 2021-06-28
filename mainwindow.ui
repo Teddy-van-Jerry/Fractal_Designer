@@ -114,7 +114,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.5 supports two more templates: Burning Ship Fractal and Generalized Newton Fractal.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.5.3 (2021/04/13)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  While the new version of 5.6 which features Chinese translation of the app, 5.6.0 solves the fatal bug of calling ffmpeg.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.6.0 (2021/06/28)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -122,7 +124,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Qt Forum      : &lt;/span&gt;&lt;a href=&quot;https://forum.qt.io/user/teddy-van-jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Stack Overflow: &lt;/span&gt;&lt;a href=&quot;https://stackoverflow.com/users/15080514/teddy-van-jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Bilibili      : &lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/631883409&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy_van_Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * E-mail        : &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;teddy-van-jerry@foxmail.com&lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#000000;&quot;&gt; or &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;teddy-jerry@qq.com&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * E-mail        : &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;me@teddy-van-jerry.org&lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#000000;&quot;&gt; or &lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#00aa00;&quot;&gt;teddy-jerry@qq.com&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt; color:#000000;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -598,7 +600,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QToolBox" name="toolBox">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="ToolBoxPage1_2">
              <property name="geometry">
@@ -606,7 +608,7 @@ p, li { white-space: pre-wrap; }
                <x>0</x>
                <y>0</y>
                <width>413</width>
-               <height>417</height>
+               <height>234</height>
               </rect>
              </property>
              <attribute name="label">
@@ -778,8 +780,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>314</width>
-               <height>321</height>
+               <width>348</width>
+               <height>438</height>
               </rect>
              </property>
              <attribute name="label">
@@ -796,7 +798,7 @@ p, li { white-space: pre-wrap; }
                    </font>
                   </property>
                   <property name="html">
-                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                   <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -849,7 +851,7 @@ p, li { white-space: pre-wrap; }
                 <item row="0" column="0" colspan="3">
                  <widget class="QLabel" name="label_27">
                   <property name="text">
-                   <string>Unconvergent Points</string>
+                   <string>Divergent Points</string>
                   </property>
                  </widget>
                 </item>
@@ -875,7 +877,7 @@ p, li { white-space: pre-wrap; }
                    </font>
                   </property>
                   <property name="html">
-                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                   <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -1968,6 +1970,19 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="menuAdditional_template_settings"/>
    </widget>
+   <widget class="QMenu" name="menuOptions_O">
+    <property name="title">
+     <string>Options(&amp;O)</string>
+    </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="actionEnglish_2"/>
+     <addaction name="actionChinese_2"/>
+    </widget>
+    <addaction name="menuLanguage"/>
+   </widget>
    <addaction name="menuFile_F"/>
    <addaction name="menuEdit_E"/>
    <addaction name="menuView_V"/>
@@ -1975,6 +1990,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuPicture_P"/>
    <addaction name="menuVideo_D"/>
    <addaction name="menuHelp_H"/>
+   <addaction name="menuOptions_O"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -2794,11 +2810,30 @@ p, li { white-space: pre-wrap; }
     <string>For the Public</string>
    </property>
   </action>
+  <action name="actionEnglish_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string notr="true">English</string>
+   </property>
+  </action>
+  <action name="actionChinese_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">中文</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="Icon_resources.qrc"/>
   <include location="EXE_Icons.qrc"/>
   <include location="Icon.qrc"/>
+  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -20,6 +20,9 @@
 #include <QButtonGroup>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
+// #include <QtQml/QQmlEngine>
+// #include <QtQml/QQmlContext>
+// #include <QtQml/QtQml>
 #include "login.h"
 #include "new_file.h"
 #include "open_file.h"
@@ -408,6 +411,10 @@ private slots:
 
     void on_MainWindow_AboutFD_clicked();
 
+    void on_actionEnglish_2_triggered();
+
+    void on_actionChinese_2_triggered();
+
 signals:
 
     void Search_clicked(QString);
@@ -455,9 +462,19 @@ private:
 
     PeciseDoubleFactory m_factory;
 
+    QTranslator *translator;
+
+    // QQmlEngine* qml_engine = QQmlEngine::contextForObject(this)->engine();
+
 public:
 
     Route_Tool* route_tool_window;
+
+    enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
+
+    void setLanguage(App_Language la);
+
+    bool language_setting_no_change_now = false;
 
 //    Build_Thread *bld_thread;
 };

@@ -4,6 +4,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
+VERSION = 5.6.0.1
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
@@ -77,6 +79,7 @@ RESOURCES += \
     EXE_Icons.qrc \
     Icon.qrc \
     Icon_resources.qrc \
+    Languages.qrc \
     StyleSheet.qrc \
     Templates.qrc
 
@@ -89,15 +92,18 @@ DISTFILES += \
     Templates/Template_1.bmp \
     icon.rc
 
-RC_ICONS += \
-    icon.rc
+TRANSLATIONS += \
+    Languages/FRD_zh_CN.ts \
+    Languages/FRD_en_UK.ts
 
-RC_FILE += \
-    icon.rc
+# Software Information
+win32 {
+    QMAKE_TARGET_PRODUCT     = Fractal Designer
+    QMAKE_TARGET_COMPANY     = Teddy van Jerry
+    QMAKE_TARGET_DESCRIPTION = A software to create fractal videos.
+    QMAKE_TARGET_COPYRIGHT   = "Copyright (C) 2021 Teddy van Jerry"
 
-VERSION = 5.5
-
-QMAKE_TARGET_PRODUCT = Fractal Designer
-QMAKE_TARGET_COMPANY = TVJ
-QMAKE_TARGET_DESCRIPTION = This is a software to make fractals built by Qt.
-QMAKE_TARGET_COPYRIGHT = Copyright (C) 2021 Teddy van Jerry
+    RC_ICONS += \
+        "EXE Icons/FRD.ico" \
+        "EXE Icons/FRD_File.ico"
+}
