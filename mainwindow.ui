@@ -811,39 +811,8 @@ p, li { white-space: pre-wrap; }
              <layout class="QGridLayout" name="gridLayout_11">
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_19">
-<<<<<<< Updated upstream
-                <item row="1" column="0" colspan="3">
-                 <widget class="QTextBrowser" name="Convergent_Points_Colour_Formula_View">
-                  <property name="font">
-                   <font>
-                    <family>Consolas</family>
-                   </font>
-                  </property>
-                  <property name="html">
-                   <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#282828;&quot;&gt;A = 0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QPushButton" name="pushButton_42">
-                  <property name="text">
-                   <string>Default</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="Convergent_setColour">
-=======
                 <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_26">
->>>>>>> Stashed changes
                   <property name="text">
                    <string>Convergent Points</string>
                   </property>
@@ -872,16 +841,6 @@ A = 255;</string>
                  <widget class="QLabel" name="label_27">
                   <property name="text">
                    <string>Divergent Points</string>
-<<<<<<< Updated upstream
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QPushButton" name="pushButton_45">
-                  <property name="text">
-                   <string>Default</string>
-=======
->>>>>>> Stashed changes
                   </property>
                  </widget>
                 </item>
@@ -892,23 +851,11 @@ A = 255;</string>
                     <family>Consolas</family>
                    </font>
                   </property>
-<<<<<<< Updated upstream
-                  <property name="html">
-                   <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#ff0000;&quot;&gt;R = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#282828;&quot;&gt;A = 0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-=======
                   <property name="plainText">
                    <string>R = 0;
 G = 0;
 B = 0;
 A = 255;</string>
->>>>>>> Stashed changes
                   </property>
                  </widget>
                 </item>
@@ -2001,19 +1948,6 @@ p, li { white-space: pre-wrap; }
     </widget>
     <addaction name="menuLanguage"/>
    </widget>
-   <widget class="QMenu" name="menuOptions_O">
-    <property name="title">
-     <string>Options(&amp;O)</string>
-    </property>
-    <widget class="QMenu" name="menuLanguage">
-     <property name="title">
-      <string>Language</string>
-     </property>
-     <addaction name="actionEnglish_2"/>
-     <addaction name="actionChinese_2"/>
-    </widget>
-    <addaction name="menuLanguage"/>
-   </widget>
    <addaction name="menuFile_F"/>
    <addaction name="menuEdit_E"/>
    <addaction name="menuView_V"/>
@@ -2862,13 +2796,8 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
-<<<<<<< Updated upstream
-  <include location="EXE_Icons.qrc"/>
-  <include location="Icon.qrc"/>
-=======
   <include location="Icon.qrc"/>
   <include location="EXE_Icons.qrc"/>
->>>>>>> Stashed changes
   <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>

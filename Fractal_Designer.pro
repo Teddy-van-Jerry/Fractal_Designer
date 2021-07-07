@@ -4,11 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-<<<<<<< Updated upstream
-VERSION = 5.6.0.1
-=======
 VERSION = 5.6.1.0
->>>>>>> Stashed changes
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -78,25 +74,14 @@ RESOURCES += \
     Icon.qrc \
     Icon_resources.qrc \
     Languages.qrc \
-<<<<<<< Updated upstream
-    StyleSheet.qrc \
-    Templates.qrc
-=======
     StyleSheet.qrc
->>>>>>> Stashed changes
 
 DISTFILES += \
     EXE Icons/FRD_icon.png \
     EXE Icons/FRD_icon.png \
     Menu Icon/Preview.png \
     Menu Icon/Property_16x.svg \
-<<<<<<< Updated upstream
-    Menu Icon/Refresh.svg \
-    Templates/Template_1.bmp \
-    icon.rc
-=======
     Menu Icon/Refresh.svg
->>>>>>> Stashed changes
 
 TRANSLATIONS += \
     Languages/FRD_zh_CN.ts \

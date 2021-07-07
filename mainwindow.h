@@ -20,13 +20,7 @@
 #include <QButtonGroup>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
-<<<<<<< Updated upstream
-// #include <QtQml/QQmlEngine>
-// #include <QtQml/QQmlContext>
-// #include <QtQml/QtQml>
-=======
 #include <complex> // std::complex
->>>>>>> Stashed changes
 #include "login.h"
 #include "new_file.h"
 #include "open_file.h"
@@ -454,13 +448,10 @@ private:
 
     // QQmlEngine* qml_engine = QQmlEngine::contextForObject(this)->engine();
 
-<<<<<<< Updated upstream
-=======
     Template_2_Settings* template_2_dialog = new Template_2_Settings(this);
 
     Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
 
->>>>>>> Stashed changes
 public:
 
     Route_Tool* route_tool_window;
