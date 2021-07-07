@@ -20,22 +20,17 @@
 #include <QButtonGroup>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
-// #include <QtQml/QQmlEngine>
-// #include <QtQml/QQmlContext>
-// #include <QtQml/QtQml>
+#include <complex> // std::complex
 #include "login.h"
 #include "new_file.h"
 #include "open_file.h"
 #include "route_tool.h"
-#include "set_colour.h"
-#include "Complex.h"
 #include "create_image_info.h"
 #include "help.h"
 #include "search_result.h"
 #include "info_save.h"
 #include "route_info.h"
 #include "version.h"
-#include "frd_4_help.h"
 #include "new_features.h"
 #include "create_images_range.h"
 #include "create_image_task.h"
@@ -94,6 +89,7 @@ public:
             sb->setSingleStep(0.1);
             // sb->interpretText();
             return sb;
+#undef DBL_MAX
         }
         return QItemEditorFactory::createEditor(userType, parent);
     }
@@ -125,7 +121,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 5, 3, 0};
+    uint8_t FRD_Version[4] = {5, 6, 1, 0};
 
     QString Open_Location = "";
 
@@ -143,15 +139,11 @@ public:
 
     int redo_max_depth = 0;
 
-    double Colour_Data_S[2][4][29][2] = {0};
-
     int from_i = 0, to_i = -1;
 
     void setOpenLocation(QString);
 
     bool High_Version_Open(int type = 0);
-
-    void set_Colour_Dlg(int n);
 
     bool save_or_not = false;    
 
@@ -167,8 +159,6 @@ public:
 
     void saveElsewhere();
 
-    void showColourFormula();
-
     void Version_Dialog_Support(int index);
 
     void NewFeatures();
@@ -181,7 +171,7 @@ public:
 
     void deleteImage(int);
 
-    Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k = 0);
+    std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k = 0);
 
 public slots:
 
@@ -219,15 +209,11 @@ private slots:
 
     void on_MainWindow_openfile_clicked();
 
-    void on_Convergent_setColour_clicked();
-
     void on_actionRoute_Tool_triggered();
 
     void resizeEvent(QResizeEvent *Event);
 
     void on_Tab_currentChanged(int index);
-
-    void on_Unconvergent_setColour_clicked();
 
     void on_actionSave_S_triggered();
 
@@ -238,6 +224,8 @@ private slots:
     void on_Template_Choice_3_toggled(bool checked);
 
     void on_Template_Choice_4_toggled(bool checked);
+
+    void on_Template_Choice_5_toggled(bool checked);
 
     void on_actionPreview_Refresh_triggered();
 
@@ -303,12 +291,6 @@ private slots:
 
     void on_actionAuto_Refresh_triggered();
 
-    void on_actionNew_triggered();
-
-    void on_actionOpen_triggered();
-
-    void on_actionSave_triggered();
-
     void on_actionUndo_triggered();
 
     void on_actionRedo_triggered();
@@ -322,6 +304,8 @@ private slots:
     void on_Template_Choice_3_clicked();
 
     void on_Template_Choice_4_clicked();
+
+    void on_Template_Choice_5_clicked();
 
     void routeEdit(QStandardItem*);
 
@@ -437,8 +421,6 @@ signals:
 
     void shareVersion(bool);
 
-    void shareData(double C1[4][29][2], double C2[4][29][2], int, double, double, int);
-
     void createImageStop();
 
 private:
@@ -465,6 +447,10 @@ private:
     QTranslator *translator;
 
     // QQmlEngine* qml_engine = QQmlEngine::contextForObject(this)->engine();
+
+    Template_2_Settings* template_2_dialog = new Template_2_Settings(this);
+
+    Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
 
 public:
 

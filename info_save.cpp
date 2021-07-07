@@ -1,9 +1,9 @@
 #include "info_save.h"
 #include "mainwindow.h"
 
-void _complex_out(QDataStream& out, const Complex& c)
+void _complex_out(QDataStream& out, std::complex<double> c)
 {
-    out << c.getReal() << c.getImaginary();
+    out << c.real() << c.imag();
 }
 
 void Info_Save::print(QString path, uint8_t FRD_Version[4])
@@ -38,8 +38,8 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     if (template_ == 2)
     {
         out << Template_2.name[0] << Template_2.name[1] << Template_2.length;
-        out << Julia_c1.getReal() << Julia_c1.getImaginary()
-            << Julia_c2.getReal() << Julia_c2.getImaginary()
+        out << Julia_c1.real() << Julia_c1.imag()
+            << Julia_c2.real() << Julia_c2.imag()
             << Julia_c_rate;
     }
 
@@ -64,17 +64,9 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;
     out << min_class_v << max_class_v << max_loop_t;
 
-    // Colour 1
     out << Colour1.name[0] << Colour1.name[1] << Colour1.length;
-    For_All_Colour(i, j)
-        out << Colour_Data_1[i][j][0] << Colour_Data_1[i][j][1];
-    End_All_Colour
 
-    // Colour 2
     out << Colour2.name[0] << Colour2.name[1] << Colour2.length;
-    For_All_Colour(i, j)
-        out << Colour_Data_2[i][j][0] << Colour_Data_2[i][j][1];
-    End_All_Colour
 
     // Route
     out << Route.name[0] << Route.name[1] << Route.length;
