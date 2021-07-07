@@ -7,6 +7,7 @@
 #include <QSettings>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
-    permanent->setText(tr("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry"));
+    permanent->setText("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry");
     ui->statusbar->addPermanentWidget(permanent);
-    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.5!"), 20000);
+    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.6!"), 20000);
     show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
@@ -44,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolBar->insertWidget(NULL, Label_Spacer);
 
     Button_Login_MainWindow = new QPushButton();
-    Button_Login_MainWindow->setText("Log In");
+    Button_Login_MainWindow->setText(tr("Log In"));
     QFile Button_Login_MainWindow_qss(":/StyleSheet/Button_Login_MainWindow.qss");
     Button_Login_MainWindow_qss.open(QFile::ReadOnly);
     QString Button_Login_MainWindow_qss_str = QLatin1String(Button_Login_MainWindow_qss.readAll());
@@ -60,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setStyleSheet("background-color: ");
     //qDebug() << QCoreApplication::applicationDirPath();
+    /*
     QString filename1(":/Templates/Template_1.bmp");
     if(!(image_T1.load(filename1))) // load the image
     {
@@ -88,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
                      tr("Build Error"),
                      tr("Fail to open the image"));
     }
+    */
     //ui->progressBar_Preview->setVisible(false);
     QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
     Button_Quick_Option_qss.open(QFile::ReadOnly);
@@ -124,7 +127,6 @@ MainWindow::MainWindow(QWidget *parent)
     route_tool_window = new Route_Tool(this);
 
     show_preview_image();
-    showColourFormula();
 }
 
 MainWindow::~MainWindow()
@@ -148,12 +150,12 @@ void MainWindow::setOpenLocation(QString str)
     }
 }
 
-inline void _complex_in(QDataStream& in, Complex& c)
+inline void _complex_in(QDataStream& in, std::complex<double>& c)
 {
     double r = 0, i = 0;
     in >> r >> i;
-    c.setReal(r);
-    c.setImaginary(i);
+    std::complex<double> new_c { r, i };
+    c = new_c;
 }
 
 bool MainWindow::High_Version_Open(int type)
@@ -166,7 +168,7 @@ bool MainWindow::High_Version_Open(int type)
     FRD_R.skip(16);
     if(FRD_R.read(8) != "FRD\xEFTvJ*")
     {
-        QMessageBox::critical(this, "Fail to open", "The file may be damaged or should not be opened with Fractal Designer.");
+        QMessageBox::critical(this, tr("Fail to open"), tr("The file may be damaged or should not be opened with Fractal Designer."));
         if(type) // OPEN_FILE_OUT
         {
             exit(1);
@@ -200,10 +202,10 @@ bool MainWindow::High_Version_Open(int type)
             FRD_R.skip(4);
             double t1, t2, t3, t4;
             in >> t1 >> t2 >> t3 >> t4 >> curr_info.Julia_c_rate;
-            curr_info.Julia_c1.setReal(t1);
-            curr_info.Julia_c1.setImaginary(t2);
-            curr_info.Julia_c2.setReal(t3);
-            curr_info.Julia_c2.setImaginary(t4);
+            std::complex<double> c1 { t1, t2 };
+            std::complex<double> c2 { t3, t4 };
+            curr_info.Julia_c1 = c1;
+            curr_info.Julia_c2 = c2;
         }
         else if NameIs('T', '4')
         {
@@ -228,16 +230,12 @@ bool MainWindow::High_Version_Open(int type)
         else if NameIs('C', '1')
         {
             FRD_R.skip(4);
-            For_All_Colour(i, j)
-                in >> curr_info.Colour_Data_1[i][j][0] >> curr_info.Colour_Data_1[i][j][1];
-            End_All_Colour
+
         }
         else if NameIs('C', '2')
         {
             FRD_R.skip(4);
-            For_All_Colour(i, j)
-                in >> curr_info.Colour_Data_2[i][j][0] >> curr_info.Colour_Data_2[i][j][1];
-            End_All_Colour
+
         }
         else if NameIs('R', 'O')
         {
@@ -413,23 +411,6 @@ void MainWindow::on_MainWindow_openfile_clicked()
     MainWindow::on_actionOpen_O_triggered();
 }
 
-void MainWindow::set_Colour_Dlg(int n)
-{
-    Set_Colour* set_colour_window = new Set_Colour(this, Project_Name, n);
-//    set_colour_window->set_label(n);
-    set_colour_window->show();
-}
-
-void MainWindow::on_Convergent_setColour_clicked()
-{
-    set_Colour_Dlg(0);
-}
-
-void MainWindow::on_Unconvergent_setColour_clicked()
-{
-    set_Colour_Dlg(1);
-}
-
 void MainWindow::show_template_graph()
 {
 //    ui->label_Template_1->setPixmap(QPixmap::fromImage());
@@ -504,6 +485,7 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
         ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
     }
 
+    /*
     ui->label_Template_1->resize(ui->widget_T1->size());
     int T1_w_width(ui->label_Template_1->width());
     int T1_w_height(ui->label_Template_1->height());
@@ -526,7 +508,6 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
     if(rate_i_T2 > rate_w_T2)
     {
-
         ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T2_w_height));
     }
     else
@@ -562,7 +543,7 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     else
     {
         ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
-    }
+    }*/
 }
 
 void MainWindow::on_Tab_currentChanged(int index)
@@ -583,7 +564,7 @@ void MainWindow::on_Tab_currentChanged(int index)
             ui->Label_Preview_Image->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width));
         }
     }
-
+    /*
     if(index == 1) // Template
     {
         ui->label_Template_1->resize(ui->widget_T1->size());
@@ -645,12 +626,11 @@ void MainWindow::on_Tab_currentChanged(int index)
         {
             ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
         }
-    }
+    }*/
 }
 
 void MainWindow::on_actionSave_S_triggered()
 {
-    HIGH_V_ONLY
     save_or_not = true;
     if(Open_Location == "") on_actionNew_N_triggered();
 
@@ -686,6 +666,11 @@ void MainWindow::on_Template_Choice_2_toggled(bool checked)
         ui->Min_class_value->setDecimals(6);
         ui->Min_class_value->setToolTip("");
         ui->label_Minimum_Unclassified_Value->setToolTip("");
+        on_actionTemplate_2_triggered();
+    }
+    else
+    {
+        template_2_dialog->close();
     }
 }
 
@@ -710,17 +695,132 @@ void MainWindow::on_Template_Choice_4_toggled(bool checked)
         ui->Min_class_value->setDecimals(10);
         ui->Min_class_value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
         ui->label_Minimum_Unclassified_Value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
-    }    
+        on_actionTemplate_6_triggered(); // Choice of Template 4
+    }
+    else
+    {
+        template_4_dialog->close();
+    }
 }
 
-inline Complex MainWindow::_curr_complex(const Complex& c1, const Complex& c2, double t, double k)
+void MainWindow::on_Template_Choice_5_toggled(bool checked)
 {
-    return c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t);
+    if(checked)
+    {
+        Project_Template = "5";
+        ui->label_Minimum_Unclassified_Value->setText("Minimum unclassified value");
+        ui->Min_class_value->setDecimals(6);
+        ui->Min_class_value->setToolTip("");
+        ui->label_Minimum_Unclassified_Value->setToolTip("");
+    }
+}
+
+inline std::complex<double> MainWindow::_curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k)
+{
+    return c1 + (c2 - c1) * ((1 - k) * t + k * t * t);
+}
+
+void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4], std::string Colour2_[4])
+{
+    QStringList Colour1_l = str1.split(';');
+    QStringList Colour2_l = str2.split(';');
+
+    qDebug() << "Check RGBA" << Colour1_l << Colour2_l;
+
+    for (const auto& str : Colour1_l)
+    {
+        QString s;
+        for (const auto& ch : str)
+        {
+            if (!ch.isSpace())
+            {
+                s.append(ch);
+            }
+        }
+        qDebug() << s;
+        if (s.left(2) == "R=")
+        {
+            Colour1_[0] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "G=")
+        {
+            Colour1_[1] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "B=")
+        {
+            Colour1_[2] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "A=")
+        {
+            Colour1_[3] = s.remove(0, 2).toStdString();
+        }
+        else
+        {
+            // just omit that
+        }
+    }
+
+    for (const auto& str : Colour2_l)
+    {
+        QString s;
+        for (const auto& ch : str)
+        {
+            if (!ch.isSpace())
+            {
+                s.append(ch);
+            }
+        }
+        if (s.left(2) == "R=")
+        {
+            Colour2_[0] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "G=")
+        {
+            Colour2_[1] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "B=")
+        {
+            Colour2_[2] = s.remove(0, 2).toStdString();
+        }
+        else if (s.left(2) == "A=")
+        {
+            Colour2_[3] = s.remove(0, 2).toStdString();
+        }
+        else
+        {
+            // just omit that
+        }
+    }
 }
 
 void MainWindow::on_actionPreview_Refresh_triggered()
 {
     Create_Image_Task* preview = new Create_Image_Task(this);
+
+    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
+    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
+    std::string Colour1_[4], Colour2_[4];
+
+    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
+
+    std::string msg1[4], msg2[4];
+    std::vector<var> post1[4], post2[4];
+    for (int i = 0; i != 4; i++) {
+        if (!to_postorder(Colour1_[i], msg1 + i, post1[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        {
+            QMessageBox::critical(this, "Error", "Syntax error in Convergent Point Colour Setting!");
+            qDebug() << QString::fromStdString(msg1[i]);
+            return;
+        }
+    }
+    for (int i = 0; i != 4; i++) {
+        if (!to_postorder(Colour2_[i], msg2 + i, post2[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        {
+            QMessageBox::critical(this, "Error", "Syntax error in Divergent Point Colour Setting!");
+            qDebug() << QString::fromStdString(msg2[i]);
+            return;
+        }
+    }
 
     Create_Images_Task_Pre(preview);
 
@@ -744,7 +844,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
         if(Version_Higher_Than_4)
         {
             double t = ui->doubleSpinBox_t->value();
-            Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
             double& k = curr_info.Julia_c_rate;
             preview->setTemplate2(_curr_complex(c1, c2, t, k));
             preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
@@ -763,7 +863,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
 
             double& k = curr_info.Newton_c_rate;
 
-            Complex arr[10];
+            std::complex<double> arr[10];
             for(int i = 0; i != 10; i++)
             {
                 arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
@@ -848,20 +948,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
                                            QMessageBox::Yes);
         if(result == QMessageBox::Yes)
         {
-            if(Version_Higher_Than_4)
-            {
-                on_actionSave_S_triggered();
-            }
-            else
-            {
-                on_actionSave_triggered();
-                /*
-                New_File* new_project = new New_File(this);
-                new_project->show();
-                new_project->exec();
-                save_or_not = true;
-                */
-            }
+            on_actionSave_S_triggered();
         }
         else if(result == QMessageBox::No)
         {
@@ -988,11 +1075,6 @@ void MainWindow::on_pushButton_routeClear_clicked()
 void MainWindow::on_actionCreate_Images_triggered()
 {
     if(!ui->actionCreate_Images->isEnabled()) return;
-    if(User_Name.isEmpty())
-    {
-        QMessageBox::warning(this, "Can not create images", "You have not logged in.");
-        return;
-    }
 
     if(!save_or_not)
     {
@@ -1025,8 +1107,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     ui->actionCreate_Images->setDisabled(true);
     ui->actionCreate_Images_in_Range->setDisabled(true);
     ui->actionCheck_Images->setDisabled(true);
-    // on_actionPreview_Refresh_triggered();
-    // work_thread->start();
+
     qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
     int current_index = 0;
@@ -1036,39 +1117,8 @@ void MainWindow::on_actionCreate_Images_triggered()
     create_image_info = new Create_Image_Info;
     connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
     connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
-    //connect(create_image_info, &Create_Image_Info::close, create_image_info, &Create_Image_Info::close_create_image_info);
     create_image_info->show();
-    emit build_image_info_signal(path + "\\" + name, image_format, total_image, 0);
-
-    /* Old Version
-    for(int i = 0; i < total_image - 1; i++)
-    {        
-        double t = static_cast<double>(i) / total_image;
-        while(current_index + 2 < model->rowCount() && t > model->item(current_index + 1)->text().toDouble())
-        {
-            current_index++;
-        }
-        double dt = (t - model->item(current_index, 0)->text().toDouble())
-                / (model->item(current_index + 1, 0)->text().toDouble() - model->item(current_index, 0)->text().toDouble());
-        double k = (model->item(current_index, 5)->text().toDouble());
-        double x = model->item(current_index, 1)->text().toDouble()
-                + (model->item(current_index + 1, 1)->text().toDouble() - model->item(current_index, 1)->text().toDouble())
-                * ((1 - k) * dt + k * pow(dt, 2));
-        double y = model->item(current_index, 2)->text().toDouble()
-                + (model->item(current_index + 1, 2)->text().toDouble() - model->item(current_index, 2)->text().toDouble())
-                * ((1 - k) * dt + k * pow(dt, 2));
-        double angle = model->item(current_index, 3)->text().toDouble()
-                + (model->item(current_index + 1, 3)->text().toDouble() - model->item(current_index, 3)->text().toDouble())
-                * ((1 - k) * dt + k * pow(dt, 2));
-        double width = 1.0 / (1.0 / model->item(current_index, 4)->text().toDouble()
-                + (1.0 / model->item(current_index + 1, 4)->text().toDouble() - 1.0 / model->item(current_index, 4)->text().toDouble())
-                * ((1 - k) * dt + k * pow(dt, 2)));
-        qDebug() << t << current_index << x << y << width << angle;
-        emit build_signal(x, y, width, width * Y / X, X, Y, angle, t, image_format, Project_Name, name + QString::number(i), "Create_Image");
-    }
-    */
-
-    // New version with the normal speed
+    emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);
 
     for(int i = 0; i < total_image - 1; i++)
     {
@@ -1107,45 +1157,29 @@ void MainWindow::on_actionCreate_Images_triggered()
 
         // qDebug() << t << current_index << x << y << width << angle;
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        // create_images->setAutoDelete(false);
-        Create_Images_Task_Pre(create_images);
+        // Create_Images_Task_Pre(create_images);
         if(curr_info.template_ == 2)
         {
-            if(Version_Higher_Than_4)
-            {
-                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-                double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
-            }
-            else
-            {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-                return;
-            }
+            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            double k = curr_info.Julia_c_rate;
+            create_images->setTemplate2(c1 + (c2 - c1) * ((1 - k) * T + k * T * T));
         }
         if(curr_info.template_ == 4)
         {
-            if(Version_Higher_Than_4)
-            {
-                double& k = curr_info.Newton_c_rate;
+            double& k = curr_info.Newton_c_rate;
 
-                Complex arr[10];
-                for(int i = 0; i != 10; i++)
-                {
-                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
-                }
-
-                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
-                                            arr,
-                                            _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
-                                            _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
-                                            _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
-            }
-            else
+            std::complex<double> arr[10];
+            for(int i = 0; i != 10; i++)
             {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-                return;
+                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
             }
+
+            create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                        arr,
+                                        _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                        _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                        _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
+
         }
         create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
         QThreadPool::globalInstance()->start(create_images);
@@ -1154,34 +1188,18 @@ void MainWindow::on_actionCreate_Images_triggered()
     Create_Image_Task* create_images = new Create_Image_Task(this);
     // create_images->setAutoDelete(false);
 
-    Create_Images_Task_Pre(create_images);
+    //Create_Images_Task_Pre(create_images);
     if(curr_info.template_ == 2)
     {
-        if(Version_Higher_Than_4)
-        {
-            create_images->setTemplate2(curr_info.Julia_c2);
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-            return;
-        }
+        create_images->setTemplate2(curr_info.Julia_c2);
     }
     if(curr_info.template_ == 4)
     {
-        if(Version_Higher_Than_4)
-        {
-            create_images->setTemplate4(curr_info.Newton_a_2,
-                                        curr_info.Newton_xn_2,
-                                        curr_info.Newton_sin_2,
-                                        curr_info.Newton_cos_2,
-                                        curr_info.Newton_ex_2);
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-            return;
-        }
+        create_images->setTemplate4(curr_info.Newton_a_2,
+                                    curr_info.Newton_xn_2,
+                                    curr_info.Newton_sin_2,
+                                    curr_info.Newton_cos_2,
+                                    curr_info.Newton_ex_2);
     }
     create_images->setImage(Tb(model->rowCount() - 1, 1),
                             Tb(model->rowCount() - 1, 2),
@@ -1192,8 +1210,6 @@ void MainWindow::on_actionCreate_Images_triggered()
                             1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last");
     QThreadPool::globalInstance()->start(create_images);
     qDebug() << "Here Here !!!!";
-
-    // delete create_images;
 }
 
 void MainWindow::on_commandLinkButton_Image_clicked()
@@ -1284,14 +1300,18 @@ void MainWindow::on_actionCreate_Video_triggered()
     QString video_file_name = ui->lineEdit_videoName->text();
     QString video_file_path = ui->lineEdit_videoPath->text(); // only used in high version
     QString video_format = "mp4";
+#if defined (WIN32) || defined (WIN64)
+    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -r ";
+#elif defined (__linux__)
     QString PowerShell_arg1 = "ffmpeg -r ";
-    PowerShell_arg1.append(ui->comboBox_fps->currentText());
-    PowerShell_arg1.append(" -f image2 -i ");
-    PowerShell_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
-    PowerShell_arg1.append("%d.png\" -vcodec libx264 -crf ");
-    PowerShell_arg1.append(QString::number(crf_value));
-    PowerShell_arg1.append(" -pix_fmt yuv420p ");
-    PowerShell_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
+#endif
+    ffmpeg_arg1.append(ui->comboBox_fps->currentText());
+    ffmpeg_arg1.append(" -f image2 -i ");
+    ffmpeg_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
+    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
+    ffmpeg_arg1.append(QString::number(crf_value));
+    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
+    ffmpeg_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
                                video_file_name + "." + video_format
                              : video_file_name + "_temp." + video_format);
 
@@ -1319,13 +1339,12 @@ void MainWindow::on_actionCreate_Video_triggered()
 
         QProcess* create_video = new QProcess(this);
         create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-        QString cmd("powershell");
-        QStringList parameters1{PowerShell_arg1};
 #if defined (WIN32) || defined (_WIN64)
-        create_video->start(cmd, parameters1);
-        QString file_suffix = "ps1";
+        qDebug() << ffmpeg_arg1;
+        create_video->start(ffmpeg_arg1);
+        QString file_suffix = "cmd";
 #elif defined(__linux__)
-        create_video->start(parameters1[0]);
+        create_video->start(ffmpeg_arg1);
         QString file_suffix = "sh";
 #endif
         Alive[0] = create_video->waitForFinished(300000);
@@ -1336,14 +1355,14 @@ void MainWindow::on_actionCreate_Video_triggered()
             QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
             create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out1(&create_video_ps);
-            out1 << PowerShell_arg1;
+            out1 << ffmpeg_arg1;
             create_video_ps.close();
 
             // Retry running shell file
             QProcess* run_sh = new QProcess(this);
             run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
 #if defined (WIN32) || (_WIN64)
-            run_sh->start("powershell", QStringList() << "Create_Video.ps1");
+            run_sh->start("Create_Video.cmd");
 #elif defined (__linux__)
             run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
 #endif
@@ -1399,22 +1418,29 @@ void MainWindow::on_actionCreate_Video_triggered()
             }
             Music_Added_NoEnd_.close();
         }
-
-        QString PowerShell_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-        QStringList parameters2{PowerShell_arg2};
-        create_video->start(cmd, parameters2);
+#if defined (WIN32) || (WIN64)
+        QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#elif defined (__linux__)
+        QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#endif
+        qDebug() << ffmpeg_arg2;
+        create_video->start(ffmpeg_arg2);
         Alive[1] = create_video->waitForFinished(300000);
 
         ui->statusbar->showMessage(tr("Adding Music..."), 300000);
 
+#if defined (WIN32) || (WIN64)
+        QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
+#elif defined (__linux__)
         QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-        PowerShell_arg3.append(video_file_name + "_temp." + video_format);
-        PowerShell_arg3.append(" -shortest -f mp4 ");
-        PowerShell_arg3.append(video_file_name + "." + video_format);
+#endif
+        ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
+        ffmpeg_arg3.append(" -shortest -f mp4 ");
+        ffmpeg_arg3.append(video_file_name + "." + video_format);
         if(Alive[0] && Alive[1])
         {
-            QStringList parameters3(PowerShell_arg3);
-            create_video->start(cmd, parameters3);
+            qDebug() << ffmpeg_arg3;
+            create_video->start(ffmpeg_arg3);
             Alive[2] = create_video->waitForFinished(60000);
             QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
             if(ck_result.exists())
@@ -1438,8 +1464,8 @@ void MainWindow::on_actionCreate_Video_triggered()
             QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
             add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out2(&add_music_ps);
-            out2 << PowerShell_arg2 << Qt::endl;
-            out2 << PowerShell_arg3;
+            out2 << ffmpeg_arg2 << Qt::endl;
+            out2 << ffmpeg_arg3;
             add_music_ps.close();
             // Retry running shell file
             QProcess* run_sh = new QProcess(this);
@@ -1448,7 +1474,7 @@ void MainWindow::on_actionCreate_Video_triggered()
             if(Alive[0])
             {
 #if defined (WIN32) || (_WIN64)
-                run_sh->start("powershell", QStringList() << "Add_Music.ps1");
+                run_sh->start("Add_Music.cmd");
 #elif defined (__linux__)
                 run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
 #endif
@@ -1512,14 +1538,14 @@ void MainWindow::on_actionCreate_Video_triggered()
         QProcess* create_video = new QProcess;
         create_video->setWorkingDirectory(Project_Name);
         QString cmd("powershell");
-        QStringList parameters1{PowerShell_arg1};
+        QStringList parameters1{ffmpeg_arg1};
         create_video->start(cmd, parameters1);
         create_video->waitForFinished();
 
         QFile create_video_ps(Project_Name + "/Create_Video.ps1");
         create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream out1(&create_video_ps);
-        out1 << PowerShell_arg1;
+        out1 << ffmpeg_arg1;
         create_video_ps.close();
 
         QFile Music_Added_NoEnd_(Project_Name + "/Music_Added_NoEnd.txt");
@@ -1790,414 +1816,6 @@ void MainWindow::on_actionAuto_Refresh_triggered()
     */
 }
 
-void MainWindow::on_actionNew_triggered()
-{
-    Version_Higher_Than_4 = false;
-    New_File* new_project = new New_File(this);
-    new_project->show();
-    save_or_not = true;
-    if(Open_Location != "" && Project_Name == "Unsaved project")
-    {
-        Version_Higher_Than_4 = true;
-    }
-}
-
-void MainWindow::on_actionOpen_triggered()
-{
-    Version_Higher_Than_4 = false;
-    Open_File* open_project = new Open_File(this);
-    connect(open_project, &Open_File::template_choice, this, &MainWindow::iniTemplate);
-    connect(open_project, &Open_File::define_value, this, &MainWindow::iniValue);
-    connect(open_project, &Open_File::image_size, this, &MainWindow::iniSize);
-    connect(open_project, &Open_File::route_info, this, &MainWindow::iniRouteInfo);
-    connect(open_project, &Open_File::image_path, this, &MainWindow::iniImagePath);
-    connect(open_project, &Open_File::image_prefix, this, &MainWindow::iniImagePrefix);
-    connect(open_project, &Open_File::frame_rate, this, &MainWindow::iniFrameRate);
-    connect(open_project, &Open_File::total_time, this, &MainWindow::iniTotalTime);
-    connect(open_project, &Open_File::music_added, this, &MainWindow::iniMusicAdded);
-    open_project->show();
-    open_project->exec();
-    save_or_not = true;
-    MainWindow::on_actionSave_triggered();
-    if(Open_Location != "" && Project_Name == "")
-    {
-        Version_Higher_Than_4 = true;
-    }
-}
-
-void MainWindow::on_actionSave_triggered()
-{
-    if(!save_or_not)
-    {
-        New_File* new_file = new New_File(0);
-        new_file->setWindowIcon(QIcon(":/exe_icon/EXE Icons/FRD_icon.png"));
-        new_file->open();
-    }
-
-    LOW_V_ONLY
-
-    QFile Template_Choice(Project_Name + "/Template_Choice.txt");
-    Template_Choice.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out1(&Template_Choice);
-    out1 << Project_Template;
-    Template_Choice.close();
-
-    QFile Define_Value(Project_Name + "/Define_Value.txt");
-    Define_Value.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out2(&Define_Value);
-    out2 << ui->Min_class_value->value() << tr(" ") << ui->Max_class_value->value() << tr(" ") << ui->Max_loop_time->value();
-    Define_Value.close();
-
-    QFile Image_Size(Project_Name + "/Image_Size.txt");
-    Image_Size.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out3(&Image_Size);
-    out3 << ui->Image_size_X->value() << tr(" ") << ui->Image_size_Y->value();
-    Image_Size.close();
-
-    QFile Route_Info_Param(Project_Name + "/Route_Info.txt");
-    Route_Info_Param.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out4(&Route_Info_Param);
-    out4 << model->rowCount() << Qt::endl;
-    for(int i = 0; i != model->rowCount(); i++)
-    {
-        qDebug() << "save the table";
-        for(int j = 0; j != 6; j++)
-        {
-            out4 << model->item(i, j)->text() << " ";
-        }
-        out4 << Qt::endl;
-    }
-    Route_Info_Param.close();
-
-    QFile Image_Prefix_(Project_Name + "/Image_Prefix.txt");
-    Image_Prefix_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out5(&Image_Prefix_);
-    out5 << ui->lineEdit_imagePrefix->text();
-    Image_Prefix_.close();
-
-    QFile Image_Dir_(Project_Name + "/Image_Dir.txt");
-    Image_Dir_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out6(&Image_Dir_);
-    out6 << ui->lineEdit_imagePath->text();
-    Image_Dir_.close();
-
-    QFile Frame_Rate_(Project_Name + "/Frame_Rate.txt");
-    Frame_Rate_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out7(&Frame_Rate_);
-    out7 << ui->comboBox_fps->currentIndex();
-    Frame_Rate_.close();
-
-    QFile Total_Time_(Project_Name + "/Total_Time.txt");
-    Total_Time_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out8(&Total_Time_);
-    out8 << ui->timeEdit->text();
-    Total_Time_.close();
-
-    QFile Music_Added_(Project_Name + "/Music_Added.txt");
-    Music_Added_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out9(&Music_Added_);
-    out9 << ui->textBrowser_music->toPlainText() << "\n<End>";
-    Music_Added_.close();
-
-    QFile Colour_Set_1(Project_Name + "/Colour_Set_1.txt");
-    QFile Colour_Set_temp1(Project_Name + "/Colour_Set_temp1.txt");
-    if(Colour_Set_temp1.exists())
-    {
-        QFile::remove(Project_Name + "/Colour_Set_1.txt");
-        if(QFile::copy(Project_Name + "/Colour_Set_temp1.txt", Project_Name + "/Colour_Set_1.txt"))
-        {
-            qDebug() << "succeeded copy";
-        }
-        else
-        {
-            qDebug() << "failed copy";
-        }
-    }
-
-    QFile Colour_Set_2(Project_Name + "/Colour_Set_2.txt");
-    QFile Colour_Set_temp2(Project_Name + "/Colour_Set_temp2.txt");
-    if(Colour_Set_temp2.exists())
-    {
-        QFile::remove(Project_Name + "/Colour_Set_2.txt");
-        if(QFile::copy(Project_Name + "/Colour_Set_temp2.txt", Project_Name + "/Colour_Set_2.txt"))
-        {
-            qDebug() << "succeeded copy";
-        }
-        else
-        {
-            qDebug() << "failed copy";
-        }
-    }
-
-    QString Formula[2][29] = {
-        {
-            "k",
-            "Zn.X",
-            "Zn.Y",
-            "|Zn|",
-            "|Zn| / MIN",
-            "argz(Zn)",
-            "sin(argz(Zn))",
-            "cos(argz(Zn))",
-            "Z0.X",
-            "Z0.Y",
-            "|Z0|",
-            "|Z0| / MIN",
-            "argz(Z0)",
-            "sin(argz(Z0))",
-            "|Zn-Z0|",
-            "e^k",
-            "10^k",
-            "ln(1+|Zn|)",
-            "ln(1+|Z0|)",
-            "ln(1+|Zn-Z0|)",
-            "e^|Zn|",
-            "e^|Z0|",
-            "e^|Zn-Z0|",
-            "10^|Zn|",
-            "10^|Z0|",
-            "10^|Zn-Z0|",
-            "e^(|Zn| / MIN)",
-            "e^(|Z0| / MIN)",
-            ""
-        },
-        {
-            "k",
-            "Zn.X",
-            "Zn.Y",
-            "|Zn|",
-            "|Zn| / MAX",
-            "argz(Zn)",
-            "sin(argz(Zn))",
-            "cos(argz(Zn))",
-            "Z0.X",
-            "Z0.Y",
-            "|Z0|",
-            "|Z0| / MAX",
-            "argz(Z0)",
-            "sin(argz(Z0))",
-            "|Zn-Z0|",
-            "e^k",
-            "10^k",
-            "ln(1+|Zn|)",
-            "ln(1+|Z0|)",
-            "ln(1+|Zn-Z0|)",
-            "e^|Zn|",
-            "e^|Z0|",
-            "e^|Zn-Z0|",
-            "10^|Zn|",
-            "10^|Z0|",
-            "10^|Zn-Z0|",
-            "e^(|Zn| / MAX)",
-            "e^(|Z0| / MAX)",
-            ""
-        }
-    };
-
-    QString colour_defined[2][4] = {
-        {"R = ", "G = ", "B = ", "A = "},
-        {"R = ", "G = ", "B = ", "A = "}
-    };
-    double Colour_Data[2][4][29][2] = {0};
-    //Colour_Data[0][3][28][1] = Colour_Data[1][3][28][1] = 255;
-
-    QFile Colour_saved_1(Project_Name + "/Colour_Set_temp1.txt");
-    if(Colour_saved_1.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream in1(&Colour_saved_1);
-        for(int j = 0; j != 4; j++)
-        {
-            in1 >> Colour_Data[0][j][0][0] >> Colour_Data[0][j][0][1];
-            in1 >> Colour_Data[0][j][1][0] >> Colour_Data[0][j][1][1];
-            in1 >> Colour_Data[0][j][2][0] >> Colour_Data[0][j][2][1];
-            in1 >> Colour_Data[0][j][3][0] >> Colour_Data[0][j][3][1];
-            in1 >> Colour_Data[0][j][4][0] >> Colour_Data[0][j][4][1];
-            in1 >> Colour_Data[0][j][5][0] >> Colour_Data[0][j][5][1];
-            in1 >> Colour_Data[0][j][6][0] >> Colour_Data[0][j][6][1];
-            in1 >> Colour_Data[0][j][7][0] >> Colour_Data[0][j][7][1];
-            in1 >> Colour_Data[0][j][8][0] >> Colour_Data[0][j][8][1];
-            in1 >> Colour_Data[0][j][9][0] >> Colour_Data[0][j][9][1];
-            in1 >> Colour_Data[0][j][10][0] >> Colour_Data[0][j][10][1];
-            in1 >> Colour_Data[0][j][11][0] >> Colour_Data[0][j][11][1];
-            in1 >> Colour_Data[0][j][12][0] >> Colour_Data[0][j][12][1];
-            in1 >> Colour_Data[0][j][13][0] >> Colour_Data[0][j][13][1];
-            in1 >> Colour_Data[0][j][14][0] >> Colour_Data[0][j][14][1];
-            in1 >> Colour_Data[0][j][15][0] >> Colour_Data[0][j][15][1];
-            in1 >> Colour_Data[0][j][16][0] >> Colour_Data[0][j][16][1];
-            in1 >> Colour_Data[0][j][17][0] >> Colour_Data[0][j][17][1];
-            in1 >> Colour_Data[0][j][18][0] >> Colour_Data[0][j][18][1];
-            in1 >> Colour_Data[0][j][19][0] >> Colour_Data[0][j][19][1];
-            in1 >> Colour_Data[0][j][20][0] >> Colour_Data[0][j][20][1];
-            in1 >> Colour_Data[0][j][21][0] >> Colour_Data[0][j][21][1];
-            in1 >> Colour_Data[0][j][22][0] >> Colour_Data[0][j][22][1];
-            in1 >> Colour_Data[0][j][23][0] >> Colour_Data[0][j][23][1];
-            in1 >> Colour_Data[0][j][24][0] >> Colour_Data[0][j][24][1];
-            in1 >> Colour_Data[0][j][25][0] >> Colour_Data[0][j][25][1];
-            in1 >> Colour_Data[0][j][26][0] >> Colour_Data[0][j][26][1];
-            in1 >> Colour_Data[0][j][27][0] >> Colour_Data[0][j][27][1];
-            in1 >> Colour_Data[0][j][28][0] >> Colour_Data[0][j][28][1];
-        }
-        Colour_saved_1.close();
-    }
-    else
-    {
-        for(int i = 0; i!= 4; i++)
-        {
-            colour_defined[0][i].append("0");
-        }
-    }
-
-    QFile Colour_saved_2(Project_Name + "/Colour_Set_temp2.txt");
-    if(Colour_saved_2.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream in2(&Colour_saved_2);
-        for(int j = 0; j != 4; j++)
-        {
-            in2 >> Colour_Data[1][j][0][0] >> Colour_Data[1][j][0][1];
-            in2 >> Colour_Data[1][j][1][0] >> Colour_Data[1][j][1][1];
-            in2 >> Colour_Data[1][j][2][0] >> Colour_Data[1][j][2][1];
-            in2 >> Colour_Data[1][j][3][0] >> Colour_Data[1][j][3][1];
-            in2 >> Colour_Data[1][j][4][0] >> Colour_Data[1][j][4][1];
-            in2 >> Colour_Data[1][j][5][0] >> Colour_Data[1][j][5][1];
-            in2 >> Colour_Data[1][j][6][0] >> Colour_Data[1][j][6][1];
-            in2 >> Colour_Data[1][j][7][0] >> Colour_Data[1][j][7][1];
-            in2 >> Colour_Data[1][j][8][0] >> Colour_Data[1][j][8][1];
-            in2 >> Colour_Data[1][j][9][0] >> Colour_Data[1][j][9][1];
-            in2 >> Colour_Data[1][j][10][0] >> Colour_Data[1][j][10][1];
-            in2 >> Colour_Data[1][j][11][0] >> Colour_Data[1][j][11][1];
-            in2 >> Colour_Data[1][j][12][0] >> Colour_Data[1][j][12][1];
-            in2 >> Colour_Data[1][j][13][0] >> Colour_Data[1][j][13][1];
-            in2 >> Colour_Data[1][j][14][0] >> Colour_Data[1][j][14][1];
-            in2 >> Colour_Data[1][j][15][0] >> Colour_Data[1][j][15][1];
-            in2 >> Colour_Data[1][j][16][0] >> Colour_Data[1][j][16][1];
-            in2 >> Colour_Data[1][j][17][0] >> Colour_Data[1][j][17][1];
-            in2 >> Colour_Data[1][j][18][0] >> Colour_Data[1][j][18][1];
-            in2 >> Colour_Data[1][j][19][0] >> Colour_Data[1][j][19][1];
-            in2 >> Colour_Data[1][j][20][0] >> Colour_Data[1][j][20][1];
-            in2 >> Colour_Data[1][j][21][0] >> Colour_Data[1][j][21][1];
-            in2 >> Colour_Data[1][j][22][0] >> Colour_Data[1][j][22][1];
-            in2 >> Colour_Data[1][j][23][0] >> Colour_Data[1][j][23][1];
-            in2 >> Colour_Data[1][j][24][0] >> Colour_Data[1][j][24][1];
-            in2 >> Colour_Data[1][j][25][0] >> Colour_Data[1][j][25][1];
-            in2 >> Colour_Data[1][j][26][0] >> Colour_Data[1][j][26][1];
-            in2 >> Colour_Data[1][j][27][0] >> Colour_Data[1][j][27][1];
-            in2 >> Colour_Data[1][j][28][0] >> Colour_Data[1][j][28][1];
-        }
-        Colour_saved_2.close();
-    }
-    else
-    {
-        for(int i = 0; i!= 4; i++)
-        {
-            colour_defined[1][i].append("0");
-        }
-    }
-
-    for(int i = 0; i != 2; i++)
-    {
-        for(int j = 0; j != 4; j++)
-        {
-            for(int k = 0; k != 29; k++)
-            {
-                if(Colour_Data[i][j][k][0] != 0 || Colour_Data[i][j][k][1] != 0)
-                {
-                    if(Colour_Data[i][j][k][0] != 0 && Colour_Data[i][j][k][1] != 0)
-                    {
-                        if(colour_defined[i][j].right(1) != " ")
-                        {
-                            colour_defined[i][j].append(" + ");
-                        }
-                        if(Colour_Data[i][j][k][1] > 0)
-                        {
-                            colour_defined[i][j].append(tr("(") +
-                                QString::number(Colour_Data[i][j][k][0]) +
-                                "t + " +
-                                QString::number(Colour_Data[i][j][k][1]) +
-                                ")" +
-                                Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(tr("(") +
-                                QString::number(Colour_Data[i][j][k][0]) +
-                                "t - " +
-                                QString::number(-Colour_Data[i][j][k][1]) +
-                                ")" +
-                                Formula[i][k]);
-                        }
-                    }
-                    else if(Colour_Data[i][j][k][0] != 0)
-                    {
-                        if(Colour_Data[i][j][k][0] > 0)
-                        {
-                            if(colour_defined[i][j].right(1) != " ")
-                            {
-                                colour_defined[i][j].append(" + ");
-                            }
-                            colour_defined[i][j].append(QString::number(Colour_Data[i][j][k][0]) + "t " + Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(" - ");
-                            colour_defined[i][j].append(QString::number(-Colour_Data[i][j][k][0]) + "t " + Formula[i][k]);
-                        }
-                    }
-                    else
-                    {
-                        if(Colour_Data[i][j][k][1] > 0)
-                        {
-                            if(colour_defined[i][j].right(1) != " ")
-                            {
-                                colour_defined[i][j].append(" + ");
-                            }
-                            colour_defined[i][j].append(QString::number(Colour_Data[i][j][k][1]) + " " + Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(" - ");
-                            colour_defined[i][j].append(QString::number(-Colour_Data[i][j][k][1]) + " " + Formula[i][k]);
-                        }
-                    }
-                    if(k == 28) colour_defined[i][j].chop(1);
-                }
-            }
-        }
-    }
-    for(int i = 0; i != 2; i++)
-    {
-        for(int j = 0; j != 4; j++)
-        {
-            if(colour_defined[i][j].right(1) == " ")
-            {
-                colour_defined[i][j].append("0");
-            }
-        }
-    }
-
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(qRgb(236, 28, 36)); // red
-    ui->Convergent_Points_Colour_Formula_View->setText(colour_defined[0][0]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(qRgb(25, 193, 72)); // green
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][1]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(Qt::blue);
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][2]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(Qt::gray);
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][3]);
-
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(qRgb(236, 28, 36)); // red
-    ui->Unconvergent_Points_Colour_Formula_View->setText(colour_defined[1][0]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(qRgb(25, 193, 72)); // green
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][1]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(Qt::blue);
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][2]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(Qt::gray);
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][3]);
-
-    if(Open_Location != "" && Project_Name == "Unsaved project")
-    {
-        Version_Higher_Than_4 = true;
-    }
-}
-
 void MainWindow::edit(int mode) // default as EDIT_HERE
 {
     if(NO_EDIT) return;
@@ -2244,19 +1862,7 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
         curr_info.min_class_v = ui->Min_class_value->value();
         curr_info.max_class_v = ui->Max_class_value->value();
         curr_info.max_loop_t  = ui->Max_loop_time->value();
-/*
-        // Colour 1
-        For_All_Colour(i, j)
-            curr_info.Colour_Data_1[i][j][0] = Colour_Data_S[0][i][j][0];
-            curr_info.Colour_Data_1[i][j][1] = Colour_Data_S[0][i][j][1];
-        End_All_Colour
 
-        // Colour 2
-        For_All_Colour(i, j)
-            curr_info.Colour_Data_2[i][j][0] = Colour_Data_S[1][i][j][0];
-            curr_info.Colour_Data_2[i][j][1] = Colour_Data_S[1][i][j][1];
-        End_All_Colour
-*/
         // Route Info
         QList<Route_Info> Route;
         for(int i = 0; i != model->rowCount(); i++)
@@ -2339,7 +1945,7 @@ void MainWindow::display()
 
     // Colour
     // It is initialized in class Set_Colour itself using curr_info.
-    showColourFormula();
+    // showColourFormula();
 
     // Route Info
     isRouteValid = true;
@@ -2510,6 +2116,11 @@ void MainWindow::on_Template_Choice_4_clicked()
     edit();
 }
 
+void MainWindow::on_Template_Choice_5_clicked()
+{
+    edit();
+}
+
 void MainWindow::routeEdit(QStandardItem* it)
 {
     HIGH_V_ONLY
@@ -2538,7 +2149,6 @@ void MainWindow::routeEdit(QStandardItem* it)
     if(model_list != curr_info.Route_)
     {
         qDebug() << "routeEdit";
-        // curr_info.setRouteInfo(model_list);
         edit();
         display(); // used to check its validity
     }
@@ -2574,188 +2184,6 @@ void MainWindow::on_Max_loop_time_editingFinished()
     HIGH_V_ONLY
     if(ui->Max_loop_time->value() == curr_info.max_loop_t) return;
     edit();
-}
-
-void MainWindow::showColourFormula()
-{
-    HIGH_V_ONLY
-
-    QString Formula[2][29] = {
-        {
-            "k",
-            "Zn.X",
-            "Zn.Y",
-            "|Zn|",
-            "|Zn| / MIN",
-            "argz(Zn)",
-            "sin(argz(Zn))",
-            "cos(argz(Zn))",
-            "Z0.X",
-            "Z0.Y",
-            "|Z0|",
-            "|Z0| / MIN",
-            "argz(Z0)",
-            "sin(argz(Z0))",
-            "|Zn-Z0|",
-            "e^k",
-            "10^k",
-            "ln(1+|Zn|)",
-            "ln(1+|Z0|)",
-            "ln(1+|Zn-Z0|)",
-            "e^|Zn|",
-            "e^|Z0|",
-            "e^|Zn-Z0|",
-            "10^|Zn|",
-            "10^|Z0|",
-            "10^|Zn-Z0|",
-            "e^(|Zn| / MIN)",
-            "e^(|Z0| / MIN)",
-            ""
-        },
-        {
-            "k",
-            "Zn.X",
-            "Zn.Y",
-            "|Zn|",
-            "|Zn| / MAX",
-            "argz(Zn)",
-            "sin(argz(Zn))",
-            "cos(argz(Zn))",
-            "Z0.X",
-            "Z0.Y",
-            "|Z0|",
-            "|Z0| / MAX",
-            "argz(Z0)",
-            "sin(argz(Z0))",
-            "|Zn-Z0|",
-            "e^k",
-            "10^k",
-            "ln(1+|Zn|)",
-            "ln(1+|Z0|)",
-            "ln(1+|Zn-Z0|)",
-            "e^|Zn|",
-            "e^|Z0|",
-            "e^|Zn-Z0|",
-            "10^|Zn|",
-            "10^|Z0|",
-            "10^|Zn-Z0|",
-            "e^(|Zn| / MAX)",
-            "e^(|Z0| / MAX)",
-            ""
-        }
-    };
-
-    QString colour_defined[2][4] = {
-        {"R = ", "G = ", "B = ", "A = "},
-        {"R = ", "G = ", "B = ", "A = "}
-    };
-    //double Colour_SET[2][4][29][2] = {0};
-    //Colour_Data[0][3][28][1] = Colour_Data[1][3][28][1] = 255;
-
-#ifndef Colour_SET
-#define Colour_SET(i) ((!i) ? curr_info.Colour_Data_1 : curr_info.Colour_Data_2)
-
-    for(int i = 0; i != 2; i++)
-    {
-        for(int j = 0; j != 4; j++)
-        {
-            for(int k = 0; k != 29; k++)
-            {
-                if(Colour_SET(i)[j][k][0] != 0 || Colour_SET(i)[j][k][1] != 0)
-                {
-                    if(Colour_SET(i)[j][k][0] != 0 && Colour_SET(i)[j][k][1] != 0)
-                    {
-                        if(colour_defined[i][j].right(1) != " ")
-                        {
-                            colour_defined[i][j].append(" + ");
-                        }
-                        if(Colour_SET(i)[j][k][1] > 0)
-                        {
-                            colour_defined[i][j].append(tr("(") +
-                                QString::number(Colour_SET(i)[j][k][0]) +
-                                "t + " +
-                                QString::number(Colour_SET(i)[j][k][1]) +
-                                ")" +
-                                Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(tr("(") +
-                                QString::number(Colour_SET(i)[j][k][0]) +
-                                "t - " +
-                                QString::number(-Colour_SET(i)[j][k][1]) +
-                                ")" +
-                                Formula[i][k]);
-                        }
-                    }
-                    else if(Colour_SET(i)[j][k][0] != 0)
-                    {
-                        if(Colour_SET(i)[j][k][0] > 0)
-                        {
-                            if(colour_defined[i][j].right(1) != " ")
-                            {
-                                colour_defined[i][j].append(" + ");
-                            }
-                            colour_defined[i][j].append(QString::number(Colour_SET(i)[j][k][0]) + "t " + Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(" - ");
-                            colour_defined[i][j].append(QString::number(-Colour_SET(i)[j][k][0]) + "t " + Formula[i][k]);
-                        }
-                    }
-                    else
-                    {
-                        if(Colour_SET(i)[j][k][1] > 0)
-                        {
-                            if(colour_defined[i][j].right(1) != " ")
-                            {
-                                colour_defined[i][j].append(" + ");
-                            }
-                            colour_defined[i][j].append(QString::number(Colour_SET(i)[j][k][1]) + " " + Formula[i][k]);
-                        }
-                        else
-                        {
-                            colour_defined[i][j].append(" - ");
-                            colour_defined[i][j].append(QString::number(-Colour_SET(i)[j][k][1]) + " " + Formula[i][k]);
-                        }
-                    }
-                    if(k == 28) colour_defined[i][j].chop(1);
-                }
-            }
-        }
-    }
-    for(int i = 0; i != 2; i++)
-    {
-        for(int j = 0; j != 4; j++)
-        {
-            if(colour_defined[i][j].right(1) == " ")
-            {
-                colour_defined[i][j].append("0");
-            }
-        }
-    }
-
-#undef Colour_SET
-#endif
-
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(qRgb(236, 28, 36)); // red
-    ui->Convergent_Points_Colour_Formula_View->setText(colour_defined[0][0]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(qRgb(25, 193, 72)); // green
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][1]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(Qt::blue);
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][2]);
-    ui->Convergent_Points_Colour_Formula_View->setTextColor(Qt::gray);
-    ui->Convergent_Points_Colour_Formula_View->append(colour_defined[0][3]);
-
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(qRgb(236, 28, 36)); // red
-    ui->Unconvergent_Points_Colour_Formula_View->setText(colour_defined[1][0]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(qRgb(25, 193, 72)); // green
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][1]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(Qt::blue);
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][2]);
-    ui->Unconvergent_Points_Colour_Formula_View->setTextColor(Qt::gray);
-    ui->Unconvergent_Points_Colour_Formula_View->append(colour_defined[1][3]);
 }
 
 void MainWindow::dealRouteSort(int)
@@ -2991,8 +2419,7 @@ void MainWindow::on_pushButton_IV_clear3_clicked()
 
 void MainWindow::on_actionFRD_4_Help_triggered()
 {
-    FRD_4_Help* FRD_4_Help_Window = new FRD_4_Help(this);
-    FRD_4_Help_Window->show();
+
 }
 
 void MainWindow::NewFeatures()
@@ -3120,14 +2547,14 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         qDebug() << t << current_index << x << y << width << angle;
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        Create_Images_Task_Pre(create_images);
+        // Create_Images_Task_Pre(create_images);
         if(curr_info.template_ == 2)
         {
             if(Version_Higher_Than_4)
             {
-                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
                 double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
+                create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
             }
             else
             {
@@ -3141,7 +2568,7 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
             {
                 double& k = curr_info.Newton_c_rate;
 
-                Complex arr[10];
+                std::complex<double> arr[10];
                 for(int i = 0; i != 10; i++)
                 {
                     arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
@@ -3236,15 +2663,15 @@ void MainWindow::createImagesInList(const QList<int>& list)
         }
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        Create_Images_Task_Pre(create_images);
+        // Create_Images_Task_Pre(create_images);
 
         if(curr_info.template_ == 2)
         {
             if(Version_Higher_Than_4)
             {
-                Complex c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+                std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
                 double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * T + k * T * T));
+                create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
             }
             else
             {
@@ -3258,7 +2685,7 @@ void MainWindow::createImagesInList(const QList<int>& list)
             {
                 double& k = curr_info.Newton_c_rate;
 
-                Complex arr[10];
+                std::complex<double> arr[10];
                 for(int i = 0; i != 10; i++)
                 {
                     arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
@@ -3502,14 +2929,14 @@ void MainWindow::on_actionLeast_triggered()
 
 void MainWindow::on_actionTemplate_2_triggered()
 {
-    Template_2_Settings* dialog = new Template_2_Settings(this);
-    dialog->show();
+    template_2_dialog->setGeometry(x() + width() / 2 - 15, y() + 130, width() / 2, 342);
+    template_2_dialog->show();
 }
 
 void MainWindow::on_actionTemplate_6_triggered() // Template 4 in Menu Additional Template Settings
 {
-    Template_4_Settings* dialog = new Template_4_Settings(this);
-    dialog->show();
+    template_4_dialog->setGeometry(x() + width() / 2 - 15, y() + 130, width() / 2, 493);
+    template_4_dialog->show();
 }
 
 void MainWindow::on_actionVersion_5_triggered() // Version 1 of Sample Video Template 3
@@ -3525,4 +2952,85 @@ void MainWindow::on_actionVersion_6_triggered() // Version 1 of Sample Video Tem
 void MainWindow::on_MainWindow_AboutFD_clicked()
 {
     on_actionGitHub_Repository_triggered();
+}
+
+void MainWindow::on_actionChinese_2_triggered() // language Chinese
+{
+    if (app_language == LANGUAGE_ENGLISH)
+    {
+        app_language = LANGUAGE_CHINESE;
+        translator = new QTranslator(qApp);
+        if (translator->load(":/Languages/FRD_zh_CN.qm"))
+        {
+            qApp->installTranslator(translator);
+            ui->retranslateUi(this);
+            QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+            setting.beginGroup("LANGUAGE");
+            setting.setValue("Language", "CHINESE");
+            setting.endGroup();
+            QMessageBox::information(this, "提示", "语言已切换至中文，\n重启软件可以看到语言改变。");
+
+        }
+        else
+        {
+            qDebug() << "Fail to switch to Chinese";
+            return;
+        }
+    }
+    else
+    {
+        return;
+    }
+    ui->actionEnglish_2->setChecked(false);
+}
+
+void MainWindow::on_actionEnglish_2_triggered() // language English
+{
+    if (language_setting_no_change_now) return;
+    language_setting_no_change_now = true;
+    if (app_language == LANGUAGE_CHINESE)
+    {
+        app_language = LANGUAGE_ENGLISH;
+        translator = new QTranslator(qApp);
+        if (translator->load(":/Languages/FRD_en_UK.qm"))
+        {
+            qApp->installTranslator(translator);
+            ui->retranslateUi(this);
+            QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+            setting.beginGroup("LANGUAGE");
+            setting.setValue("Language", "ENGLISH");
+            setting.endGroup();
+            QMessageBox::information(this, "Information", "The language has been switched into English.\nRestart the programme to change the language.");
+        }
+        else
+        {
+            qDebug() << "Fail to switch to English";
+            return;
+        }
+    }
+    else
+    {
+        return;
+    }
+    ui->actionChinese_2->setChecked(false);
+    language_setting_no_change_now = false;
+}
+
+void MainWindow::setLanguage(App_Language la)
+{
+    if (language_setting_no_change_now) return;
+    language_setting_no_change_now = true;
+    if(la == LANGUAGE_CHINESE)
+    {
+        app_language = LANGUAGE_CHINESE;
+        ui->actionEnglish_2->setChecked(false);
+        ui->actionChinese_2->setChecked(true);
+    }
+    else
+    {
+        app_language = LANGUAGE_ENGLISH;
+        ui->actionEnglish_2->setChecked(true);
+        ui->actionChinese_2->setChecked(false);
+    }
+    language_setting_no_change_now = false;
 }

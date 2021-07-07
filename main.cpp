@@ -21,11 +21,33 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    a.setApplicationVersion("5.3.6");
+    a.setApplicationVersion("5.6.0");
     a.setApplicationName("Fractal Designer");
     // a.setApplicationDisplayName("Fractal Designer");
     a.setOrganizationName("Teddy van Jerry");
     a.setOrganizationDomain("https://github.com/Teddy-van-Jerry");
+
+    QSettings language_set(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+    QString Last_Language_Set = language_set.value("LANGUAGE/Language", "").toString();
+
+    qDebug() << "Language Last Time" << Last_Language_Set;
+
+    MainWindow::App_Language language_last_time;
+
+    if (Last_Language_Set == "CHINESE")
+    {
+        QTranslator *translator = new QTranslator(qApp);
+        translator->load(":/Languages/FRD_zh_CN.qm");
+        qApp->installTranslator(translator);
+        language_last_time = MainWindow::LANGUAGE_CHINESE;
+    }
+    else
+    {
+        language_last_time = MainWindow::LANGUAGE_ENGLISH;
+    }
+
+    MainWindow w;
+    w.setLanguage(language_last_time);
 
 #if defined (WIN32) || defined (_WIN64)
 
@@ -49,7 +71,6 @@ int main(int argc, char *argv[])
 
 #endif
 
-    MainWindow w;
     w.setOpenLocation(argc > 1 ? argv[1] : "");
     w.show();
     return a.exec();

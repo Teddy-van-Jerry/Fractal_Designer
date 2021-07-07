@@ -2,9 +2,9 @@
 #include "ui_route_tool.h"
 #include "mainwindow.h"
 
-inline Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k)
+inline std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k)
 {
-    return c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t);
+    return c1 + (c2 - c1) * ((1 - k) * t + k * t * t);
 }
 
 class Paint_Event : public QDialog
@@ -75,36 +75,30 @@ void Route_Tool::on_pushButton_view_clicked()
     Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
     Create_Image_Task* route_tool_img = new Create_Image_Task(pa);
 
-    if(pa->Version_Higher_Than_4)
-    {
+
         QDir ck(QCoreApplication::applicationDirPath() + "/temp");
         if(!ck.exists())
         {
             ck.mkdir(ck.absolutePath());
         }
 
-        route_tool_img->setVersion(true);
-        route_tool_img->setData(pa->pre_info[pa->current_info_v].Colour_Data_1,
-                                pa->pre_info[pa->current_info_v].Colour_Data_2,
-                                pa->pre_info[pa->current_info_v].template_,
-                                pa->pre_info[pa->current_info_v].min_class_v,
-                                pa->pre_info[pa->current_info_v].max_class_v,
-                                pa->pre_info[pa->current_info_v].max_loop_t);
-    }
-    else
-    {
-        route_tool_img->setVersion(false);
-        route_tool_img->setPath(pa->Project_Name);
-    }
+    // route_tool_img->setVersion(true);
+    /*route_tool_img->setData(pa->pre_info[pa->current_info_v].Colour1_,
+                            pa->pre_info[pa->current_info_v].Colour2_,
+                            pa->pre_info[pa->current_info_v].template_,
+                            pa->pre_info[pa->current_info_v].min_class_v,
+                            pa->pre_info[pa->current_info_v].max_class_v,
+                            pa->pre_info[pa->current_info_v].max_loop_t);
+    */
     qDebug() << "alive";
     if(pa->pre_info[pa->current_info_v].template_ == 2)
     {
         if(pa->Version_Higher_Than_4)
         {
             double t = ui->doubleSpinBox_t->value();
-            Complex c1 = pa->pre_info[pa->current_info_v].Julia_c1, c2 = pa->pre_info[pa->current_info_v].Julia_c2;
+            std::complex<double> c1 = pa->pre_info[pa->current_info_v].Julia_c1, c2 = pa->pre_info[pa->current_info_v].Julia_c2;
             double k = pa->pre_info[pa->current_info_v].Julia_c_rate;
-            route_tool_img->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
+            route_tool_img->setTemplate2(c1 + (c2 - c1) * ((1 - k) * t + k * t * t));
         }
         else
         {
@@ -120,7 +114,7 @@ void Route_Tool::on_pushButton_view_clicked()
 
             double& k = pa->pre_info[pa->current_info_v].Newton_c_rate;
 
-            Complex arr[10];
+            std::complex<double> arr[10];
             for(int i = 0; i != 10; i++)
             {
                 arr[i] = _curr_complex(pa->pre_info[pa->current_info_v].Newton_xn_1[i], pa->pre_info[pa->current_info_v].Newton_xn_2[i], t, k);

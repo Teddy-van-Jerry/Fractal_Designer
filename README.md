@@ -1,7 +1,12 @@
 # Fractal_Designer
 This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
 
-## Version Information
+## Minor Update
+- Version 5.6.0 updated in 2021/06/28.
+- Solve the bug of calling ffmpeg in Windows. If users haven't added ffmpeg to their environment variable, the process of creating videos will fail. (Now you need to add `Resources\ffmpeg.exe` under the the same folder with `Fractal_Designer.exe`)
+- Note that many minor bugs now can be seen due to the project is now just half way doing the translation work.
+
+## Last Version Information
 This is version 5.5.3 updated in 2021/04/13.
 There are release versions for Windows and Linux.
 The code is known to work properly in Win 10 and Ubuntu 20.
