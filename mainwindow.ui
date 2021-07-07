@@ -46,7 +46,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -362,223 +362,244 @@ p, li { white-space: pre-wrap; }
        <attribute name="title">
         <string>Template</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,1,1,3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Current Layer:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <layout class="QVBoxLayout" name="verticalLayout_7">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QWidget" name="widget_T4" native="true">
-            <property name="toolTip">
-             <string>Generalized Newton Fractal</string>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Current Layer:</string>
             </property>
-            <property name="statusTip">
-             <string>Choose Template 4: This needs additional settings in Menu Template.</string>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
-            <widget class="QLabel" name="label_Template_4">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>101</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Template 4</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="Template_Choice_4">
-            <property name="toolTip">
-             <string>Template 4</string>
-            </property>
-            <property name="text">
-             <string>Template 4</string>
-            </property>
+           <widget class="QComboBox" name="comboBox_Template_Layer">
+            <item>
+             <property name="text">
+              <string>Fractal 1</string>
+             </property>
+            </item>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
-        <item row="1" column="3">
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QWidget" name="widget_T2" native="true">
-            <property name="toolTip">
-             <string>Julia Set</string>
-            </property>
-            <property name="statusTip">
-             <string>Choose Template 2: This needs additional settings in Menu Template.</string>
-            </property>
-            <widget class="QLabel" name="label_Template_2">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>101</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Template 2</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="Template_Choice_2">
-            <property name="statusTip">
-             <string>Template 2</string>
-            </property>
-            <property name="text">
-             <string>Template 2</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox_Template_Layer">
-          <item>
-           <property name="text">
-            <string>Fractal 1</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_2">
+        <item>
+         <spacer name="verticalSpacer_21">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
-            <height>20</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="1" column="0" colspan="3">
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QRadioButton" name="Template_Choice_1">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Template 1</string>
+          </property>
+          <property name="statusTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>Template 1: Mandelbrot Set</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_22">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="Template_Choice_2">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="statusTip">
+           <string>Template 2</string>
+          </property>
+          <property name="text">
+           <string>Template 2: Julia Set</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_23">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="Template_Choice_3">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Template 3</string>
+          </property>
+          <property name="text">
+           <string>Template 3: Burning Ship Fractal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_24">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="Template_Choice_4">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Template 4</string>
+          </property>
+          <property name="text">
+           <string>Template 4: Newton Fractal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_25">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QWidget" name="widget_T1" native="true">
+           <widget class="QRadioButton" name="Template_Choice_5">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
             <property name="toolTip">
-             <string>Mandelbrot Set</string>
+             <string>Template 4</string>
             </property>
-            <property name="statusTip">
-             <string>Choose Template 1.</string>
+            <property name="text">
+             <string>Customize:</string>
             </property>
-            <widget class="QLabel" name="label_Template_1">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>101</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Template 1</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="Template_Choice_1">
-            <property name="toolTip">
-             <string>Template 1</string>
-            </property>
-            <property name="statusTip">
-             <string/>
-            </property>
-            <property name="text">
-             <string>Template 1</string>
+           <widget class="QLineEdit" name="lineEdit">
+            <property name="placeholderText">
+             <string>Enter your formula here</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
-        <item row="2" column="0" colspan="3">
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <spacer name="verticalSpacer_26">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QWidget" name="widget_T3" native="true">
-            <property name="toolTip">
-             <string>Burning Ship Fractal</string>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="statusTip">
-             <string>Choose Template 3.</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
             </property>
-            <widget class="QLabel" name="label_Template_3">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>101</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Template 3</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>View online template help</string>
+            </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="Template_Choice_3">
-            <property name="toolTip">
-             <string>Template 3</string>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="text">
-             <string>Template 3</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
             </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -790,6 +811,7 @@ p, li { white-space: pre-wrap; }
              <layout class="QGridLayout" name="gridLayout_11">
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_19">
+<<<<<<< Updated upstream
                 <item row="1" column="0" colspan="3">
                  <widget class="QTextBrowser" name="Convergent_Points_Colour_Formula_View">
                   <property name="font">
@@ -818,22 +840,27 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="2" column="1">
                  <widget class="QPushButton" name="Convergent_setColour">
-                  <property name="text">
-                   <string>Customize</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QPushButton" name="pushButton_44">
-                  <property name="text">
-                   <string>Clear</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" colspan="3">
+=======
+                <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_26">
+>>>>>>> Stashed changes
                   <property name="text">
                    <string>Convergent Points</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QPlainTextEdit" name="Convergent_Points_Colour_Formula">
+                  <property name="font">
+                   <font>
+                    <family>Consolas</family>
+                   </font>
+                  </property>
+                  <property name="plainText">
+                   <string>R = 0;
+G = 0;
+B = 0;
+A = 255;</string>
                   </property>
                  </widget>
                 </item>
@@ -841,17 +868,11 @@ p, li { white-space: pre-wrap; }
               </item>
               <item row="1" column="0">
                <layout class="QGridLayout" name="gridLayout_20">
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="Unconvergent_setColour">
-                  <property name="text">
-                   <string>Customize</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" colspan="3">
+                <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_27">
                   <property name="text">
                    <string>Divergent Points</string>
+<<<<<<< Updated upstream
                   </property>
                  </widget>
                 </item>
@@ -859,23 +880,19 @@ p, li { white-space: pre-wrap; }
                  <widget class="QPushButton" name="pushButton_45">
                   <property name="text">
                    <string>Default</string>
+=======
+>>>>>>> Stashed changes
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="2">
-                 <widget class="QPushButton" name="pushButton_47">
-                  <property name="text">
-                   <string>Clear</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="3">
-                 <widget class="QTextBrowser" name="Unconvergent_Points_Colour_Formula_View">
+                <item row="1" column="0" colspan="2">
+                 <widget class="QPlainTextEdit" name="Divergent_Points_Colour_Formula">
                   <property name="font">
                    <font>
                     <family>Consolas</family>
                    </font>
                   </property>
+<<<<<<< Updated upstream
                   <property name="html">
                    <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -885,6 +902,13 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#00aa00;&quot;&gt;G = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#0000ff;&quot;&gt;B = 0&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'SimSun'; font-size:9pt; color:#282828;&quot;&gt;A = 0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+=======
+                  <property name="plainText">
+                   <string>R = 0;
+G = 0;
+B = 0;
+A = 255;</string>
+>>>>>>> Stashed changes
                   </property>
                  </widget>
                 </item>
@@ -1685,6 +1709,9 @@ p, li { white-space: pre-wrap; }
      <string>File(&amp;F)</string>
     </property>
     <widget class="QMenu" name="menuFRD_4_Compatibility">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>FRD 4 Compatibility</string>
      </property>
@@ -1959,16 +1986,20 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionTemplate_2"/>
      <addaction name="actionTemplate_6"/>
     </widget>
-    <widget class="QMenu" name="menuMore_Templates">
-     <property name="title">
-      <string>More Templates</string>
-     </property>
-     <addaction name="actionFrom_EXE"/>
-     <addaction name="actionFrom_Python"/>
-    </widget>
-    <addaction name="menuMore_Templates"/>
-    <addaction name="separator"/>
     <addaction name="menuAdditional_template_settings"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions_O">
+    <property name="title">
+     <string>Options(&amp;O)</string>
+    </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="actionEnglish_2"/>
+     <addaction name="actionChinese_2"/>
+    </widget>
+    <addaction name="menuLanguage"/>
    </widget>
    <widget class="QMenu" name="menuOptions_O">
     <property name="title">
@@ -2030,7 +2061,7 @@ p, li { white-space: pre-wrap; }
     <string>New(&amp;N)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string notr="true">Ctrl+N</string>
    </property>
   </action>
   <action name="actionOpen_O">
@@ -2057,7 +2088,7 @@ p, li { white-space: pre-wrap; }
     <string>Save(&amp;S)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string notr="true">Ctrl+S</string>
    </property>
   </action>
   <action name="actionExit_E">
@@ -2069,7 +2100,7 @@ p, li { white-space: pre-wrap; }
     <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string notr="true">Ctrl+E</string>
    </property>
   </action>
   <action name="actionSettings">
@@ -2132,7 +2163,7 @@ p, li { white-space: pre-wrap; }
     <string>English</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+H</string>
+    <string notr="true">Ctrl+H</string>
    </property>
   </action>
   <action name="actionChinese">
@@ -2144,7 +2175,7 @@ p, li { white-space: pre-wrap; }
     <string>Chinese</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+H</string>
+    <string notr="true">Ctrl+Shift+H</string>
    </property>
   </action>
   <action name="actionVersion">
@@ -2189,7 +2220,7 @@ p, li { white-space: pre-wrap; }
     <string>Create Images</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+B</string>
+    <string notr="true">Ctrl+B</string>
    </property>
   </action>
   <action name="actionCreate_Video">
@@ -2201,7 +2232,7 @@ p, li { white-space: pre-wrap; }
     <string>Create Video</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string notr="true">Ctrl+R</string>
    </property>
   </action>
   <action name="actionMore_Templates">
@@ -2218,7 +2249,7 @@ p, li { white-space: pre-wrap; }
     <string>Route Tool</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+T</string>
+    <string notr="true">Ctrl+T</string>
    </property>
   </action>
   <action name="actionPreview_Refresh">
@@ -2230,7 +2261,7 @@ p, li { white-space: pre-wrap; }
     <string>Preview Refresh</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F5</string>
+    <string notr="true">Ctrl+F5</string>
    </property>
   </action>
   <action name="actionpng">
@@ -2323,7 +2354,7 @@ p, li { white-space: pre-wrap; }
     <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+.</string>
+    <string notr="true">Ctrl+.</string>
    </property>
   </action>
   <action name="actionmp4">
@@ -2368,7 +2399,7 @@ p, li { white-space: pre-wrap; }
     <string>Open</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+O</string>
+    <string notr="true">Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionSave">
@@ -2380,7 +2411,7 @@ p, li { white-space: pre-wrap; }
     <string>Save</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string notr="true">Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionFRD_4_Help">
@@ -2400,7 +2431,7 @@ p, li { white-space: pre-wrap; }
     <string>Undo</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Z</string>
+    <string notr="true">Ctrl+Z</string>
    </property>
   </action>
   <action name="actionRedo">
@@ -2415,7 +2446,7 @@ p, li { white-space: pre-wrap; }
     <string>Redo</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Y</string>
+    <string notr="true">Ctrl+Y</string>
    </property>
   </action>
   <action name="actionFRD_4_Project">
@@ -2632,7 +2663,7 @@ p, li { white-space: pre-wrap; }
     <string>Close</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+W</string>
+    <string notr="true">Ctrl+W</string>
    </property>
   </action>
   <action name="action1E5x">
@@ -2682,7 +2713,7 @@ p, li { white-space: pre-wrap; }
     <string>Create Images in Range</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+B</string>
+    <string notr="true">Ctrl+Shift+B</string>
    </property>
   </action>
   <action name="actionVersion_3">
@@ -2831,8 +2862,13 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
+<<<<<<< Updated upstream
   <include location="EXE_Icons.qrc"/>
   <include location="Icon.qrc"/>
+=======
+  <include location="Icon.qrc"/>
+  <include location="EXE_Icons.qrc"/>
+>>>>>>> Stashed changes
   <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>

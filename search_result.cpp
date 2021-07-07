@@ -19,7 +19,7 @@ Search_Result::Search_Result(QWidget *parent) :
 Search_Result::~Search_Result()
 {
     delete ui;
-    for(auto i : btn) delete i;
+    for(auto& i : btn) delete i;
     delete label;
     delete Help_E;
     delete Help_C;
@@ -71,7 +71,7 @@ void Search_Result::getSearch(QString search)
     All_P[16] = {16, "Stop", "Stop creating images.", {"stop", "create", "image", "images", "停", "停止", "停止生成图片"}};
     All_P[17] = {17, "Undo", "Undo one step if possible.", {"undo", "撤消", "撤回"}};
     All_P[18] = {18, "Redo", "Redo one step if possible.", {"redo", "恢复"}};
-    All_P[19] = {19, "FRD 4 Help", "Fractal Designer 4 (Compatibility Mode) Help.", {"help", "4", "帮助"}};
+    All_P[19] = {19, "FRD 4 Help", "Fractal Designer 4 (Compatibility Mode) Help.", {}};
     All_P[20] = {20, "New Features", "View New Features in Fractal Designer since Version 4.7.", {"new", "feature", "features", "新特征", "新"}};
     All_P[21] = {21, "Version", "View version information.", {"version", "版本", "版本信息"}};
     All_P[22] = {22, "Bug Report", "Report the bugs you have found.", {"bug", "bugs", "report", "错误"}};
@@ -138,7 +138,7 @@ void Search_Result::getSearch(QString search)
         Btn_Con(16, on_actionStop_triggered());
         Btn_Con(17, on_actionUndo_triggered());
         Btn_Con(18, on_actionRedo_triggered());
-        Btn_Con(19, on_actionFRD_4_Help_triggered());
+        // Btn_Con(19, on_actionFRD_4_Help_triggered());
         Btn_Con(20, on_actionNew_Features_triggered());
         Btn_Con(21, on_actionVersion_triggered());
         Btn_Con(22, on_actionBug_Report_triggered());

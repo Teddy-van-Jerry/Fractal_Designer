@@ -64,33 +64,33 @@ void Template_4_Settings::uiInit()
         ui->doubleSpinBox_x9_4
     };
 
-    ui->doubleSpinBox_a_1->setValue(info.Newton_a_1.getReal());
-    ui->doubleSpinBox_a_2->setValue(info.Newton_a_1.getImaginary());
-    ui->doubleSpinBox_a_3->setValue(info.Newton_a_2.getReal());
-    ui->doubleSpinBox_a_4->setValue(info.Newton_a_2.getImaginary());
+    ui->doubleSpinBox_a_1->setValue(info.Newton_a_1.real());
+    ui->doubleSpinBox_a_2->setValue(info.Newton_a_1.imag());
+    ui->doubleSpinBox_a_3->setValue(info.Newton_a_2.real());
+    ui->doubleSpinBox_a_4->setValue(info.Newton_a_2.imag());
 
     for (int i = 0; i != 10; i++)
     {
-        spb_xn[i     ]->setValue(info.Newton_xn_1[i].getReal());
-        spb_xn[i + 10]->setValue(info.Newton_xn_1[i].getImaginary());
-        spb_xn[i + 20]->setValue(info.Newton_xn_2[i].getReal());
-        spb_xn[i + 30]->setValue(info.Newton_xn_2[i].getImaginary());
+        spb_xn[i     ]->setValue(info.Newton_xn_1[i].real());
+        spb_xn[i + 10]->setValue(info.Newton_xn_1[i].imag());
+        spb_xn[i + 20]->setValue(info.Newton_xn_2[i].real());
+        spb_xn[i + 30]->setValue(info.Newton_xn_2[i].imag());
     }
 
-    ui->doubleSpinBox_sin_1->setValue(info.Newton_sin_1.getReal());
-    ui->doubleSpinBox_sin_2->setValue(info.Newton_sin_1.getImaginary());
-    ui->doubleSpinBox_sin_3->setValue(info.Newton_sin_2.getReal());
-    ui->doubleSpinBox_sin_4->setValue(info.Newton_sin_2.getImaginary());
+    ui->doubleSpinBox_sin_1->setValue(info.Newton_sin_1.real());
+    ui->doubleSpinBox_sin_2->setValue(info.Newton_sin_1.imag());
+    ui->doubleSpinBox_sin_3->setValue(info.Newton_sin_2.real());
+    ui->doubleSpinBox_sin_4->setValue(info.Newton_sin_2.imag());
 
-    ui->doubleSpinBox_cos_1->setValue(info.Newton_cos_1.getReal());
-    ui->doubleSpinBox_cos_2->setValue(info.Newton_cos_1.getImaginary());
-    ui->doubleSpinBox_cos_3->setValue(info.Newton_cos_2.getReal());
-    ui->doubleSpinBox_cos_4->setValue(info.Newton_cos_2.getImaginary());
+    ui->doubleSpinBox_cos_1->setValue(info.Newton_cos_1.real());
+    ui->doubleSpinBox_cos_2->setValue(info.Newton_cos_1.imag());
+    ui->doubleSpinBox_cos_3->setValue(info.Newton_cos_2.real());
+    ui->doubleSpinBox_cos_4->setValue(info.Newton_cos_2.imag());
 
-    ui->doubleSpinBox_ex_1->setValue(info.Newton_ex_1.getReal());
-    ui->doubleSpinBox_ex_2->setValue(info.Newton_ex_1.getImaginary());
-    ui->doubleSpinBox_ex_3->setValue(info.Newton_ex_2.getReal());
-    ui->doubleSpinBox_ex_4->setValue(info.Newton_ex_2.getImaginary());
+    ui->doubleSpinBox_ex_1->setValue(info.Newton_ex_1.real());
+    ui->doubleSpinBox_ex_2->setValue(info.Newton_ex_1.imag());
+    ui->doubleSpinBox_ex_3->setValue(info.Newton_ex_2.real());
+    ui->doubleSpinBox_ex_4->setValue(info.Newton_ex_2.imag());
 
     ui->slider->setValue(info.Newton_c_rate * 50);
 }
@@ -148,41 +148,41 @@ void Template_4_Settings::on_pushButton_Save_clicked()
     };
 
     bool edited = false;
-
-    if (info.Newton_a_1.getReal()      != ui->doubleSpinBox_a_1->value()) { info.Newton_a_1.setReal     (ui->doubleSpinBox_a_1->value()); edited = true; }
-    if (info.Newton_a_1.getImaginary() != ui->doubleSpinBox_a_2->value()) { info.Newton_a_1.setImaginary(ui->doubleSpinBox_a_2->value()); edited = true; }
-    if (info.Newton_a_2.getReal()      != ui->doubleSpinBox_a_3->value()) { info.Newton_a_2.setReal     (ui->doubleSpinBox_a_3->value()); edited = true; }
-    if (info.Newton_a_2.getImaginary() != ui->doubleSpinBox_a_4->value()) { info.Newton_a_2.setImaginary(ui->doubleSpinBox_a_4->value()); edited = true; }
+/*
+    if (info.Newton_a_1.real()      != ui->doubleSpinBox_a_1->value()) { info.Newton_a_1.setReal     (ui->doubleSpinBox_a_1->value()); edited = true; }
+    if (info.Newton_a_1.imag() != ui->doubleSpinBox_a_2->value()) { info.Newton_a_1.setImaginary(ui->doubleSpinBox_a_2->value()); edited = true; }
+    if (info.Newton_a_2.real()      != ui->doubleSpinBox_a_3->value()) { info.Newton_a_2.setReal     (ui->doubleSpinBox_a_3->value()); edited = true; }
+    if (info.Newton_a_2.imag() != ui->doubleSpinBox_a_4->value()) { info.Newton_a_2.setImaginary(ui->doubleSpinBox_a_4->value()); edited = true; }
 
     for (int i = 0; i != 10; i++)
     {
-        if (info.Newton_xn_1[i].getReal()      != spb_xn[i     ]) { info.Newton_xn_1[i].setReal     (spb_xn[i     ]); edited = true; }
-        if (info.Newton_xn_1[i].getImaginary() != spb_xn[i + 10]) { info.Newton_xn_1[i].setImaginary(spb_xn[i + 10]); edited = true; }
-        if (info.Newton_xn_2[i].getReal()      != spb_xn[i + 20]) { info.Newton_xn_2[i].setReal     (spb_xn[i + 20]); edited = true; }
-        if (info.Newton_xn_2[i].getImaginary() != spb_xn[i + 30]) { info.Newton_xn_2[i].setImaginary(spb_xn[i + 30]); edited = true; }
+        if (info.Newton_xn_1[i].real()      != spb_xn[i     ]) { info.Newton_xn_1[i].setReal     (spb_xn[i     ]); edited = true; }
+        if (info.Newton_xn_1[i].imag() != spb_xn[i + 10]) { info.Newton_xn_1[i].setImaginary(spb_xn[i + 10]); edited = true; }
+        if (info.Newton_xn_2[i].real()      != spb_xn[i + 20]) { info.Newton_xn_2[i].setReal     (spb_xn[i + 20]); edited = true; }
+        if (info.Newton_xn_2[i].imag() != spb_xn[i + 30]) { info.Newton_xn_2[i].setImaginary(spb_xn[i + 30]); edited = true; }
     }
 
-    if (info.Newton_sin_1.getReal()      != ui->doubleSpinBox_sin_1->value()) { info.Newton_sin_1.setReal     (ui->doubleSpinBox_sin_1->value()); edited = true; }
-    if (info.Newton_sin_1.getImaginary() != ui->doubleSpinBox_sin_2->value()) { info.Newton_sin_1.setImaginary(ui->doubleSpinBox_sin_2->value()); edited = true; }
-    if (info.Newton_sin_2.getReal()      != ui->doubleSpinBox_sin_3->value()) { info.Newton_sin_2.setReal     (ui->doubleSpinBox_sin_3->value()); edited = true; }
-    if (info.Newton_sin_2.getImaginary() != ui->doubleSpinBox_sin_4->value()) { info.Newton_sin_2.setImaginary(ui->doubleSpinBox_sin_4->value()); edited = true; }
+    if (info.Newton_sin_1.real()      != ui->doubleSpinBox_sin_1->value()) { info.Newton_sin_1.setReal     (ui->doubleSpinBox_sin_1->value()); edited = true; }
+    if (info.Newton_sin_1.imag() != ui->doubleSpinBox_sin_2->value()) { info.Newton_sin_1.setImaginary(ui->doubleSpinBox_sin_2->value()); edited = true; }
+    if (info.Newton_sin_2.real()      != ui->doubleSpinBox_sin_3->value()) { info.Newton_sin_2.setReal     (ui->doubleSpinBox_sin_3->value()); edited = true; }
+    if (info.Newton_sin_2.imag() != ui->doubleSpinBox_sin_4->value()) { info.Newton_sin_2.setImaginary(ui->doubleSpinBox_sin_4->value()); edited = true; }
 
-    if (info.Newton_cos_1.getReal()      != ui->doubleSpinBox_cos_1->value()) { info.Newton_cos_1.setReal     (ui->doubleSpinBox_cos_1->value()); edited = true; }
-    if (info.Newton_cos_1.getImaginary() != ui->doubleSpinBox_cos_2->value()) { info.Newton_cos_1.setImaginary(ui->doubleSpinBox_cos_2->value()); edited = true; }
-    if (info.Newton_cos_2.getReal()      != ui->doubleSpinBox_cos_3->value()) { info.Newton_cos_2.setReal     (ui->doubleSpinBox_cos_3->value()); edited = true; }
-    if (info.Newton_cos_2.getImaginary() != ui->doubleSpinBox_cos_4->value()) { info.Newton_cos_2.setImaginary(ui->doubleSpinBox_cos_4->value()); edited = true; }
+    if (info.Newton_cos_1.real()      != ui->doubleSpinBox_cos_1->value()) { info.Newton_cos_1.setReal     (ui->doubleSpinBox_cos_1->value()); edited = true; }
+    if (info.Newton_cos_1.imag() != ui->doubleSpinBox_cos_2->value()) { info.Newton_cos_1.setImaginary(ui->doubleSpinBox_cos_2->value()); edited = true; }
+    if (info.Newton_cos_2.real()      != ui->doubleSpinBox_cos_3->value()) { info.Newton_cos_2.setReal     (ui->doubleSpinBox_cos_3->value()); edited = true; }
+    if (info.Newton_cos_2.imag() != ui->doubleSpinBox_cos_4->value()) { info.Newton_cos_2.setImaginary(ui->doubleSpinBox_cos_4->value()); edited = true; }
 
-    if (info.Newton_ex_1.getReal()      != ui->doubleSpinBox_ex_1->value()) { info.Newton_ex_1.setReal     (ui->doubleSpinBox_ex_1->value()); edited = true; }
-    if (info.Newton_ex_1.getImaginary() != ui->doubleSpinBox_ex_2->value()) { info.Newton_ex_1.setImaginary(ui->doubleSpinBox_ex_2->value()); edited = true; }
-    if (info.Newton_ex_2.getReal()      != ui->doubleSpinBox_ex_3->value()) { info.Newton_ex_2.setReal     (ui->doubleSpinBox_ex_3->value()); edited = true; }
-    if (info.Newton_ex_2.getImaginary() != ui->doubleSpinBox_ex_4->value()) { info.Newton_ex_2.setImaginary(ui->doubleSpinBox_ex_4->value()); edited = true; }
+    if (info.Newton_ex_1.real()      != ui->doubleSpinBox_ex_1->value()) { info.Newton_ex_1.setReal     (ui->doubleSpinBox_ex_1->value()); edited = true; }
+    if (info.Newton_ex_1.imag() != ui->doubleSpinBox_ex_2->value()) { info.Newton_ex_1.setImaginary(ui->doubleSpinBox_ex_2->value()); edited = true; }
+    if (info.Newton_ex_2.real()      != ui->doubleSpinBox_ex_3->value()) { info.Newton_ex_2.setReal     (ui->doubleSpinBox_ex_3->value()); edited = true; }
+    if (info.Newton_ex_2.imag() != ui->doubleSpinBox_ex_4->value()) { info.Newton_ex_2.setImaginary(ui->doubleSpinBox_ex_4->value()); edited = true; }
 
     if (info.Newton_c_rate != static_cast<double>(ui->slider->value()) / 50)
     {
         info.Newton_c_rate = static_cast<double>(ui->slider->value()) / 50;
         edited = true;
     }
-
+*/
     if (edited) p->edit(EDIT_ALREADY);
 
     close();

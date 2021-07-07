@@ -11,10 +11,10 @@ Template_2_Settings::Template_2_Settings(QWidget *parent) :
     ui->setupUi(this);
     set_p;
     this_NO_EDIT = true;
-    ui->doubleSpinBox_C1R->setValue(p_info.Julia_c1.getReal());
-    ui->doubleSpinBox_C1I->setValue(p_info.Julia_c1.getImaginary());
-    ui->doubleSpinBox_C2R->setValue(p_info.Julia_c2.getReal());
-    ui->doubleSpinBox_C2I->setValue(p_info.Julia_c2.getImaginary());
+    ui->doubleSpinBox_C1R->setValue(p_info.Julia_c1.real());
+    ui->doubleSpinBox_C1I->setValue(p_info.Julia_c1.imag());
+    ui->doubleSpinBox_C2R->setValue(p_info.Julia_c2.real());
+    ui->doubleSpinBox_C2I->setValue(p_info.Julia_c2.imag());
     ui->doubleSpinBox_Rate->setValue(p_info.Julia_c_rate);
     this_NO_EDIT = false;
 }
@@ -28,7 +28,8 @@ void Template_2_Settings::on_doubleSpinBox_C1R_valueChanged(double arg1)
 {
     set_p;
     if(p->NO_EDIT || this_NO_EDIT)  return;
-    p_info.Julia_c1.setReal(arg1);
+    std::complex<double> c { arg1, p_info.Julia_c1.imag() };
+    p_info.Julia_c1 = c;
     edited = true;
 }
 
@@ -36,15 +37,16 @@ void Template_2_Settings::on_doubleSpinBox_C1I_valueChanged(double arg1)
 {
     set_p;
     if(p->NO_EDIT || this_NO_EDIT) return;
-    p_info.Julia_c1.setImaginary(arg1);
+    std::complex<double> c { p_info.Julia_c1.real(), arg1 };
+    p_info.Julia_c1 = c;
     edited = true;
 }
 
 void Template_2_Settings::on_doubleSpinBox_C2R_valueChanged(double arg1)
 {
     set_p;
-    if(p->NO_EDIT || this_NO_EDIT) return;
-    p_info.Julia_c2.setReal(arg1);
+    std::complex<double> c { arg1, p_info.Julia_c2.imag() };
+    p_info.Julia_c2 = c;
     edited = true;
 }
 
@@ -52,7 +54,8 @@ void Template_2_Settings::on_doubleSpinBox_C2I_valueChanged(double arg1)
 {
     set_p;
     if(p->NO_EDIT || this_NO_EDIT) return;
-    p_info.Julia_c2.setImaginary(arg1);
+    std::complex<double> c { p_info.Julia_c2.real(), arg1 };
+    p_info.Julia_c2 = c;
     edited = true;
 }
 

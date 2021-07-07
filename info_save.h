@@ -4,8 +4,8 @@
 #include <QString>
 #include <QFile>
 #include <QDebug>
+#include <complex>
 #include "route_info.h"
-#include "Complex.h"
 
 #define _ROUTE_SIZE_ 48
 
@@ -34,8 +34,8 @@ class Info_Save
     info Template_2 {'T', '2', 40}; // 16*2+8=40
     info Template_4 {'T', '4', 456}; // 16*28+8=456
     info ImageValue {'I', 'V', 20}; // 8+8+4=20
-    info Colour1 {'C', '1', 1856}; // 29*2*4*8=1856
-    info Colour2 {'C', '2', 1856}; // 29*2*4*8=1856
+    info Colour1 {'C', '1', 0};
+    info Colour2 {'C', '2', 0};
     info Route {'R', 'O', 0};
     info ImageOther {'I', 'O', 0};
     info VideoInfo {'V', 'I', 0};
@@ -45,12 +45,11 @@ public:
     char template_ = 0;
     double min_class_v = 0, max_class_v = 0;
     qint32 max_loop_t = 50;
-    double Colour_Data_1[4][29][2] = {0};
-    double Colour_Data_2[4][29][2] = {0};
     QList<Route_Info> Route_;
     qint16 image_size_x = 1920, image_size_y = 1080;
     char frame_rate_index = 1;
     QString total_time_str = "0100";
+    QString Colour1_f[4], Colour2_f[4];
     QString img_path;
     QString img_prefix;
     QString video_path;
@@ -58,21 +57,21 @@ public:
     QList<QString> music_list;
 
     ////////// Template 2 Only //////////
-    Complex Julia_c1, Julia_c2;
+    std::complex<double> Julia_c1, Julia_c2;
     double Julia_c_rate = 0;
     /////////////////////////////////////
 
     ////////// Template 4 Only //////////
-    Complex Newton_a_1 = 1;
-    Complex Newton_a_2 = 1;
-    Complex Newton_xn_1[10] {0};
-    Complex Newton_xn_2[10] {0};
-    Complex Newton_sin_1 = 0;
-    Complex Newton_sin_2 = 0;
-    Complex Newton_cos_1 = 0;
-    Complex Newton_cos_2 = 0;
-    Complex Newton_ex_1 = 0;
-    Complex Newton_ex_2 = 0;
+    std::complex<double> Newton_a_1 = 1;
+    std::complex<double> Newton_a_2 = 1;
+    std::complex<double> Newton_xn_1[10] {0};
+    std::complex<double> Newton_xn_2[10] {0};
+    std::complex<double> Newton_sin_1 = 0;
+    std::complex<double> Newton_sin_2 = 0;
+    std::complex<double> Newton_cos_1 = 0;
+    std::complex<double> Newton_cos_2 = 0;
+    std::complex<double> Newton_ex_1 = 0;
+    std::complex<double> Newton_ex_2 = 0;
     double Newton_c_rate = 0;
     /////////////////////////////////////
 
@@ -80,25 +79,47 @@ public:
     char config1 = 0;
     /////////////////////////////////////
 
-    void setRouteInfo(QList<Route_Info> route_list)
+    void setRouteInfo(const QList<Route_Info>& route_list)
     {
         Route_ = route_list;
         Route.length = route_list.size() * _ROUTE_SIZE_;
     }
 
-    void setImageOtherInfo(QString img_path_, QString img_prefix_)
+    void setImageOtherInfo(const QString& img_path_, const QString& img_prefix_)
     {
         img_path   = img_path_;
         img_prefix = img_prefix_;
         ImageOther.length = 33 + sizeof(total_time_str) + sizeof(img_path) + sizeof(img_prefix);
     }
 
-    void setVideoInfo(QString v_path, QString v_name, QList<QString> m_list)
+    void setVideoInfo(const QString& v_path, const QString& v_name, const QList<QString>& m_list)
     {
         video_path = v_path;
         video_name = v_name;
         music_list = m_list;
         VideoInfo.length = 2 + sizeof(video_path) + sizeof(video_name) + sizeof(music_list);
+    }
+
+    void setColourInfo(const QString colour_info[4], bool conv)
+    {
+        if (conv)
+        {
+            Colour1.length = 0;
+            for (int i = 0; i != 4; i++)
+            {
+                Colour1_f[i] = colour_info[i];
+                Colour1.length += sizeof(colour_info[i]);
+            }
+        }
+        else
+        {
+            Colour2.length = 0;
+            for (int i = 0; i != 4; i++)
+            {
+                Colour2_f[i] = colour_info[i];
+                Colour2.length += sizeof(colour_info[i]);
+            }
+        }
     }
 
     void print(QString path, uint8_t FRD_Version[4]);
