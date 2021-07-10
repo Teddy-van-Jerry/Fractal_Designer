@@ -75,12 +75,17 @@ void Route_Tool::on_pushButton_view_clicked()
     Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
     Create_Image_Task* route_tool_img = new Create_Image_Task(pa);
 
+    QDir ck(QCoreApplication::applicationDirPath() + "/temp");
+    if(!ck.exists())
+    {
+        ck.mkdir(ck.absolutePath());
+    }
 
-        QDir ck(QCoreApplication::applicationDirPath() + "/temp");
-        if(!ck.exists())
-        {
-            ck.mkdir(ck.absolutePath());
-        }
+    if (!pa->createImagePre(route_tool_img))
+    {
+        delete route_tool_img;
+        return;
+    }
 
     // route_tool_img->setVersion(true);
     /*route_tool_img->setData(pa->pre_info[pa->current_info_v].Colour1_,

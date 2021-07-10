@@ -91,6 +91,21 @@ void Create_Image_Task::run()
                         p_ -= Newton_cos * sin(this_point);
                         this_point = this_point - Newton_a * p / p_;
                     }
+                    case 5:
+                    {
+                        std::vector<std::complex<double>> num_list
+                        {
+                            this_point, this_point.real(), this_point.imag(), z0, z0.real(), z0.imag(), t, double(k)
+                        };
+                        std::string msg;
+                        this_point = eval_postorder(Formula, num_list, &msg);
+                        if (!msg.empty())
+                        {
+                            // 0 indicates formula error
+                            emit error_calc(0);
+                        }
+                        break;
+                    }
                     default: break;
                     }
                 }
@@ -99,7 +114,9 @@ void Create_Image_Task::run()
             double RGBA[4];
             if (!setRGBA(RGBA, convergent, this_point, z0, t, k))
             {
-                emit error_calc();
+                // 1 indicates colour error in convergent point
+                // 2 indicates colour error in divergent point
+                emit error_calc(convergent ? 1 : 2);
             }
             else
             {
@@ -134,7 +151,7 @@ void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y
     work_name    = work_name_;
 }
 
-void Create_Image_Task::setData(std::vector<var> C1[4], std::vector<var> C2[4], int temp, double min, double max, int lpt)
+void Create_Image_Task::setData(std::vector<_var> C1[4], std::vector<_var> C2[4], int temp, double min, double max, int lpt)
 {
     for (int i = 0; i != 4; i++)
     {
@@ -145,6 +162,11 @@ void Create_Image_Task::setData(std::vector<var> C1[4], std::vector<var> C2[4], 
     min_class_v = min < 1E-10 ? 1E-10 : min;
     max_class_v = max < 1E-10 ? 1E-10 : max;
     max_loop_t  = lpt;
+}
+
+void Create_Image_Task::setFormula(const std::vector<_var>& post)
+{
+    Formula = post;
 }
 
 void Create_Image_Task::setTemplate2(std::complex<double> c)

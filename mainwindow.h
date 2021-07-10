@@ -36,6 +36,7 @@
 #include "create_image_task.h"
 #include "template_2_settings.h"
 #include "template_4_settings.h"
+#include "preview_setting.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -121,7 +122,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 6, 1, 0};
+    uint8_t FRD_Version[4] = {5, 6, 3, 0};
 
     QString Open_Location = "";
 
@@ -145,7 +146,7 @@ public:
 
     bool High_Version_Open(int type = 0);
 
-    bool save_or_not = false;    
+    bool save_or_not = false;
 
     void show_template_graph(); //
 
@@ -170,6 +171,10 @@ public:
     bool existImage(int) const;
 
     void deleteImage(int);
+
+    bool createImagePre(Create_Image_Task* task);
+
+    void customTemplatePre(Create_Image_Task* task);
 
     std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k = 0);
 
@@ -399,6 +404,14 @@ private slots:
 
     void on_actionChinese_2_triggered();
 
+    void on_Convergent_Points_Colour_Formula_textChanged();
+
+    void on_Divergent_Points_Colour_Formula_textChanged();
+
+    void on_lineEdit_Custom_Formula_editingFinished();
+
+    void on_actionPreview_Settings_triggered();
+
 signals:
 
     void Search_clicked(QString);
@@ -451,6 +464,8 @@ private:
     Template_2_Settings* template_2_dialog = new Template_2_Settings(this);
 
     Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
+
+    Preview_Setting* preview_setting = new Preview_Setting(this);
 
 public:
 
