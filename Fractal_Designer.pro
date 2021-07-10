@@ -4,14 +4,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 5.6.1.0
+VERSION = 5.6.3.0
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    String_Complex.cpp \
+    String_Evaluate.cpp \
     create_image_info.cpp \
     create_image_task.cpp \
     create_images_range.cpp \
@@ -23,6 +23,7 @@ SOURCES += \
     new_features.cpp \
     new_file.cpp \
     open_file.cpp \
+    preview_setting.cpp \
     route_info.cpp \
     route_tool.cpp \
     search_result.cpp \
@@ -31,7 +32,7 @@ SOURCES += \
     version.cpp
 
 HEADERS += \
-    String_Complex.h \
+    String_Evaluate.h \
     create_image_info.h \
     create_image_task.h \
     create_images_range.h \
@@ -42,6 +43,7 @@ HEADERS += \
     new_features.h \
     new_file.h \
     open_file.h \
+    preview_setting.h \
     route_info.h \
     route_tool.h \
     search_result.h \
@@ -58,6 +60,7 @@ FORMS += \
     new_features.ui \
     new_file.ui \
     open_file.ui \
+    preview_setting.ui \
     route_tool.ui \
     search_result.ui \
     template_2_settings.ui \

@@ -1,15 +1,31 @@
-#include "String_Complex.h"
-
-/**
- * \brief Complex number with argument 'real' and 'imag'.
+/*
+ * Project: String_Evaluate
+ * File: String_Evaluate.cpp
+ * Description: calculate std::string and return std::complex
+ * ---------------------------
+ *
+ * @author: Teddy van Jerry, Pulkit Mittal
+ * @licence: MIT Licence
+ * @compiler: At least C++11
+ *
+ * @version 1.0: 2021/07/05
+ * - initial version
+ *
+ * @version 1.1: 2021/07/08
+ * - add bracket check
+ *
+ * @version 1.2: 2021/07/09
+ * - break the function eval_postorder
+ * - break into header and source files
+ *
  */
-static inline std::complex<double> Comp(double real, double imag) {
-    return real + imag * IMAG_I;
-}
 
-/**
- * \brief Change 'c' with 'from' to the corresponding letter in 'to'
- */
+#include "String_Evaluate.h"
+
+_var::_var(std::string s) : str(s) {}
+_var::_var(std::complex<double> n) : num(n) {}
+_var::_var(size_t index) : num(static_cast<double>(index) + 0.5), is_var(true) {}
+
 inline void _char_replace(char& c, const std::string& from, const std::string& to) {
     for (auto i = from.begin(); i != from.end(); i++) {
         if (c == *i) {
@@ -19,30 +35,21 @@ inline void _char_replace(char& c, const std::string& from, const std::string& t
     }
 }
 
-/**
- * \brief Change char of 'str' with 'from' to the corresponding letter in 'to'
- */
 inline void _string_replace(std::string& str, const std::string& from, const std::string& to) {
     for (auto& c : str) {
         _char_replace(c, from, to);
     }
 }
 
-/**
- * \brief give error message
- */
 inline void __error_msg(std::string* msg, const std::string& word, const char* file_, size_t line_) {
     if (msg) {
         *msg = word;
     }
 #ifdef COMPLEX_CERR_ERROR_
-    std::cerr << "ERROR: " << word << "\nAt \"" << file_ << ' ' << "\" Line " << line_ << std::endl;
+    std::cerr << "ERROR: " << word << "\nAt \"" << file_ << "\" Line " << line_ << std::endl;
 #endif
 }
 
-/**
- * \brief give error message
- */
 #ifndef _error_msg
 #define _error_msg(msg, word) __error_msg(msg, word, __FILE__, __LINE__)
 #endif
@@ -63,7 +70,7 @@ inline int _operator_weight_index(char c) {
 
 inline int _operator_weight_compare(char c1, char c2) {
     int compare[8][8] {
-        //        +   -   *   /   ^   (   )   &
+        //        +   -   *   /   ^   (   )   &   ('&' represents a function name)
         /* + */ { 1,  1, -1, -1, -1, -1,  1, -1 },
         /* - */ { 1,  1, -1, -1, -1, -1,  1, -1 },
         /* * */ { 1,  1,  1,  1, -1, -1,  1, -1 },
@@ -123,12 +130,56 @@ inline void _unary_to_binary(const std::string& str, std::string& new_str, typen
     }
 }
 
-/**
- * \brief Pre-edit the
- *
- * The initial string after pre-editing is str,
- * the final postorder result will be stored in vec.
- */
+bool _bracket(const std::string& expr)
+{
+    std::stack<char> s;
+    char x;
+
+    for (size_t i = 0; i != expr.length(); i++) {
+        if (expr[i] == '(' || expr[i] == '[' || expr[i] == '{') {
+            s.push(expr[i]);
+            continue;
+        }
+        if (expr[i] != ')' && expr[i] && ']' && expr[i] != '}') {
+            continue;
+        }
+        else if (s.empty()) {
+            return false;
+        }
+
+        switch (expr[i]) {
+        case ')':
+            x = s.top();
+            s.pop();
+            if (x == '{' || x == '[') {
+                return false;
+            }
+            break;
+
+        case '}':
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '[') {
+                return false;
+            }
+            break;
+
+        case ']':
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '{') {
+                return false;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return (s.empty());
+}
+
 bool _pre_edit(std::string& str) {
     // PART 1: change into standard form
     _string_replace(str, "[{}]IJj", "(())iii");
@@ -205,13 +256,7 @@ bool _pre_edit(std::string& str) {
     return true;
 }
 
-/**
- * \brief Add a new operator
- *
- * compare the priority of operators,
- * decide to push directly or pop and then compares
- */
-inline bool _add_new_oper(const std::string& oper, std::string* msg, std::stack<std::string>& s, std::vector<var>& vec) {
+inline bool _add_new_oper(const std::string& oper, std::string* msg, std::stack<std::string>& s, std::vector<_var>& vec) {
     if (s.empty()) {
         if (oper != ")") {
             s.push(oper);
@@ -248,16 +293,10 @@ inline bool _add_new_oper(const std::string& oper, std::string* msg, std::stack<
     return false; // normally it won't get here.
 }
 
-/**
- * \brief Change the inorder str to postorder
- *
- * The initial string after pre-editing is str,
- * the final postorder result will be stored in vec.
- */
 bool _to_postorder(
     const std::string& str,
     std::string* msg,
-    std::vector<var>& vec,
+    std::vector<_var>& vec,
     std::vector<std::string> var_list) {
     // temporary stack to store operator
     std::stack<std::string> s;
@@ -273,7 +312,7 @@ bool _to_postorder(
             size_t i_ = 0;
             while (i_ != var_list.size()) {
                 if (var_list[i_] == var_name) {
-                    vec.push_back(static_cast<var>(i_));
+                    vec.push_back(static_cast<_var>(i_));
                     break;
                 }
                 else {
@@ -338,9 +377,6 @@ bool _to_postorder(
     return true;
 }
 
-/**
- * \brief implement func in std::string
- */
 inline std::complex<double> _func(std::string fun_name, std::complex<double> num, std::string* msg) {
     // change fun_name to lower case
     for (auto& c : fun_name) {
@@ -397,20 +433,17 @@ inline std::complex<double> _func(std::string fun_name, std::complex<double> num
     return result;
 }
 
-/**
- * \brief Evaluate the complex number from the string
- *
- * The second argument msg is optional, return the status.
- * if it is empty, the process is correct;
- * Otherwise, it displays error information.
- */
 bool to_postorder(
     std::string str,
     std::string* msg,
-    std::vector<var>& post_order,
+    std::vector<_var>& post_order,
     std::vector<std::string> var_list) {
     if (str.empty()) {
         _error_msg(msg, "Empty string");
+        return false;
+    }
+    if (!_bracket(str)) {
+        _error_msg(msg, "Mismatch of brackets");
         return false;
     }
     for (const auto& c : str) {
@@ -428,10 +461,10 @@ bool to_postorder(
 }
 
 std::complex<double> eval_postorder(
-    std::vector<var> post_order,
+    std::vector<_var> post_order,
     std::vector<std::complex<double>> num_list,
     std::string* msg) {
-    std::stack<var> s;
+    std::stack<_var> s;
     auto iter = post_order.begin();
     do {
         if (iter->str.empty()) {
@@ -500,13 +533,6 @@ std::complex<double> eval_postorder(
     }
 }
 
-/**
- * \brief Evaluate the complex number from the string
- *
- * The second argument msg is optional, return the status.
- * if it is empty, the process is correct;
- * Otherwise, it displays error information.
- */
 std::complex<double> eval(
     std::string str,
     std::vector<std::string> var_list,
@@ -518,7 +544,7 @@ std::complex<double> eval(
         return ERROR_COMPLEX;
     }
 
-    std::vector<var> post_order;
+    std::vector<_var> post_order;
     if (!to_postorder(str, msg, post_order, var_list)) {
         // error handling
         return ERROR_COMPLEX;

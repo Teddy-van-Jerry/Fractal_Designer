@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Fractal_Designer</string>
+   <string notr="true">Fractal Designer</string>
   </property>
   <property name="windowIcon">
    <iconset resource="EXE_Icons.qrc">
@@ -46,7 +46,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -114,9 +114,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.5 supports two more templates: Burning Ship Fractal and Generalized Newton Fractal.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  While the new version of 5.6 which features Chinese translation of the app, 5.6.0 solves the fatal bug of calling ffmpeg.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  In the alpha version of Fractal Designer 5.6, help links point to Help of Version 5.5. There can be numerous bugs. For more information about how to test the new alpha version, please check out our group website: &lt;/span&gt;&lt;a href=&quot;https://group.teddy-van-jerry.org/project/fractal-designer-5-6-3-alpha-release/&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Fractal Designer 5.6.3-alpha Release – TVJ Group (teddy-van-jerry.org)&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.6.0 (2021/06/28)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 5.6.3-alpha (2021/07/10)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* GitHub        : &lt;/span&gt;&lt;a href=&quot;https://github.com/Teddy-van-Jerry&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy-van-Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -357,7 +357,7 @@ p, li { white-space: pre-wrap; }
       </widget>
       <widget class="QWidget" name="Template">
        <property name="toolTip">
-        <string>Template</string>
+        <string/>
        </property>
        <attribute name="title">
         <string>Template</string>
@@ -545,13 +545,38 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit">
+           <widget class="QLineEdit" name="lineEdit_Custom_Formula">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Customize the formula</string>
+            </property>
+            <property name="statusTip">
+             <string>Remember to press Enter after editing the formula.</string>
+            </property>
             <property name="placeholderText">
-             <string>Enter your formula here</string>
+             <string>Enter your formula here, for example: $z ^ 2 + $z0</string>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Tip: Remember to press &lt;strong&gt;Enter&lt;/strong&gt; after editing the formula.</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="verticalSpacer_26">
@@ -582,7 +607,7 @@ p, li { white-space: pre-wrap; }
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="pushButton_Template_Help">
             <property name="text">
              <string>View online template help</string>
             </property>
@@ -621,7 +646,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QToolBox" name="toolBox">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="ToolBoxPage1_2">
              <property name="geometry">
@@ -629,7 +654,7 @@ p, li { white-space: pre-wrap; }
                <x>0</x>
                <y>0</y>
                <width>413</width>
-               <height>234</height>
+               <height>417</height>
               </rect>
              </property>
              <attribute name="label">
@@ -801,8 +826,8 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>348</width>
-               <height>438</height>
+               <width>160</width>
+               <height>251</height>
               </rect>
              </property>
              <attribute name="label">
@@ -932,8 +957,8 @@ A = 255;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>422</width>
-               <height>439</height>
+               <width>401</width>
+               <height>443</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1707,15 +1732,7 @@ p, li { white-space: pre-wrap; }
       <iconset resource="Icon_resources.qrc">
        <normaloff>:/icon/Menu Icon/Preview.png</normaloff>:/icon/Menu Icon/Preview.png</iconset>
      </property>
-     <widget class="QMenu" name="menuSettings">
-      <property name="title">
-       <string>Settings</string>
-      </property>
-      <addaction name="actionSize"/>
-      <addaction name="separator"/>
-      <addaction name="actionAuto_Refresh"/>
-     </widget>
-     <addaction name="menuSettings"/>
+     <addaction name="actionPreview_Settings"/>
     </widget>
     <widget class="QMenu" name="menuMagnify_Settings">
      <property name="title">
@@ -2263,22 +2280,6 @@ p, li { white-space: pre-wrap; }
     <string>Template 2</string>
    </property>
   </action>
-  <action name="actionSize">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Size</string>
-   </property>
-  </action>
-  <action name="actionAuto_Refresh">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Auto Refresh</string>
-   </property>
-  </action>
   <action name="actionStop">
    <property name="icon">
     <iconset resource="Icon_resources.qrc">
@@ -2794,11 +2795,16 @@ p, li { white-space: pre-wrap; }
     <string notr="true">中文</string>
    </property>
   </action>
+  <action name="actionPreview_Settings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Icon.qrc"/>
-  <include location="EXE_Icons.qrc"/>
   <include location="Icon_resources.qrc"/>
+  <include location="EXE_Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
