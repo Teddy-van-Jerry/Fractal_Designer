@@ -61,36 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setStyleSheet("background-color: ");
     //qDebug() << QCoreApplication::applicationDirPath();
-    /*
-    QString filename1(":/Templates/Template_1.bmp");
-    if(!(image_T1.load(filename1))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename2(":/Templates/Template_2.jpg");
-    if(!(image_T2.load(filename2))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename3(":/Templates/Template_3.jpg");
-    if(!(image_T3.load(filename3))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename4(":/Templates/Template_4.png");
-    if(!(image_T4.load(filename4))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    */
+
     //ui->progressBar_Preview->setVisible(false);
     QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
     Button_Quick_Option_qss.open(QFile::ReadOnly);
@@ -102,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
     ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
     ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->pushButton->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->pushButton_Chinese_Help->setStyleSheet(Button_Quick_Option_qss_str);
     ui->pushButton_Template_Help->setStyleSheet(Button_Quick_Option_qss_str);
 
     model->setColumnCount(6);
@@ -141,7 +112,6 @@ void MainWindow::setOpenLocation(QString str)
     Open_Location = str;
     if(str != "")
     {
-        Version_Higher_Than_4 = true;
         save_or_not = true;
         High_Version_Open(OPEN_FILE_OUT);
     }
@@ -239,7 +209,7 @@ bool MainWindow::High_Version_Open(int type)
         else if NameIs('I', 'V')
         {
             FRD_R.skip(4);
-            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t;
+            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t >> curr_info.y_inverse;
         }
         else if NameIs('C', '1')
         {
@@ -358,28 +328,24 @@ void MainWindow::on_actionChinese_triggered()
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998"));
+    QDesktopServices::openUrl(QUrl("https://teddy-van-jerry.org"));
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_Chinese_Help_clicked()
 {
+    qDebug() << "Button clicked";
     MainWindow::on_actionChinese_triggered();
 }
 
 void MainWindow::on_actionNew_N_triggered()
 {
-    if(Version_Higher_Than_4 && ui->actionClose->isEnabled())
+    if(ui->actionClose->isEnabled())
     {
         on_actionClose_triggered();
     }
-    Version_Higher_Than_4 = true;
     New_File* new_project = new New_File(this);
     new_project->show();
     save_or_not = true;
-    if(Open_Location == "" && Project_Name != "Unsaved project")
-    {
-        Version_Higher_Than_4 = false;
-    }
 }
 
 void MainWindow::on_MainWindow_Newfile_clicked()
@@ -403,7 +369,6 @@ void MainWindow::on_actionOpen_O_triggered()
         {
             on_actionClose_triggered();
         }
-        Version_Higher_Than_4 = true;
         Open_Location = New_Open_Location;
         if(!High_Version_Open(OPEN_FILE_IN))
         {
@@ -416,11 +381,6 @@ void MainWindow::on_actionOpen_O_triggered()
         QMessageBox::warning(this, "Opening Project Error", "The file doesn't exist!");
         // Open_Location = "";
     }
-    else if(Project_Name != "Unsaved project")
-    {
-        Version_Higher_Than_4 = false;
-    }
-
 }
 
 void MainWindow::on_MainWindow_openfile_clicked()
@@ -468,7 +428,6 @@ void MainWindow::show_preview_image()
 
 void MainWindow::on_actionRoute_Tool_triggered()
 {
-    //Route_Tool* route_tool = new Route_Tool;
     route_tool_window->show();
 }
 
@@ -581,69 +540,23 @@ void MainWindow::on_Tab_currentChanged(int index)
             ui->Label_Preview_Image->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width));
         }
     }
-    /*
-    if(index == 1) // Template
+
+    if(index == 4) // Template
     {
-        ui->label_Template_1->resize(ui->widget_T1->size());
-        int T1_w_width(ui->label_Template_1->width());
-        int T1_w_height(ui->label_Template_1->height());
-        double rate_w_T1 = static_cast<double>(T1_w_height) / T1_w_width;
-        double rate_i_T1 = static_cast<double>(image_T1.height()) / image_T1.width();
-        if(rate_i_T1 > rate_w_T1)
+        double rate_i = static_cast<double>(image_preview.height()) / image_preview.width();
+        ui->label_previewInVideo->resize(ui->widget_previewInVideo->size());
+        int preview_w_width_video(ui->widget_previewInVideo->width());
+        int Preview_w_height_video(ui->widget_previewInVideo->height());
+        double rate_w_video = static_cast<double>(Preview_w_height_video) / preview_w_width_video;
+        if(rate_i > rate_w_video)
         {
-            ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToHeight(T1_w_height));
+            ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToHeight(Preview_w_height_video));
         }
         else
         {
-            ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
+            ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
         }
-
-        ui->label_Template_2->resize(ui->widget_T2->size());
-        int T2_w_width(ui->label_Template_2->width());
-        int T2_w_height(ui->label_Template_2->height());
-        double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
-        double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
-        if(rate_i_T2 > rate_w_T2)
-        {
-
-            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
-        }
-        else
-        {
-            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
-        }
-
-
-        ui->label_Template_3->resize(ui->widget_T3->size());
-        int T3_w_width(ui->label_Template_3->width());
-        int T3_w_height(ui->label_Template_3->height());
-        double rate_w_T3 = static_cast<double>(T3_w_height) /T3_w_width;
-        double rate_i_T3 = static_cast<double>(image_T3.height()) / image_T3.width();
-        if(rate_i_T3 > rate_w_T3)
-        {
-
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToHeight(T3_w_height));
-        }
-        else
-        {
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToWidth(T3_w_width));
-        }
-
-        ui->label_Template_4->resize(ui->widget_T4->size());
-        int T4_w_width(ui->label_Template_4->width());
-        int T4_w_height(ui->label_Template_4->height());
-        double rate_w_T4 = static_cast<double>(T4_w_height) /T4_w_width;
-        double rate_i_T4 = static_cast<double>(image_T4.height()) / image_T4.width();
-        if(rate_i_T4 > rate_w_T4)
-        {
-
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToHeight(T4_w_height));
-        }
-        else
-        {
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
-        }
-    }*/
+    }
 }
 
 void MainWindow::on_actionSave_S_triggered()
@@ -890,19 +803,11 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     if(curr_info.template_ == 2)
     {
-        if(Version_Higher_Than_4)
-        {
-            double t = ui->doubleSpinBox_t->value();
-            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-            double& k = curr_info.Julia_c_rate;
-            preview->setTemplate2(_curr_complex(c1, c2, t, k));
-            // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-            return;
-        }
+        double t = ui->doubleSpinBox_t->value();
+        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+        double& k = curr_info.Julia_c_rate;
+        preview->setTemplate2(_curr_complex(c1, c2, t, k));
+        // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     }
     else if(curr_info.template_ == 4)
     {
@@ -947,7 +852,8 @@ void MainWindow::on_actionPreview_Refresh_triggered()
                       curr_info.ps.xWidth, curr_info.ps.yHeight,
                       curr_info.ps.width, curr_info.ps.height,
                       curr_info.ps.angle, ui->doubleSpinBox_t->value(),
-                      "png", Pre_Img_Dir, "Preview Image", "Preview");
+                      "png", Pre_Img_Dir, "Preview Image", "Preview",
+                      curr_info.y_inverse);
 
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
@@ -1144,13 +1050,7 @@ void MainWindow::on_actionCreate_Images_triggered()
         return;
     }
 
-    if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
-    {
-        QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
-        return;
-    }
-
-    if(Version_Higher_Than_4 && !isRouteValid)
+    if(!isRouteValid)
     {
         QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
         return;
@@ -1159,7 +1059,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
-    if(!QDir(path).exists())
+    if(path.isEmpty() || !QDir(path).exists())
     {
         QMessageBox::warning(this, "Can not create images", "The path does not exist.");
         return;
@@ -1247,7 +1147,7 @@ void MainWindow::on_actionCreate_Images_triggered()
                                         _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
 
         }
-        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         QThreadPool::globalInstance()->start(create_images);
     }
 
@@ -1273,7 +1173,8 @@ void MainWindow::on_actionCreate_Images_triggered()
                             Tb(model->rowCount() - 1, 4) * Y / X,
                             X, Y,
                             Tb(model->rowCount() - 1, 3),
-                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last");
+                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
+                            curr_info.y_inverse);
     QThreadPool::globalInstance()->start(create_images);
     qDebug() << "Here Here !!!!";
 }
@@ -1327,11 +1228,14 @@ void MainWindow::on_toolButton_imagePath_clicked()
 {  
     QString default_dir = Project_Name;
     default_dir = Open_Location;
-    while(default_dir.right(1) != "/" && default_dir.right(1) != "\\")
+    if (!Open_Location.isEmpty())
     {
+        while(default_dir.right(1) != "/" && default_dir.right(1) != "\\")
+        {
+            default_dir.chop(1);
+        }
         default_dir.chop(1);
     }
-    default_dir.chop(1);
     QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     ui->lineEdit_imagePath->setText(Pro_Path);
@@ -1681,8 +1585,9 @@ void MainWindow::on_toolButton_videoPath_clicked()
 
 void MainWindow::on_actionEnglish_triggered()
 {
-    Help* help = new Help;
-    help->show();
+    // Help* help = new Help;
+    // help->show();
+    QDesktopServices::openUrl(QUrl(English_Help_Url));
 }
 
 void MainWindow::on_MainWindow_HelpEnglish_clicked()
@@ -2014,6 +1919,7 @@ void MainWindow::display()
     ui->Min_class_value->setValue(curr_info.min_class_v);
     ui->Max_class_value->setValue(curr_info.max_class_v);
     ui->Max_loop_time->setValue(curr_info.max_loop_t);
+    ui->checkBox_yInverse->setChecked(curr_info.y_inverse);
 
     // Colour Info
     ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
@@ -2346,7 +2252,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl(Bug_Report_CSDN));
+    QDesktopServices::openUrl(QUrl(Bug_Report));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2519,6 +2425,10 @@ void MainWindow::on_actionClose_triggered()
     Info_Save new_info;
     current_info_v = 0;
     redo_max_depth = 1;
+    NO_EDIT = true;
+    on_actionReset_Colour_Definition_triggered();
+    preview_setting = new Preview_Setting(this);
+    NO_EDIT = false;
     Project_Template = "Undefined";
     curr_info = new_info;
     save_or_not = false;
@@ -2580,6 +2490,12 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
+
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        return;
+    }
 
     create_image_info = new Create_Image_Info();
     connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
@@ -2675,11 +2591,11 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         }
         if(i != to_i)
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         }
         else
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last", curr_info.y_inverse);
         }
         QThreadPool::globalInstance()->start(create_images);
     }
@@ -2702,6 +2618,12 @@ void MainWindow::createImagesInList(const QList<int>& list)
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
+
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        return;
+    }
 
     create_image_info = new Create_Image_Info();
     connect(this, &MainWindow::build_image_info_signal_, create_image_info, &Create_Image_Info::set_info_);
@@ -2798,11 +2720,11 @@ void MainWindow::createImagesInList(const QList<int>& list)
         // qDebug() << t << current_index << x << y << width << angle;
         if(i != *(--list.end()))
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         }
         else
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last", curr_info.y_inverse);
         }
         QThreadPool::globalInstance()->start(create_images);
     }
@@ -3147,4 +3069,30 @@ void MainWindow::on_lineEdit_Custom_Formula_editingFinished()
 void MainWindow::on_actionPreview_Settings_triggered()
 {
     preview_setting->show();
+}
+
+void MainWindow::on_actionReset_Colour_Definition_triggered()
+{
+    QString str = "R = 0;\nG = 0;\nB = 0;\nA = 255;";
+    bool edit_here = false;
+    if (ui->Convergent_Points_Colour_Formula->toPlainText() != str)
+    {
+        ui->Convergent_Points_Colour_Formula->setPlainText(str);
+        edit_here = true;
+    }
+    if (ui->Divergent_Points_Colour_Formula->toPlainText() != str)
+    {
+        ui->Divergent_Points_Colour_Formula->setPlainText(str);
+        edit_here = true;
+    }
+    if (edit_here)
+    {
+        edit();
+    }
+}
+
+void MainWindow::on_checkBox_yInverse_stateChanged(int arg1)
+{
+    buff_info.y_inverse = arg1;
+    edit(EDIT_ALREADY);
 }

@@ -57,6 +57,8 @@ private:
 
     bool isCancelled = false;
 
+    bool y_inverse = false;
+
     int range_complex_to_255(const std::complex<double>& c);
 
     bool setRGBA(double[4], bool, const std::complex<double>&, const std::complex<double>&, double, int);
@@ -79,7 +81,7 @@ signals:
     void error_calc(int);
 
 public: // function
-    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString);
+    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString, bool);
 
     void setData(std::vector<_var>[4], std::vector<_var>[4], int, double, double, int);
 

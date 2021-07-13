@@ -66,7 +66,7 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
 
     // Image Value
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;
-    out << min_class_v << max_class_v << max_loop_t;
+    out << min_class_v << max_class_v << max_loop_t << y_inverse;
 
     out << Colour1.name[0] << Colour1.name[1] << Colour1.length << Colour1_f;
 

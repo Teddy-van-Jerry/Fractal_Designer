@@ -1,17 +1,10 @@
 # Fractal_Designer
-This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
+This is an application to make fractal videos based on Qt(6.1.1), C++ and FFmpeg.
 
-## Minor Update
-- Version 5.6.0 updated in 2021/06/28.
-- Solve the bug of calling ffmpeg in Windows. If users haven't added ffmpeg to their environment variable, the process of creating videos will fail. (Now you need to add `Resources\ffmpeg.exe` under the the same folder with `Fractal_Designer.exe`)
-- Note that many minor bugs now can be seen due to the project is now just half way doing the translation work.
-
-## Last Version Information
-This is version 5.5.3 updated in 2021/04/13.
-There are release versions for Windows and Linux.
-The code is known to work properly in Win 10 and Ubuntu 20.
-- For Windows, just run the exe file
-- For Linux, run Fractal_Designer.sh
+## Version Information
+This is version 5.6.3-beta updated in 2021/07/14.
+Beta version is now only available for Windows.
+Please report bug at issues.
 
 ## Main Features
 - You can create fractal images and videos at your command, with the freedom of designing colours and routes.
@@ -19,9 +12,9 @@ The code is known to work properly in Win 10 and Ubuntu 20.
 - More functions are there to be discovered by you! For more information, you can find them in help.
 
 ## Tips
-- Try not to use the compatibility mode with Fractal Designer 4 as it is error-prone.
-- In this version, Fractal Designer supports 4 templates, two of which require additional settings.
+- In this version, Fractal Designer is no longer compatible with previous versions.
 - You can report bugs if any.
+- Fractal Designer 5.6 will be the LTS version.
 
 ## Username and Passcode
 You can use any of them to log in the application:
@@ -46,4 +39,4 @@ You can use any of them to log in the application:
 > More videos are being uploaded.
 
 ## Download Release
-Now there are only release versions for Windows and Linux.
+Now there is only release versions for Windows in beta version.
