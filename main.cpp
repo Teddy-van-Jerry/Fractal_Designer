@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    a.setApplicationVersion("5.6.0");
+    a.setApplicationVersion("5.6.3");
     a.setApplicationName("Fractal Designer");
     // a.setApplicationDisplayName("Fractal Designer");
     a.setOrganizationName("Teddy van Jerry");

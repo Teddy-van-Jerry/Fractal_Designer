@@ -115,12 +115,12 @@ void Preview_Setting::on_pushButton_Default_clicked()
         else if (msg_box.clickedButton() == btn1)
         {
             // Universal View
-            setTemplateInfo(800, 600, 4, 3, 0, -0.4, 0.6, ui->checkBox->isChecked());
+            setTemplateInfo(800, 600, 4, 3, 0, -0.4, -0.6, ui->checkBox->isChecked());
         }
         else if (msg_box.clickedButton() == btn2)
         {
             // Burning Ship View
-            setTemplateInfo(800, 600, 0.16, 0.12, 0, -1.755, 0.032, ui->checkBox->isChecked());
+            setTemplateInfo(800, 600, 0.16, 0.12, 0, -1.755, -0.032, ui->checkBox->isChecked());
         }
     }
         break;
@@ -134,18 +134,6 @@ void Preview_Setting::on_pushButton_Default_clicked()
         break;
     }
 }
-
-//
-// preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-
-/*
-if(curr_info.template_ == 1)
-    preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-if(curr_info.template_ == 3)
-    preview->setImage(-0.4, 0.6, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-if(curr_info.template_ == 5)
-    preview->setImage(0, 0, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-*/
 
 void Preview_Setting::setTemplateInfo(int width_, int height_, double xWidth_, double yHeight_, double angle_, double centreX_, double centreY_, bool checked)
 {

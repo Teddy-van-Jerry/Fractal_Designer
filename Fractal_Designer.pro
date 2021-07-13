@@ -15,7 +15,6 @@ SOURCES += \
     create_image_info.cpp \
     create_image_task.cpp \
     create_images_range.cpp \
-    help.cpp \
     info_save.cpp \
     login.cpp \
     main.cpp \
@@ -36,7 +35,6 @@ HEADERS += \
     create_image_info.h \
     create_image_task.h \
     create_images_range.h \
-    help.h \
     info_save.h \
     login.h \
     mainwindow.h \
@@ -54,7 +52,6 @@ HEADERS += \
 FORMS += \
     create_image_info.ui \
     create_images_range.ui \
-    help.ui \
     login.ui \
     mainwindow.ui \
     new_features.ui \
@@ -94,7 +91,7 @@ TRANSLATIONS += \
 win32 {
     QMAKE_TARGET_PRODUCT     = Fractal Designer
     QMAKE_TARGET_COMPANY     = Teddy van Jerry
-    QMAKE_TARGET_DESCRIPTION = A software to create fractal videos.
+    QMAKE_TARGET_DESCRIPTION = Fractal Designer
     QMAKE_TARGET_COPYRIGHT   = "Copyright (C) 2021 Teddy van Jerry"
 
     RC_ICONS += \

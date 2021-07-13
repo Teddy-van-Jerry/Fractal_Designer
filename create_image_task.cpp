@@ -17,8 +17,6 @@ void Create_Image_Task::run()
 {
     qDebug() << "Got it here";
 
-    y = -y;
-
     qDebug() << "The working thread: " << QThread::currentThreadId();
     double progress = 0;
     int progress_now = 0;
@@ -38,11 +36,11 @@ void Create_Image_Task::run()
         for(int j = Y - 1; j >= 0; j--)
         {
             double dx = x_width * (static_cast<double>(i) / X - 0.5);
-            double dy = y_height * (static_cast<double>(j) / Y - 0.5);
+            double dy = - y_height * (static_cast<double>(j) / Y - 0.5);
+            if (y_inverse) dy = - dy;
             double mod = sqrt(dx * dx + dy * dy);
             double theta = atan2(dy, dx) + rotate_angle / 180 * Pi;
-            std::complex<double> this_point(x + mod * cos(theta),
-                               y + mod * sin(theta));
+            std::complex<double> this_point(x + mod * cos(theta), y + mod * sin(theta));
             std::complex<double> z0(this_point), last_point(-this_point);
             bool convergent = true;
             int k = 0;
@@ -135,7 +133,7 @@ void Create_Image_Task::run()
 }
 
 void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y_height_, int X_, int Y_, double rotate_angle_, double t_,
-                                 QString img_format_, QString img_path_, QString img_title_, QString work_name_)
+                                 QString img_format_, QString img_path_, QString img_title_, QString work_name_, bool y_inverse_)
 {
     x            = x_;
     y            = y_;
@@ -149,6 +147,7 @@ void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y
     img_path     = img_path_;
     img_title    = img_title_;
     work_name    = work_name_;
+    y_inverse    = y_inverse_;
 }
 
 void Create_Image_Task::setData(std::vector<_var> C1[4], std::vector<_var> C2[4], int temp, double min, double max, int lpt)

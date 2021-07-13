@@ -46,7 +46,7 @@ class Info_Save
     info Template {'T', 'E', 1};
     info Template_2 {'T', '2', 40}; // 16*2+8=40
     info Template_4 {'T', '4', 456}; // 16*28+8=456
-    info ImageValue {'I', 'V', 20}; // 8+8+4=20
+    info ImageValue {'I', 'V', 20}; // 8+8+4+1=21
     info Colour1 {'C', '1', 0};
     info Colour2 {'C', '2', 0};
     info Route {'R', 'O', 0};
@@ -60,6 +60,7 @@ public:
     QString CustomFormula_;
     double min_class_v = 0, max_class_v = 0;
     qint32 max_loop_t = 50;
+    bool y_inverse = false;
     QList<Route_Info> Route_;
     qint16 image_size_x = 1920, image_size_y = 1080;
     char frame_rate_index = 1;

@@ -140,7 +140,8 @@ void Route_Tool::on_pushButton_view_clicked()
     route_tool_img->setImage(ui->doubleSpinBox_centreX->value(), ui->doubleSpinBox_centreY->value(),
                              ui->doubleSpinBox_size->value(), ui->doubleSpinBox_size->value(), 600, 600,
                              ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),
-                             "png", Img_Dir, "Route_Tool Image", "Route");
+                             "png", Img_Dir, "Route_Tool Image", "Route",
+                             pa->pre_info[pa->current_info_v].y_inverse);
     QThreadPool::globalInstance()->start(route_tool_img);
 }
 
@@ -152,10 +153,7 @@ void Route_Tool::updateProgressBar(double p)
 void Route_Tool::getImage(QImage img)
 {
     qDebug() << "Preview get image";
-//    this->image_route = img;
     QPixmap view_image = QPixmap::fromImage(img);
-    //view_image.scroll(0, 0, 100, 100, 600, 600);
-    // ui->Route_View->setPixmap(view_image);
     centreX = ui->doubleSpinBox_centreX->value();
     centreY = ui->doubleSpinBox_centreY->value();
     img_size = ui->doubleSpinBox_size->value();
@@ -170,14 +168,13 @@ void Route_Tool::mouseMoveEvent(QMouseEvent* e)
             && e->position().y() >= 25 && e->position().y() <= 625
             && ui->progressBar->value() == 100)
     {
+        MainWindow* p = (MainWindow*)parent();
         double x_0 = static_cast<double>((e->position().x() - 650) / 600);
         double y_0 = -static_cast<double>((e->position().y() - 325) / 600);
+        if (p->pre_info[p->current_info_v].y_inverse) y_0 = -y_0;
         if(e->buttons() & Qt::LeftButton)
         {
-
             press_move = true;
-            //Paint_Event* paint = new Paint_Event(this, e->pos().x() - preX, e->pos().y() - preY, image);
-            //paint->update();
             dx = e->pos().x() - preX;
             dy = e->pos().y() - preY;
             double r = sqrt(dx * dx + dy * dy) * img_size / 600;
@@ -185,14 +182,12 @@ void Route_Tool::mouseMoveEvent(QMouseEvent* e)
             double theta = theta_0 + ui->doubleSpinBox_angle->value() * Pi / 180;
             double x = -r * cos(theta) + preCentreX;
             double y = r * sin(theta) + preCentreY;
+            if (p->pre_info[p->current_info_v].y_inverse) y = - r * sin(theta) + preCentreY;
             ui->doubleSpinBox_centreX->setValue(x);
             ui->doubleSpinBox_centreY->setValue(y);
             centreX = x;
             centreY = y;
-            // ui->Route_View->setPixmap(QPixmap::fromImage(QImage(":/Other Images/bk-black.png")));
             qDebug() << "Pressed moving";
-            //QPaintEvent* event_p = new QPaintEvent(QRect(e->pos().x() - preX + 350 ,e->pos().y() - preY + 20 , 950 - (e->pos().x() - preX),625 - (e->pos().y() - preY)));
-            //paintEvent(event_p);
             update();
         }
         else
@@ -205,8 +200,9 @@ void Route_Tool::mouseMoveEvent(QMouseEvent* e)
             ui->Label_Coordinate->setText(tr("(") + QString::number(x, ' ', 8) + ", " + QString::number(y, ' ', 8) + ")");
             preX = x_0 * 600 + 650;
             preY = -y_0 * 600 + 325;
+            if (!p->pre_info[p->current_info_v].y_inverse) ;
+            else preY = y_0 * 600 + 325;
         }
-        // update();
     }
     qDebug() << preX << "," << preY;
 }
@@ -221,6 +217,7 @@ void Route_Tool::mouseReleaseEvent(QMouseEvent* e)
 
 void Route_Tool::mouseDoubleClickEvent(QMouseEvent* e)
 {
+    MainWindow* p = (MainWindow*)parent();
     if(e->button() == Qt::LeftButton && ui->progressBar->value() == 100)
     {
         if(e->position().x() >= 350 && e->position().y() <= 950
@@ -228,6 +225,7 @@ void Route_Tool::mouseDoubleClickEvent(QMouseEvent* e)
         {
             double x_0 = static_cast<double>((e->position().x() - 650) / 600) * img_size;
             double y_0 = -static_cast<double>((e->position().y() - 325) / 600) * img_size;
+            if (p->pre_info[p->current_info_v].y_inverse) y_0 = -y_0;
             double r = sqrt(x_0 * x_0 + y_0 * y_0);
             double theta_0 = atan2(y_0, x_0);
             double theta = theta_0 - ui->doubleSpinBox_angle->value() * Pi / 180;
