@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <complex>
 #include "route_info.h"
+#include "preview_setting.h"
 
 #define _ROUTE_SIZE_ 48
 
@@ -28,33 +29,49 @@ struct info
     qint32 length;
 };
 
+struct Preview_Info
+{
+    int width = 800;
+    int height = 600;
+    double xWidth = 4;
+    double yHeight = 3;
+    double angle = 0;
+    double centreX = 0;
+    double centreY = 0;
+    bool autoRefresh = false;
+};
+
 class Info_Save
 {
     info Template {'T', 'E', 1};
     info Template_2 {'T', '2', 40}; // 16*2+8=40
     info Template_4 {'T', '4', 456}; // 16*28+8=456
-    info ImageValue {'I', 'V', 20}; // 8+8+4=20
+    info ImageValue {'I', 'V', 20}; // 8+8+4+1=21
     info Colour1 {'C', '1', 0};
     info Colour2 {'C', '2', 0};
     info Route {'R', 'O', 0};
     info ImageOther {'I', 'O', 0};
     info VideoInfo {'V', 'I', 0};
-    info Config {'C', 'O', 1};
+    info CustomFormula {'C', 'F', 0};
+    info Preview {'P', 'R', 49};
 
 public:
     char template_ = 0;
+    QString CustomFormula_;
     double min_class_v = 0, max_class_v = 0;
     qint32 max_loop_t = 50;
+    bool y_inverse = false;
     QList<Route_Info> Route_;
     qint16 image_size_x = 1920, image_size_y = 1080;
     char frame_rate_index = 1;
     QString total_time_str = "0100";
-    QString Colour1_f[4], Colour2_f[4];
+    QString Colour1_f, Colour2_f;
     QString img_path;
     QString img_prefix;
     QString video_path;
     QString video_name;
     QList<QString> music_list;
+    Preview_Info ps;
 
     ////////// Template 2 Only //////////
     std::complex<double> Julia_c1, Julia_c2;
@@ -73,10 +90,6 @@ public:
     std::complex<double> Newton_ex_1 = 0;
     std::complex<double> Newton_ex_2 = 0;
     double Newton_c_rate = 0;
-    /////////////////////////////////////
-
-    //////// Only Valid in Print ////////
-    char config1 = 0;
     /////////////////////////////////////
 
     void setRouteInfo(const QList<Route_Info>& route_list)
@@ -100,26 +113,24 @@ public:
         VideoInfo.length = 2 + sizeof(video_path) + sizeof(video_name) + sizeof(music_list);
     }
 
-    void setColourInfo(const QString colour_info[4], bool conv)
+    void setColourInfo(const QString& colour, bool conv)
     {
         if (conv)
         {
-            Colour1.length = 0;
-            for (int i = 0; i != 4; i++)
-            {
-                Colour1_f[i] = colour_info[i];
-                Colour1.length += sizeof(colour_info[i]);
-            }
+            Colour1.length = sizeof(colour);
+            Colour1_f = colour;
         }
         else
         {
-            Colour2.length = 0;
-            for (int i = 0; i != 4; i++)
-            {
-                Colour2_f[i] = colour_info[i];
-                Colour2.length += sizeof(colour_info[i]);
-            }
+            Colour2.length = sizeof(colour);
+            Colour2_f = colour;
         }
+    }
+
+    void setCustomFormulaInfo(const QString& str)
+    {
+        CustomFormula.length = sizeof(str);
+        CustomFormula_ = str;
     }
 
     void print(QString path, uint8_t FRD_Version[4]);

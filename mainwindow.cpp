@@ -1,4 +1,4 @@
-#include <QLabel>
+﻿#include <QLabel>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMessageBox>
@@ -61,36 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setStyleSheet("background-color: ");
     //qDebug() << QCoreApplication::applicationDirPath();
-    /*
-    QString filename1(":/Templates/Template_1.bmp");
-    if(!(image_T1.load(filename1))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename2(":/Templates/Template_2.jpg");
-    if(!(image_T2.load(filename2))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename3(":/Templates/Template_3.jpg");
-    if(!(image_T3.load(filename3))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    QString filename4(":/Templates/Template_4.png");
-    if(!(image_T4.load(filename4))) // load the image
-    {
-        QMessageBox::information(this,
-                     tr("Build Error"),
-                     tr("Fail to open the image"));
-    }
-    */
+
     //ui->progressBar_Preview->setVisible(false);
     QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
     Button_Quick_Option_qss.open(QFile::ReadOnly);
@@ -102,7 +73,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
     ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
     ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->pushButton->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->pushButton_Chinese_Help->setStyleSheet(Button_Quick_Option_qss_str);
+    ui->pushButton_Template_Help->setStyleSheet(Button_Quick_Option_qss_str);
 
     model->setColumnCount(6);
     model->setHeaderData(0, Qt::Horizontal, "t");
@@ -140,7 +112,6 @@ void MainWindow::setOpenLocation(QString str)
     Open_Location = str;
     if(str != "")
     {
-        Version_Higher_Than_4 = true;
         save_or_not = true;
         High_Version_Open(OPEN_FILE_OUT);
     }
@@ -185,8 +156,16 @@ bool MainWindow::High_Version_Open(int type)
 
     current_info_v = 0;
     redo_max_depth = 1;
-    qDebug() << FRD_R.read(4);
     QDataStream in(&FRD_R);
+
+    uint8_t version[4];
+    in >> version[0] >> version[1] >> version[2] >> version[3];
+    if (version[0] < 5 || version[1] < 6)
+    {
+        // QMessageBox::critical(this, tr("Fail to open"), tr("The version is too low to support."));
+        // return false;
+    }
+
     while(!FRD_R.atEnd())
     {
         in >> name_1 >> name_2;
@@ -222,20 +201,30 @@ bool MainWindow::High_Version_Open(int type)
             _complex_in(in, curr_info.Newton_ex_2);
             in >> curr_info.Newton_c_rate;
         }
+        else if NameIs('C', 'F')
+        {
+            FRD_R.skip(4);
+            in >> curr_info.CustomFormula_;
+        }
         else if NameIs('I', 'V')
         {
             FRD_R.skip(4);
-            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t;
+            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t >> curr_info.y_inverse;
         }
         else if NameIs('C', '1')
         {
             FRD_R.skip(4);
+            in >> curr_info.Colour1_f;
+            // It is not included in display()
+            ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
 
         }
         else if NameIs('C', '2')
         {
             FRD_R.skip(4);
-
+            in >> curr_info.Colour2_f;
+            // It is not included in display()
+            ui->Divergent_Points_Colour_Formula->setPlainText(curr_info.Colour2_f);
         }
         else if NameIs('R', 'O')
         {
@@ -266,15 +255,13 @@ bool MainWindow::High_Version_Open(int type)
                 in >> curr_info.music_list[i];
             }
         }
-        else if NameIs('C', 'O')
+        else if NameIs('P', 'R')
         {
-            qDebug() << "Config" << (int)curr_info.config1;
             FRD_R.skip(4);
-            in >> curr_info.config1;
-            if((curr_info.config1 & 1) == 1)
-            {
-                ui->actionAuto_Refresh->setChecked(true);
-            }
+            in >> curr_info.ps.width >> curr_info.ps.height
+               >> curr_info.ps.xWidth >> curr_info.ps.yHeight
+               >> curr_info.ps.angle >> curr_info.ps.centreX
+               >> curr_info.ps.centreY >> curr_info.ps.autoRefresh;
         }
         else
         {
@@ -341,28 +328,24 @@ void MainWindow::on_actionChinese_triggered()
 
 void MainWindow::on_MainWindow_AboutTVJ_clicked()
 {
-    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998"));
+    QDesktopServices::openUrl(QUrl("https://teddy-van-jerry.org"));
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_Chinese_Help_clicked()
 {
+    qDebug() << "Button clicked";
     MainWindow::on_actionChinese_triggered();
 }
 
 void MainWindow::on_actionNew_N_triggered()
 {
-    if(Version_Higher_Than_4 && ui->actionClose->isEnabled())
+    if(ui->actionClose->isEnabled())
     {
         on_actionClose_triggered();
     }
-    Version_Higher_Than_4 = true;
     New_File* new_project = new New_File(this);
     new_project->show();
     save_or_not = true;
-    if(Open_Location == "" && Project_Name != "Unsaved project")
-    {
-        Version_Higher_Than_4 = false;
-    }
 }
 
 void MainWindow::on_MainWindow_Newfile_clicked()
@@ -386,7 +369,6 @@ void MainWindow::on_actionOpen_O_triggered()
         {
             on_actionClose_triggered();
         }
-        Version_Higher_Than_4 = true;
         Open_Location = New_Open_Location;
         if(!High_Version_Open(OPEN_FILE_IN))
         {
@@ -399,11 +381,6 @@ void MainWindow::on_actionOpen_O_triggered()
         QMessageBox::warning(this, "Opening Project Error", "The file doesn't exist!");
         // Open_Location = "";
     }
-    else if(Project_Name != "Unsaved project")
-    {
-        Version_Higher_Than_4 = false;
-    }
-
 }
 
 void MainWindow::on_MainWindow_openfile_clicked()
@@ -451,7 +428,6 @@ void MainWindow::show_preview_image()
 
 void MainWindow::on_actionRoute_Tool_triggered()
 {
-    //Route_Tool* route_tool = new Route_Tool;
     route_tool_window->show();
 }
 
@@ -564,69 +540,23 @@ void MainWindow::on_Tab_currentChanged(int index)
             ui->Label_Preview_Image->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width));
         }
     }
-    /*
-    if(index == 1) // Template
+
+    if(index == 4) // Template
     {
-        ui->label_Template_1->resize(ui->widget_T1->size());
-        int T1_w_width(ui->label_Template_1->width());
-        int T1_w_height(ui->label_Template_1->height());
-        double rate_w_T1 = static_cast<double>(T1_w_height) / T1_w_width;
-        double rate_i_T1 = static_cast<double>(image_T1.height()) / image_T1.width();
-        if(rate_i_T1 > rate_w_T1)
+        double rate_i = static_cast<double>(image_preview.height()) / image_preview.width();
+        ui->label_previewInVideo->resize(ui->widget_previewInVideo->size());
+        int preview_w_width_video(ui->widget_previewInVideo->width());
+        int Preview_w_height_video(ui->widget_previewInVideo->height());
+        double rate_w_video = static_cast<double>(Preview_w_height_video) / preview_w_width_video;
+        if(rate_i > rate_w_video)
         {
-            ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToHeight(T1_w_height));
+            ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToHeight(Preview_w_height_video));
         }
         else
         {
-            ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
+            ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
         }
-
-        ui->label_Template_2->resize(ui->widget_T2->size());
-        int T2_w_width(ui->label_Template_2->width());
-        int T2_w_height(ui->label_Template_2->height());
-        double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
-        double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
-        if(rate_i_T2 > rate_w_T2)
-        {
-
-            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T1_w_height));
-        }
-        else
-        {
-            ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T1_w_width));
-        }
-
-
-        ui->label_Template_3->resize(ui->widget_T3->size());
-        int T3_w_width(ui->label_Template_3->width());
-        int T3_w_height(ui->label_Template_3->height());
-        double rate_w_T3 = static_cast<double>(T3_w_height) /T3_w_width;
-        double rate_i_T3 = static_cast<double>(image_T3.height()) / image_T3.width();
-        if(rate_i_T3 > rate_w_T3)
-        {
-
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToHeight(T3_w_height));
-        }
-        else
-        {
-            ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToWidth(T3_w_width));
-        }
-
-        ui->label_Template_4->resize(ui->widget_T4->size());
-        int T4_w_width(ui->label_Template_4->width());
-        int T4_w_height(ui->label_Template_4->height());
-        double rate_w_T4 = static_cast<double>(T4_w_height) /T4_w_width;
-        double rate_i_T4 = static_cast<double>(image_T4.height()) / image_T4.width();
-        if(rate_i_T4 > rate_w_T4)
-        {
-
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToHeight(T4_w_height));
-        }
-        else
-        {
-            ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
-        }
-    }*/
+    }
 }
 
 void MainWindow::on_actionSave_S_triggered()
@@ -635,13 +565,17 @@ void MainWindow::on_actionSave_S_triggered()
     if(Open_Location == "") on_actionNew_N_triggered();
 
     // Preparation configuration
-    curr_info.config1 = 0;
+    // curr_info.config1 = 0;
+    /*
     if(ui->actionAuto_Refresh->isChecked())
     {
         curr_info.config1 = 1;
     }
+    */
 
     // == Print into file ==
+    curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
+    curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
     curr_info.print(Open_Location, FRD_Version);
 }
 
@@ -654,6 +588,7 @@ void MainWindow::on_Template_Choice_1_toggled(bool checked)
         ui->Min_class_value->setDecimals(6);
         ui->Min_class_value->setToolTip("");
         ui->label_Minimum_Unclassified_Value->setToolTip("");
+        ui->lineEdit_Custom_Formula->setDisabled(true);
     }
 }
 
@@ -666,6 +601,7 @@ void MainWindow::on_Template_Choice_2_toggled(bool checked)
         ui->Min_class_value->setDecimals(6);
         ui->Min_class_value->setToolTip("");
         ui->label_Minimum_Unclassified_Value->setToolTip("");
+        ui->lineEdit_Custom_Formula->setDisabled(true);
         on_actionTemplate_2_triggered();
     }
     else
@@ -683,6 +619,7 @@ void MainWindow::on_Template_Choice_3_toggled(bool checked)
         ui->Min_class_value->setDecimals(6);
         ui->Min_class_value->setToolTip("");
         ui->label_Minimum_Unclassified_Value->setToolTip("");
+        ui->lineEdit_Custom_Formula->setDisabled(true);
     } 
 }
 
@@ -695,6 +632,7 @@ void MainWindow::on_Template_Choice_4_toggled(bool checked)
         ui->Min_class_value->setDecimals(10);
         ui->Min_class_value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
         ui->label_Minimum_Unclassified_Value->setToolTip("The relative accuracy, i.e. the ratio of modulus of difference in two iterations to its modulus.");
+        ui->lineEdit_Custom_Formula->setDisabled(true);
         on_actionTemplate_6_triggered(); // Choice of Template 4
     }
     else
@@ -712,6 +650,7 @@ void MainWindow::on_Template_Choice_5_toggled(bool checked)
         ui->Min_class_value->setDecimals(6);
         ui->Min_class_value->setToolTip("");
         ui->label_Minimum_Unclassified_Value->setToolTip("");
+        ui->lineEdit_Custom_Formula->setDisabled(false);
     }
 }
 
@@ -793,10 +732,21 @@ void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4]
     }
 }
 
-void MainWindow::on_actionPreview_Refresh_triggered()
+void MainWindow::customTemplatePre(Create_Image_Task* task)
 {
-    Create_Image_Task* preview = new Create_Image_Task(this);
+    QString Formula = ui->lineEdit_Custom_Formula->text();
+    std::string msg;
+    std::vector<_var> post;
+    if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
+        QMessageBox::critical(this, "Error", "Syntax error in Customized Template Formula!");
+        qDebug() << QString::fromStdString(msg);
+        return;
+    }
+    task->setFormula(post);
+}
 
+bool MainWindow::createImagePre(Create_Image_Task* task)
+{
     QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
     QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
     std::string Colour1_[4], Colour2_[4];
@@ -804,13 +754,13 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
 
     std::string msg1[4], msg2[4];
-    std::vector<var> post1[4], post2[4];
+    std::vector<_var> post1[4], post2[4];
     for (int i = 0; i != 4; i++) {
         if (!to_postorder(Colour1_[i], msg1 + i, post1[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
         {
             QMessageBox::critical(this, "Error", "Syntax error in Convergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg1[i]);
-            return;
+            return false;
         }
     }
     for (int i = 0; i != 4; i++) {
@@ -818,11 +768,23 @@ void MainWindow::on_actionPreview_Refresh_triggered()
         {
             QMessageBox::critical(this, "Error", "Syntax error in Divergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg2[i]);
-            return;
+            return false;
         }
     }
 
-    Create_Images_Task_Pre(preview);
+    Create_Images_Task_Pre(task);
+    return true;
+}
+
+void MainWindow::on_actionPreview_Refresh_triggered()
+{
+    Create_Image_Task* preview = new Create_Image_Task(this);
+
+    if (!createImagePre(preview))
+    {
+        delete preview;
+        return;
+    }
 
     QString Pre_Img_Dir;
     if(Version_Higher_Than_4)
@@ -841,21 +803,13 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     if(curr_info.template_ == 2)
     {
-        if(Version_Higher_Than_4)
-        {
-            double t = ui->doubleSpinBox_t->value();
-            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-            double& k = curr_info.Julia_c_rate;
-            preview->setTemplate2(_curr_complex(c1, c2, t, k));
-            preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-            return;
-        }
+        double t = ui->doubleSpinBox_t->value();
+        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+        double& k = curr_info.Julia_c_rate;
+        preview->setTemplate2(_curr_complex(c1, c2, t, k));
+        // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     }
-    if(curr_info.template_ == 4)
+    else if(curr_info.template_ == 4)
     {
         if(Version_Higher_Than_4)
         {
@@ -874,7 +828,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
                                   _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
                                   _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
                                   _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
-            preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+            // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
         }
         else
         {
@@ -882,10 +836,24 @@ void MainWindow::on_actionPreview_Refresh_triggered()
             return;
         }
     }
+    else if(curr_info.template_ == 5)
+    {
+        customTemplatePre(preview);
+    }
+    /*
     if(curr_info.template_ == 1)
         preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     if(curr_info.template_ == 3)
         preview->setImage(-0.4, 0.6, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    if(curr_info.template_ == 5)
+        preview->setImage(0, 0, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+    */
+    preview->setImage(curr_info.ps.centreX, curr_info.ps.centreY,
+                      curr_info.ps.xWidth, curr_info.ps.yHeight,
+                      curr_info.ps.width, curr_info.ps.height,
+                      curr_info.ps.angle, ui->doubleSpinBox_t->value(),
+                      "png", Pre_Img_Dir, "Preview Image", "Preview",
+                      curr_info.y_inverse);
 
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
@@ -1043,7 +1011,7 @@ void MainWindow::on_Slider_t_valueChanged(int value)
 void MainWindow::on_doubleSpinBox_t_editingFinished()
 {
     ui->Slider_t->setValue(1000000000 * ui->doubleSpinBox_t->value());
-    if(ui->actionAuto_Refresh->isChecked())
+    if (curr_info.ps.autoRefresh)
     {
         MainWindow::on_actionPreview_Refresh_triggered();
     }
@@ -1082,13 +1050,7 @@ void MainWindow::on_actionCreate_Images_triggered()
         return;
     }
 
-    if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
-    {
-        QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
-        return;
-    }
-
-    if(Version_Higher_Than_4 && !isRouteValid)
+    if(!isRouteValid)
     {
         QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
         return;
@@ -1097,7 +1059,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
-    if(!QDir(path).exists())
+    if(path.isEmpty() || !QDir(path).exists())
     {
         QMessageBox::warning(this, "Can not create images", "The path does not exist.");
         return;
@@ -1157,7 +1119,11 @@ void MainWindow::on_actionCreate_Images_triggered()
 
         // qDebug() << t << current_index << x << y << width << angle;
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        // Create_Images_Task_Pre(create_images);
+        if (!createImagePre(create_images))
+        {
+            delete create_images;
+            return;
+        }
         if(curr_info.template_ == 2)
         {
             std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
@@ -1181,14 +1147,14 @@ void MainWindow::on_actionCreate_Images_triggered()
                                         _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
 
         }
-        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         QThreadPool::globalInstance()->start(create_images);
     }
 
     Create_Image_Task* create_images = new Create_Image_Task(this);
     // create_images->setAutoDelete(false);
 
-    //Create_Images_Task_Pre(create_images);
+    createImagePre(create_images);
     if(curr_info.template_ == 2)
     {
         create_images->setTemplate2(curr_info.Julia_c2);
@@ -1207,7 +1173,8 @@ void MainWindow::on_actionCreate_Images_triggered()
                             Tb(model->rowCount() - 1, 4) * Y / X,
                             X, Y,
                             Tb(model->rowCount() - 1, 3),
-                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last");
+                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
+                            curr_info.y_inverse);
     QThreadPool::globalInstance()->start(create_images);
     qDebug() << "Here Here !!!!";
 }
@@ -1219,7 +1186,7 @@ void MainWindow::on_commandLinkButton_Image_clicked()
 
 void MainWindow::on_Slider_t_sliderReleased()
 {
-    if(ui->actionAuto_Refresh->isChecked())
+    if(curr_info.ps.autoRefresh)
     {
         MainWindow::on_actionPreview_Refresh_triggered();
     }
@@ -1260,9 +1227,9 @@ void MainWindow::build_image_one_ok()
 void MainWindow::on_toolButton_imagePath_clicked()
 {  
     QString default_dir = Project_Name;
-    if(Version_Higher_Than_4)
+    default_dir = Open_Location;
+    if (!Open_Location.isEmpty())
     {
-        default_dir = Open_Location;
         while(default_dir.right(1) != "/" && default_dir.right(1) != "\\")
         {
             default_dir.chop(1);
@@ -1281,12 +1248,6 @@ void MainWindow::on_actionCreate_Video_triggered()
     UNSUPPORTED_PLATFORM;
     return;
 #endif
-
-    if(User_Name.isEmpty())
-    {
-        QMessageBox::information(this, "Information", "You have not logged in.");
-        return;
-    }
 
     if(!save_or_not)
     {
@@ -1624,8 +1585,9 @@ void MainWindow::on_toolButton_videoPath_clicked()
 
 void MainWindow::on_actionEnglish_triggered()
 {
-    Help* help = new Help;
-    help->show();
+    // Help* help = new Help;
+    // help->show();
+    QDesktopServices::openUrl(QUrl(English_Help_Url));
 }
 
 void MainWindow::on_MainWindow_HelpEnglish_clicked()
@@ -1853,10 +1815,14 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
     if(mode == EDIT_HERE)
     {
         // Template
-        if(Project_Template == "1") curr_info.template_ = 1;
-        if(Project_Template == "2") curr_info.template_ = 2;
-        if(Project_Template == "3") curr_info.template_ = 3;
-        if(Project_Template == "4") curr_info.template_ = 4;
+        if      (Project_Template == "1") curr_info.template_ = 1;
+        else if (Project_Template == "2") curr_info.template_ = 2;
+        else if (Project_Template == "3") curr_info.template_ = 3;
+        else if (Project_Template == "4") curr_info.template_ = 4;
+        else if (Project_Template == "5") curr_info.template_ = 5;
+
+        // Customized Formula
+        curr_info.CustomFormula_ = ui->lineEdit_Custom_Formula->text();
 
         // Image Value
         curr_info.min_class_v = ui->Min_class_value->value();
@@ -1880,7 +1846,12 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
         curr_info.img_path = ui->lineEdit_imagePath->text();
         curr_info.img_prefix = ui->lineEdit_imagePrefix->text();
 
+        // Colour Info
+        curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
+        curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
+
         // Video Info
+        // TODO: use setXXX function instead
         curr_info.video_path = ui->lineEdit_videoPath->text();
         curr_info.video_name = ui->lineEdit_videoName->text();
 
@@ -1920,20 +1891,26 @@ void MainWindow::display()
     case 4:
         ui->Template_Choice_4->setChecked(true); Project_Template = "4";
         break;
+    case 5:
+        ui->Template_Choice_5->setChecked(true); Project_Template = "5";
+        break;
     default:
         // uncheck all
         ui->Template_Choice_1->setAutoExclusive(false);
         ui->Template_Choice_2->setAutoExclusive(false);
         ui->Template_Choice_3->setAutoExclusive(false);
         ui->Template_Choice_4->setAutoExclusive(false);
+        ui->Template_Choice_5->setAutoExclusive(false);
         ui->Template_Choice_1->setChecked(false);
         ui->Template_Choice_2->setChecked(false);
         ui->Template_Choice_3->setChecked(false);
         ui->Template_Choice_4->setChecked(false);
+        ui->Template_Choice_5->setChecked(false);
         ui->Template_Choice_1->setAutoExclusive(true);
         ui->Template_Choice_2->setAutoExclusive(true);
         ui->Template_Choice_3->setAutoExclusive(true);
         ui->Template_Choice_4->setAutoExclusive(true);
+        ui->Template_Choice_5->setAutoExclusive(true);
         Project_Template = "Undefined";
         break;
     }
@@ -1942,10 +1919,11 @@ void MainWindow::display()
     ui->Min_class_value->setValue(curr_info.min_class_v);
     ui->Max_class_value->setValue(curr_info.max_class_v);
     ui->Max_loop_time->setValue(curr_info.max_loop_t);
+    ui->checkBox_yInverse->setChecked(curr_info.y_inverse);
 
-    // Colour
-    // It is initialized in class Set_Colour itself using curr_info.
-    // showColourFormula();
+    // Colour Info
+    ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
+    ui->Divergent_Points_Colour_Formula->setPlainText(curr_info.Colour2_f);
 
     // Route Info
     isRouteValid = true;
@@ -2014,6 +1992,13 @@ void MainWindow::display()
     ui->lineEdit_imagePath->setText(curr_info.img_path);
     ui->lineEdit_imagePrefix->setText(curr_info.img_prefix);
 
+    // Customized Formula
+    ui->lineEdit_Custom_Formula->setText(curr_info.CustomFormula_);
+
+    // Colour Info
+    // ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
+    // ui->Divergent_Points_Colour_Formula->setPlainText(curr_info.Colour2_f);
+
     // Video Info
     ui->lineEdit_videoPath->setText(curr_info.video_path);
     ui->lineEdit_videoName->setText(curr_info.video_name);
@@ -2022,6 +2007,9 @@ void MainWindow::display()
     {
         ui->textBrowser_music->append(c);
     }
+
+    // Preview Info
+    preview_setting->updateInfo();
 
     NO_EDIT = false;
 }
@@ -2264,7 +2252,7 @@ void MainWindow::on_actionVersion_2_triggered()
 
 void MainWindow::on_actionBug_Report_triggered()
 {
-    QDesktopServices::openUrl(QUrl(Bug_Report_CSDN));
+    QDesktopServices::openUrl(QUrl(Bug_Report));
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -2437,6 +2425,10 @@ void MainWindow::on_actionClose_triggered()
     Info_Save new_info;
     current_info_v = 0;
     redo_max_depth = 1;
+    NO_EDIT = true;
+    on_actionReset_Colour_Definition_triggered();
+    preview_setting = new Preview_Setting(this);
+    NO_EDIT = false;
     Project_Template = "Undefined";
     curr_info = new_info;
     save_or_not = false;
@@ -2454,11 +2446,12 @@ void MainWindow::on_commandLinkButton_3_clicked()
 void MainWindow::on_actionCreate_Images_in_Range_triggered()
 {
     if(!ui->actionCreate_Images_in_Range->isEnabled()) return;
+    /*
     if(User_Name.isEmpty())
     {
         QMessageBox::warning(this, "Can not create images", "You have not logged in.");
         return;
-    }
+    }*/
 
     if(!save_or_not)
     {
@@ -2497,6 +2490,12 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
+
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        return;
+    }
 
     create_image_info = new Create_Image_Info();
     connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
@@ -2547,7 +2546,11 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         qDebug() << t << current_index << x << y << width << angle;
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        // Create_Images_Task_Pre(create_images);
+        if (!createImagePre(create_images))
+        {
+            delete create_images;
+            return;
+        }
         if(curr_info.template_ == 2)
         {
             if(Version_Higher_Than_4)
@@ -2588,11 +2591,11 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         }
         if(i != to_i)
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         }
         else
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last", curr_info.y_inverse);
         }
         QThreadPool::globalInstance()->start(create_images);
     }
@@ -2615,6 +2618,12 @@ void MainWindow::createImagesInList(const QList<int>& list)
     QString image_format = "png";
     QString path = ui->lineEdit_imagePath->text();
     QString name = ui->lineEdit_imagePrefix->text();
+
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        return;
+    }
 
     create_image_info = new Create_Image_Info();
     connect(this, &MainWindow::build_image_info_signal_, create_image_info, &Create_Image_Info::set_info_);
@@ -2663,7 +2672,11 @@ void MainWindow::createImagesInList(const QList<int>& list)
         }
 
         Create_Image_Task* create_images = new Create_Image_Task(this);
-        // Create_Images_Task_Pre(create_images);
+        if (!createImagePre(create_images))
+        {
+            delete create_images;
+            return;
+        }
 
         if(curr_info.template_ == 2)
         {
@@ -2707,11 +2720,11 @@ void MainWindow::createImagesInList(const QList<int>& list)
         // qDebug() << t << current_index << x << y << width << angle;
         if(i != *(--list.end()))
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
         }
         else
         {
-            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last");
+            create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image_Last", curr_info.y_inverse);
         }
         QThreadPool::globalInstance()->start(create_images);
     }
@@ -3033,4 +3046,53 @@ void MainWindow::setLanguage(App_Language la)
         ui->actionChinese_2->setChecked(false);
     }
     language_setting_no_change_now = false;
+}
+
+void MainWindow::on_Convergent_Points_Colour_Formula_textChanged()
+{
+    save_or_not = false;
+}
+
+void MainWindow::on_Divergent_Points_Colour_Formula_textChanged()
+{
+    save_or_not = false;
+}
+
+void MainWindow::on_lineEdit_Custom_Formula_editingFinished()
+{
+    if (ui->lineEdit_Custom_Formula->text() != curr_info.CustomFormula_)
+    {
+        edit();
+    }
+}
+
+void MainWindow::on_actionPreview_Settings_triggered()
+{
+    preview_setting->show();
+}
+
+void MainWindow::on_actionReset_Colour_Definition_triggered()
+{
+    QString str = "R = 0;\nG = 0;\nB = 0;\nA = 255;";
+    bool edit_here = false;
+    if (ui->Convergent_Points_Colour_Formula->toPlainText() != str)
+    {
+        ui->Convergent_Points_Colour_Formula->setPlainText(str);
+        edit_here = true;
+    }
+    if (ui->Divergent_Points_Colour_Formula->toPlainText() != str)
+    {
+        ui->Divergent_Points_Colour_Formula->setPlainText(str);
+        edit_here = true;
+    }
+    if (edit_here)
+    {
+        edit();
+    }
+}
+
+void MainWindow::on_checkBox_yInverse_stateChanged(int arg1)
+{
+    buff_info.y_inverse = arg1;
+    edit(EDIT_ALREADY);
 }

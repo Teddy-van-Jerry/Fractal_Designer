@@ -17,8 +17,6 @@ void Create_Image_Task::run()
 {
     qDebug() << "Got it here";
 
-    y = -y;
-
     qDebug() << "The working thread: " << QThread::currentThreadId();
     double progress = 0;
     int progress_now = 0;
@@ -38,11 +36,11 @@ void Create_Image_Task::run()
         for(int j = Y - 1; j >= 0; j--)
         {
             double dx = x_width * (static_cast<double>(i) / X - 0.5);
-            double dy = y_height * (static_cast<double>(j) / Y - 0.5);
+            double dy = - y_height * (static_cast<double>(j) / Y - 0.5);
+            if (y_inverse) dy = - dy;
             double mod = sqrt(dx * dx + dy * dy);
             double theta = atan2(dy, dx) + rotate_angle / 180 * Pi;
-            std::complex<double> this_point(x + mod * cos(theta),
-                               y + mod * sin(theta));
+            std::complex<double> this_point(x + mod * cos(theta), y + mod * sin(theta));
             std::complex<double> z0(this_point), last_point(-this_point);
             bool convergent = true;
             int k = 0;
@@ -91,6 +89,21 @@ void Create_Image_Task::run()
                         p_ -= Newton_cos * sin(this_point);
                         this_point = this_point - Newton_a * p / p_;
                     }
+                    case 5:
+                    {
+                        std::vector<std::complex<double>> num_list
+                        {
+                            this_point, this_point.real(), this_point.imag(), z0, z0.real(), z0.imag(), t, double(k)
+                        };
+                        std::string msg;
+                        this_point = eval_postorder(Formula, num_list, &msg);
+                        if (!msg.empty())
+                        {
+                            // 0 indicates formula error
+                            emit error_calc(0);
+                        }
+                        break;
+                    }
                     default: break;
                     }
                 }
@@ -99,7 +112,9 @@ void Create_Image_Task::run()
             double RGBA[4];
             if (!setRGBA(RGBA, convergent, this_point, z0, t, k))
             {
-                emit error_calc();
+                // 1 indicates colour error in convergent point
+                // 2 indicates colour error in divergent point
+                emit error_calc(convergent ? 1 : 2);
             }
             else
             {
@@ -118,7 +133,7 @@ void Create_Image_Task::run()
 }
 
 void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y_height_, int X_, int Y_, double rotate_angle_, double t_,
-                                 QString img_format_, QString img_path_, QString img_title_, QString work_name_)
+                                 QString img_format_, QString img_path_, QString img_title_, QString work_name_, bool y_inverse_)
 {
     x            = x_;
     y            = y_;
@@ -132,9 +147,10 @@ void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y
     img_path     = img_path_;
     img_title    = img_title_;
     work_name    = work_name_;
+    y_inverse    = y_inverse_;
 }
 
-void Create_Image_Task::setData(std::vector<var> C1[4], std::vector<var> C2[4], int temp, double min, double max, int lpt)
+void Create_Image_Task::setData(std::vector<_var> C1[4], std::vector<_var> C2[4], int temp, double min, double max, int lpt)
 {
     for (int i = 0; i != 4; i++)
     {
@@ -145,6 +161,11 @@ void Create_Image_Task::setData(std::vector<var> C1[4], std::vector<var> C2[4], 
     min_class_v = min < 1E-10 ? 1E-10 : min;
     max_class_v = max < 1E-10 ? 1E-10 : max;
     max_loop_t  = lpt;
+}
+
+void Create_Image_Task::setFormula(const std::vector<_var>& post)
+{
+    Formula = post;
 }
 
 void Create_Image_Task::setTemplate2(std::complex<double> c)

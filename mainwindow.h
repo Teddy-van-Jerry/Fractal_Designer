@@ -36,6 +36,7 @@
 #include "create_image_task.h"
 #include "template_2_settings.h"
 #include "template_4_settings.h"
+#include "preview_setting.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -66,8 +67,9 @@
     QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
 #endif
 
-const QString Chinese_Help_Url = "https://blog.csdn.net/weixin_50012998/article/details/115678983";
-const QString Bug_Report_CSDN  = "https://blog.csdn.net/weixin_50012998/article/details/115679067";
+const QString Chinese_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh";
+const QString English_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help";
+const QString Bug_Report       = "https://github.com/Teddy-van-Jerry/Fractal_Designer/issues/11";
 
 class PeciseDoubleFactory : public QItemEditorFactory
 {
@@ -121,7 +123,7 @@ public:
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 6, 1, 0};
+    uint8_t FRD_Version[4] = {5, 6, 3, 0};
 
     QString Open_Location = "";
 
@@ -145,7 +147,7 @@ public:
 
     bool High_Version_Open(int type = 0);
 
-    bool save_or_not = false;    
+    bool save_or_not = false;
 
     void show_template_graph(); //
 
@@ -170,6 +172,10 @@ public:
     bool existImage(int) const;
 
     void deleteImage(int);
+
+    bool createImagePre(Create_Image_Task* task);
+
+    void customTemplatePre(Create_Image_Task* task);
 
     std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k = 0);
 
@@ -199,7 +205,7 @@ private slots:
 
     void on_MainWindow_AboutTVJ_clicked();
 
-    void on_pushButton_clicked();
+    void on_pushButton_Chinese_Help_clicked();
 
     void on_actionNew_N_triggered();
 
@@ -399,6 +405,18 @@ private slots:
 
     void on_actionChinese_2_triggered();
 
+    void on_Convergent_Points_Colour_Formula_textChanged();
+
+    void on_Divergent_Points_Colour_Formula_textChanged();
+
+    void on_lineEdit_Custom_Formula_editingFinished();
+
+    void on_actionPreview_Settings_triggered();
+
+    void on_actionReset_Colour_Definition_triggered();
+
+    void on_checkBox_yInverse_stateChanged(int arg1);
+
 signals:
 
     void Search_clicked(QString);
@@ -452,6 +470,8 @@ private:
 
     Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
 
+    Preview_Setting* preview_setting = new Preview_Setting(this);
+
 public:
 
     Route_Tool* route_tool_window;
@@ -462,7 +482,6 @@ public:
 
     bool language_setting_no_change_now = false;
 
-//    Build_Thread *bld_thread;
 };
 
 #endif // MAINWINDOW_H

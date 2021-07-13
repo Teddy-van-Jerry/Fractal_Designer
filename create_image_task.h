@@ -6,7 +6,7 @@
 #include <QImage>
 #include <complex>
 #include <string>
-#include "String_Complex.h"
+#include "String_Evaluate.h"
 
 #ifndef Create_Images_Task_Pre
 #define Create_Images_Task_Pre(task__)       \
@@ -45,7 +45,7 @@ private:
     std::complex<double> Newton_cos = 0;
     std::complex<double> Newton_ex = 0;
 
-    std::vector<var> Colour1_f[4], Colour2_f[4];
+    std::vector<_var> Colour1_f[4], Colour2_f[4], Formula;
 
     enum Colour_Type { RGBA } c_type;
 
@@ -56,6 +56,8 @@ private:
     QString img_format, img_path, img_title, work_name;
 
     bool isCancelled = false;
+
+    bool y_inverse = false;
 
     int range_complex_to_255(const std::complex<double>& c);
 
@@ -76,18 +78,19 @@ signals:
 
     void one_ok();
 
-    void error_calc();
+    void error_calc(int);
 
 public: // function
-    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString);
+    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString, bool);
 
-    void setData(std::vector<var>[4], std::vector<var>[4], int, double, double, int);
+    void setData(std::vector<_var>[4], std::vector<_var>[4], int, double, double, int);
 
     void setTemplate2(std::complex<double> c);
 
     void setTemplate4(const std::complex<double>& c1, std::complex<double> c2[10], const std::complex<double>& c3,
                              const std::complex<double>& c4, const std::complex<double>& c5);
 
+    void setFormula(const std::vector<_var>&);
 public slots:
 
     void stop();

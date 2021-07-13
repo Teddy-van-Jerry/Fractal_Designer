@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>414</width>
     <height>300</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Fractal Designer 5.5.3</string>
+      <string>Fractal Designer 5.6.3-beta</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -33,7 +33,7 @@
    <item row="1" column="0" colspan="3">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Updated in 2021/04/13.</string>
+      <string>Updated in 2021/07/14.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

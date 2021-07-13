@@ -44,7 +44,7 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     }
 
     // Template4
-    if (template_ == 4)
+    else if (template_ == 4)
     {
         out << Template_4.name[0] << Template_4.name[1] << Template_4.length;
         _complex_out(out, Newton_a_1);
@@ -60,13 +60,17 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
         out << Newton_c_rate;
     }
 
+    // Customized Formula (Template 5)
+    out << CustomFormula.name[0] << CustomFormula.name[1] << CustomFormula.length;
+    out << CustomFormula_;
+
     // Image Value
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;
-    out << min_class_v << max_class_v << max_loop_t;
+    out << min_class_v << max_class_v << max_loop_t << y_inverse;
 
-    out << Colour1.name[0] << Colour1.name[1] << Colour1.length;
+    out << Colour1.name[0] << Colour1.name[1] << Colour1.length << Colour1_f;
 
-    out << Colour2.name[0] << Colour2.name[1] << Colour2.length;
+    out << Colour2.name[0] << Colour2.name[1] << Colour2.length << Colour2_f;
 
     // Route
     out << Route.name[0] << Route.name[1] << Route.length;
@@ -88,9 +92,9 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
         out << c;
     }
 
-    // Config
-    out << Config.name[0] << Config.name[1] << Config.length;
-    out << config1;
+    // Preview
+    out << Preview.name[0] << Preview.name[1] << Preview.length;
+    out << ps.width << ps.height << ps.xWidth << ps.yHeight << ps.angle << ps.centreX << ps.centreY << ps.autoRefresh;
 
     FRD_S.close();
 }
