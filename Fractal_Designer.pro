@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 5.6.3.0
+VERSION = 5.6.3.3
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -21,7 +21,6 @@ SOURCES += \
     mainwindow.cpp \
     new_features.cpp \
     new_file.cpp \
-    open_file.cpp \
     preview_setting.cpp \
     route_info.cpp \
     route_tool.cpp \
@@ -40,7 +39,6 @@ HEADERS += \
     mainwindow.h \
     new_features.h \
     new_file.h \
-    open_file.h \
     preview_setting.h \
     route_info.h \
     route_tool.h \
@@ -56,7 +54,6 @@ FORMS += \
     mainwindow.ui \
     new_features.ui \
     new_file.ui \
-    open_file.ui \
     preview_setting.ui \
     route_tool.ui \
     search_result.ui \

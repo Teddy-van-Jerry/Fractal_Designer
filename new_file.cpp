@@ -14,14 +14,6 @@ New_File::New_File(QWidget *parent) :
 {
     ui->setupUi(this);
     MainWindow* p = (MainWindow*) parentWidget();
-    if(p->Version_Higher_Than_4)
-    {
-        this->setWindowTitle("New Project");
-    }
-    else
-    {
-        this->setWindowTitle("New Project - Compatibility Mode");
-    }
 }
 
 New_File::~New_File()
