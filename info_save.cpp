@@ -1,9 +1,9 @@
 #include "info_save.h"
 #include "mainwindow.h"
 
-void _complex_out(QDataStream& out, const Complex& c)
+void _complex_out(QDataStream& out, std::complex<double> c)
 {
-    out << c.getReal() << c.getImaginary();
+    out << c.real() << c.imag();
 }
 
 void Info_Save::print(QString path, uint8_t FRD_Version[4])
@@ -38,13 +38,13 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
     if (template_ == 2)
     {
         out << Template_2.name[0] << Template_2.name[1] << Template_2.length;
-        out << Julia_c1.getReal() << Julia_c1.getImaginary()
-            << Julia_c2.getReal() << Julia_c2.getImaginary()
+        out << Julia_c1.real() << Julia_c1.imag()
+            << Julia_c2.real() << Julia_c2.imag()
             << Julia_c_rate;
     }
 
     // Template4
-    if (template_ == 4)
+    else if (template_ == 4)
     {
         out << Template_4.name[0] << Template_4.name[1] << Template_4.length;
         _complex_out(out, Newton_a_1);
@@ -60,21 +60,17 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
         out << Newton_c_rate;
     }
 
+    // Customized Formula (Template 5)
+    out << CustomFormula.name[0] << CustomFormula.name[1] << CustomFormula.length;
+    out << CustomFormula_;
+
     // Image Value
     out << ImageValue.name[0] << ImageValue.name[1] << ImageValue.length;
-    out << min_class_v << max_class_v << max_loop_t;
+    out << min_class_v << max_class_v << max_loop_t << y_inverse;
 
-    // Colour 1
-    out << Colour1.name[0] << Colour1.name[1] << Colour1.length;
-    For_All_Colour(i, j)
-        out << Colour_Data_1[i][j][0] << Colour_Data_1[i][j][1];
-    End_All_Colour
+    out << Colour1.name[0] << Colour1.name[1] << Colour1.length << Colour1_f;
 
-    // Colour 2
-    out << Colour2.name[0] << Colour2.name[1] << Colour2.length;
-    For_All_Colour(i, j)
-        out << Colour_Data_2[i][j][0] << Colour_Data_2[i][j][1];
-    End_All_Colour
+    out << Colour2.name[0] << Colour2.name[1] << Colour2.length << Colour2_f;
 
     // Route
     out << Route.name[0] << Route.name[1] << Route.length;
@@ -96,9 +92,9 @@ void Info_Save::print(QString path, uint8_t FRD_Version[4])
         out << c;
     }
 
-    // Config
-    out << Config.name[0] << Config.name[1] << Config.length;
-    out << config1;
+    // Preview
+    out << Preview.name[0] << Preview.name[1] << Preview.length;
+    out << ps.width << ps.height << ps.xWidth << ps.yHeight << ps.angle << ps.centreX << ps.centreY << ps.autoRefresh;
 
     FRD_S.close();
 }

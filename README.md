@@ -1,12 +1,10 @@
 # Fractal_Designer
-This is an application to make fractal videos based on Qt(6.0.0), C++ and FFmpeg.
+This is an application to make fractal videos based on Qt(6.1.1), C++ and FFmpeg.
 
 ## Version Information
-This is version 5.5.3 updated in 2021/04/13.
-There are release versions for Windows and Linux.
-The code is known to work properly in Win 10 and Ubuntu 20.
-- For Windows, just run the exe file
-- For Linux, run Fractal_Designer.sh
+This is version 5.6.3 updated in 2021/07/15.
+Beta version is now only available for Windows.
+Release for Linux will be published in the near future.
 
 ## Main Features
 - You can create fractal images and videos at your command, with the freedom of designing colours and routes.
@@ -14,9 +12,14 @@ The code is known to work properly in Win 10 and Ubuntu 20.
 - More functions are there to be discovered by you! For more information, you can find them in help.
 
 ## Tips
-- Try not to use the compatibility mode with Fractal Designer 4 as it is error-prone.
-- In this version, Fractal Designer supports 4 templates, two of which require additional settings.
+- In this version, Fractal Designer is no longer compatible with previous versions.
 - You can report bugs if any.
+- Fractal Designer 5.6 is the LTS version.
+- **Help Documentation**
+  - [Help (English Version)](https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help)
+  - [Help (Chinese Version)](https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh)
+  - [Mandelbrot Sample](https://frd.teddy-van-jerry.org/sample/fractal-designer-5-6-lts-sample-1)
+  - [Fractal Designer Website](https://frd.teddy-van-jerry.org)
 
 ## Username and Passcode
 You can use any of them to log in the application:
@@ -29,16 +32,17 @@ You can use any of them to log in the application:
 
 ## Sample Videos
 
-| Video Name              | Watch on YouTube             | Watch on Bilibili                           |
-| :-:                     | :-:                          | :-:                                         |
-| Mandelbrot Set 1        | https://youtu.be/LU9eL1-9V0E | https://www.bilibili.com/video/BV1TU4y147ta |
-| Mandelbrot Set 2        | -                            | https://www.bilibili.com/video/BV1qX4y1P74d |
-| Mandelbrot Set 3        | -                            | https://www.bilibili.com/video/BV17K4y1J7XM |
-| Julia Set 1             | -                            | https://www.bilibili.com/video/BV1wB4y1N7pU |
-| Burning Ship Fractal 1  | -                            | https://www.bilibili.com/video/BV1RA41157kJ |
-| Newton Fractal 1        | -                            | https://www.bilibili.com/video/BV1Tb4y1D7oN |
+| Video Name              | Watch on YouTube             | Watch on Bilibili           |
+| :-:                     | :-:                          | :-:                         |
+| Mandelbrot Set 1        | https://youtu.be/LU9eL1-9V0E | https://b23.tv/BV1TU4y147ta |
+| Mandelbrot Set 2        | -                            | https://b23.tv/BV1qX4y1P74d |
+| Mandelbrot Set 3        | -                            | https://b23.tv/BV17K4y1J7XM |
+| Mandelbrot Set 4        | -                            | https://b23.tv/BV1Hy4y1T7MD |
+| Julia Set 1             | -                            | https://b23.tv/BV1wB4y1N7pU |
+| Burning Ship Fractal 1  | -                            | https://b23.tv/BV1RA41157kJ |
+| Newton Fractal 1        | -                            | https://b23.tv/BV1Tb4y1D7oN |
 
 > More videos are being uploaded.
 
 ## Download Release
-Now there are only release versions for Windows and Linux.
+Now there is only release versions for Windows in this version.

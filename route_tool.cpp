@@ -2,9 +2,9 @@
 #include "ui_route_tool.h"
 #include "mainwindow.h"
 
-inline Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k)
+inline std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k)
 {
-    return c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t);
+    return c1 + (c2 - c1) * ((1 - k) * t + k * t * t);
 }
 
 class Paint_Event : public QDialog
@@ -70,78 +70,53 @@ void Route_Tool::on_pushButton_view_clicked()
     QString Img_Dir = pro_path;
     preCentreX = ui->doubleSpinBox_centreX->value();
     preCentreY = ui->doubleSpinBox_centreY->value();
-    qDebug() << pa->Version_Higher_Than_4;
 
     Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
     Create_Image_Task* route_tool_img = new Create_Image_Task(pa);
 
-    if(pa->Version_Higher_Than_4)
+    QDir ck(QCoreApplication::applicationDirPath() + "/temp");
+    if(!ck.exists())
     {
-        QDir ck(QCoreApplication::applicationDirPath() + "/temp");
-        if(!ck.exists())
-        {
-            ck.mkdir(ck.absolutePath());
-        }
+        ck.mkdir(ck.absolutePath());
+    }
 
-        route_tool_img->setVersion(true);
-        route_tool_img->setData(pa->pre_info[pa->current_info_v].Colour_Data_1,
-                                pa->pre_info[pa->current_info_v].Colour_Data_2,
-                                pa->pre_info[pa->current_info_v].template_,
-                                pa->pre_info[pa->current_info_v].min_class_v,
-                                pa->pre_info[pa->current_info_v].max_class_v,
-                                pa->pre_info[pa->current_info_v].max_loop_t);
-    }
-    else
+    if (!pa->createImagePre(route_tool_img))
     {
-        route_tool_img->setVersion(false);
-        route_tool_img->setPath(pa->Project_Name);
+        delete route_tool_img;
+        return;
     }
-    qDebug() << "alive";
+
     if(pa->pre_info[pa->current_info_v].template_ == 2)
     {
-        if(pa->Version_Higher_Than_4)
-        {
-            double t = ui->doubleSpinBox_t->value();
-            Complex c1 = pa->pre_info[pa->current_info_v].Julia_c1, c2 = pa->pre_info[pa->current_info_v].Julia_c2;
-            double k = pa->pre_info[pa->current_info_v].Julia_c_rate;
-            route_tool_img->setTemplate2(c1 + (c2 - c1) * Complex((1 - k) * t + k * t * t));
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-            return;
-        }
+        double t = ui->doubleSpinBox_t->value();
+        std::complex<double> c1 = pa->pre_info[pa->current_info_v].Julia_c1, c2 = pa->pre_info[pa->current_info_v].Julia_c2;
+        double k = pa->pre_info[pa->current_info_v].Julia_c_rate;
+        route_tool_img->setTemplate2(c1 + (c2 - c1) * ((1 - k) * t + k * t * t));
     }
     if(pa->pre_info[pa->current_info_v].template_ == 4)
     {
-        if(pa->Version_Higher_Than_4)
+        double t = ui->doubleSpinBox_t->value();
+
+        double& k = pa->pre_info[pa->current_info_v].Newton_c_rate;
+
+        std::complex<double> arr[10];
+        for(int i = 0; i != 10; i++)
         {
-            double t = ui->doubleSpinBox_t->value();
-
-            double& k = pa->pre_info[pa->current_info_v].Newton_c_rate;
-
-            Complex arr[10];
-            for(int i = 0; i != 10; i++)
-            {
-                arr[i] = _curr_complex(pa->pre_info[pa->current_info_v].Newton_xn_1[i], pa->pre_info[pa->current_info_v].Newton_xn_2[i], t, k);
-            }
-
-            route_tool_img->setTemplate4(_curr_complex(pa->pre_info[pa->current_info_v].Newton_a_1, pa->pre_info[pa->current_info_v].Newton_a_2, t, k),
-                                         arr,
-                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_sin_1, pa->pre_info[pa->current_info_v].Newton_sin_2, t, k),
-                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_cos_1, pa->pre_info[pa->current_info_v].Newton_cos_2, t, k),
-                                         _curr_complex(pa->pre_info[pa->current_info_v].Newton_ex_1, pa->pre_info[pa->current_info_v].Newton_ex_2, t, k));
+            arr[i] = _curr_complex(pa->pre_info[pa->current_info_v].Newton_xn_1[i], pa->pre_info[pa->current_info_v].Newton_xn_2[i], t, k);
         }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-            return;
-        }
+
+        route_tool_img->setTemplate4(_curr_complex(pa->pre_info[pa->current_info_v].Newton_a_1, pa->pre_info[pa->current_info_v].Newton_a_2, t, k),
+                                     arr,
+                                     _curr_complex(pa->pre_info[pa->current_info_v].Newton_sin_1, pa->pre_info[pa->current_info_v].Newton_sin_2, t, k),
+                                     _curr_complex(pa->pre_info[pa->current_info_v].Newton_cos_1, pa->pre_info[pa->current_info_v].Newton_cos_2, t, k),
+                                     _curr_complex(pa->pre_info[pa->current_info_v].Newton_ex_1, pa->pre_info[pa->current_info_v].Newton_ex_2, t, k));
+
     }
     route_tool_img->setImage(ui->doubleSpinBox_centreX->value(), ui->doubleSpinBox_centreY->value(),
                              ui->doubleSpinBox_size->value(), ui->doubleSpinBox_size->value(), 600, 600,
-                             ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),
-                             "png", Img_Dir, "Route_Tool Image", "Route");
+                             -ui->doubleSpinBox_angle->value(), ui->doubleSpinBox_t->value(),
+                             "png", Img_Dir, "Route_Tool Image", "Route",
+                             pa->pre_info[pa->current_info_v].y_inverse);
     QThreadPool::globalInstance()->start(route_tool_img);
 }
 
@@ -153,10 +128,7 @@ void Route_Tool::updateProgressBar(double p)
 void Route_Tool::getImage(QImage img)
 {
     qDebug() << "Preview get image";
-//    this->image_route = img;
     QPixmap view_image = QPixmap::fromImage(img);
-    //view_image.scroll(0, 0, 100, 100, 600, 600);
-    // ui->Route_View->setPixmap(view_image);
     centreX = ui->doubleSpinBox_centreX->value();
     centreY = ui->doubleSpinBox_centreY->value();
     img_size = ui->doubleSpinBox_size->value();
@@ -171,29 +143,27 @@ void Route_Tool::mouseMoveEvent(QMouseEvent* e)
             && e->position().y() >= 25 && e->position().y() <= 625
             && ui->progressBar->value() == 100)
     {
+        MainWindow* p = (MainWindow*)parent();
         double x_0 = static_cast<double>((e->position().x() - 650) / 600);
         double y_0 = -static_cast<double>((e->position().y() - 325) / 600);
+        if (p->pre_info[p->current_info_v].y_inverse) y_0 = -y_0;
         if(e->buttons() & Qt::LeftButton)
         {
-
             press_move = true;
-            //Paint_Event* paint = new Paint_Event(this, e->pos().x() - preX, e->pos().y() - preY, image);
-            //paint->update();
             dx = e->pos().x() - preX;
             dy = e->pos().y() - preY;
             double r = sqrt(dx * dx + dy * dy) * img_size / 600;
             double theta_0 = atan2(dy, dx);
             double theta = theta_0 + ui->doubleSpinBox_angle->value() * Pi / 180;
+            // if (!p->pre_info[p->current_info_v].y_inverse) theta = theta_0 - ui->doubleSpinBox_angle->value() * Pi / 180;
             double x = -r * cos(theta) + preCentreX;
             double y = r * sin(theta) + preCentreY;
+            if (p->pre_info[p->current_info_v].y_inverse) y = - r * sin(theta) + preCentreY;
             ui->doubleSpinBox_centreX->setValue(x);
             ui->doubleSpinBox_centreY->setValue(y);
             centreX = x;
             centreY = y;
-            // ui->Route_View->setPixmap(QPixmap::fromImage(QImage(":/Other Images/bk-black.png")));
             qDebug() << "Pressed moving";
-            //QPaintEvent* event_p = new QPaintEvent(QRect(e->pos().x() - preX + 350 ,e->pos().y() - preY + 20 , 950 - (e->pos().x() - preX),625 - (e->pos().y() - preY)));
-            //paintEvent(event_p);
             update();
         }
         else
@@ -201,13 +171,15 @@ void Route_Tool::mouseMoveEvent(QMouseEvent* e)
             double r = sqrt(x_0 * x_0 + y_0 * y_0) * img_size;
             double theta_0 = atan2(y_0, x_0);
             double theta = theta_0 - ui->doubleSpinBox_angle->value() * Pi / 180;
+            // if (p->pre_info[p->current_info_v].y_inverse) theta = theta_0 + ui->doubleSpinBox_angle->value() * Pi / 180;
             double x = r * cos(theta) + centreX;
             double y = r * sin(theta) + centreY;
             ui->Label_Coordinate->setText(tr("(") + QString::number(x, ' ', 8) + ", " + QString::number(y, ' ', 8) + ")");
             preX = x_0 * 600 + 650;
             preY = -y_0 * 600 + 325;
+            if (!p->pre_info[p->current_info_v].y_inverse) ;
+            else preY = y_0 * 600 + 325;
         }
-        // update();
     }
     qDebug() << preX << "," << preY;
 }
@@ -222,6 +194,7 @@ void Route_Tool::mouseReleaseEvent(QMouseEvent* e)
 
 void Route_Tool::mouseDoubleClickEvent(QMouseEvent* e)
 {
+    MainWindow* p = (MainWindow*)parent();
     if(e->button() == Qt::LeftButton && ui->progressBar->value() == 100)
     {
         if(e->position().x() >= 350 && e->position().y() <= 950
@@ -229,9 +202,11 @@ void Route_Tool::mouseDoubleClickEvent(QMouseEvent* e)
         {
             double x_0 = static_cast<double>((e->position().x() - 650) / 600) * img_size;
             double y_0 = -static_cast<double>((e->position().y() - 325) / 600) * img_size;
+            if (p->pre_info[p->current_info_v].y_inverse) y_0 = -y_0;
             double r = sqrt(x_0 * x_0 + y_0 * y_0);
             double theta_0 = atan2(y_0, x_0);
-            double theta = theta_0 - ui->doubleSpinBox_angle->value() * Pi / 180;
+            double theta = theta_0 + ui->doubleSpinBox_angle->value() * Pi / 180;
+            // if (!p->pre_info[p->current_info_v].y_inverse) theta = theta_0 - ui->doubleSpinBox_angle->value() * Pi / 180;
             double x = r * cos(theta) + centreX;
             double y = r * sin(theta) + centreY;
             ui->doubleSpinBox_centreX->setValue(x);

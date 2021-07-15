@@ -4,24 +4,18 @@
 #include <QWidget>
 #include <QObject>
 #include <QImage>
-#include "Complex.h"
+#include <complex>
+#include <string>
+#include "String_Evaluate.h"
 
 #ifndef Create_Images_Task_Pre
 #define Create_Images_Task_Pre(task__)       \
-if(Version_Higher_Than_4)                    \
-{                                            \
-    task__->setVersion(true);                \
-    task__->setData(curr_info.Colour_Data_1, \
-                    curr_info.Colour_Data_2, \
+    task__->setData(post1,                   \
+                    post2,                   \
                     curr_info.template_,     \
                     curr_info.min_class_v,   \
                     curr_info.max_class_v,   \
-                    curr_info.max_loop_t);   \
-}                                            \
-else                                         \
-{                                            \
-    task__->setPath(Project_Name);           \
-}
+                    curr_info.max_loop_t);
 #endif
 
 class Create_Image_Task : public QObject, public QRunnable
@@ -39,20 +33,21 @@ private:
 
     bool Version_Higher_Than_4 = false;
 
-    double Colour_Data_1[4][29][2], Colour_Data_2[4][29][2];
-    double Colour_Data[2][4][29][2] = {0};
-
     int template_, max_loop_t;
 
     // Template 2
-    Complex c0;
+    std::complex<double> c0;
 
     // Template 4
-    Complex Newton_a = 1;
-    Complex Newton_xn[10] {0};
-    Complex Newton_sin = 0;
-    Complex Newton_cos = 0;
-    Complex Newton_ex = 0;
+    std::complex<double> Newton_a = 1;
+    std::complex<double> Newton_xn[10] {0};
+    std::complex<double> Newton_sin = 0;
+    std::complex<double> Newton_cos = 0;
+    std::complex<double> Newton_ex = 0;
+
+    std::vector<_var> Colour1_f[4], Colour2_f[4], Formula;
+
+    enum Colour_Type { RGBA } c_type;
 
     double min_class_v, max_class_v;
 
@@ -61,6 +56,12 @@ private:
     QString img_format, img_path, img_title, work_name;
 
     bool isCancelled = false;
+
+    bool y_inverse = false;
+
+    int range_complex_to_255(const std::complex<double>& c);
+
+    bool setRGBA(double[4], bool, const std::complex<double>&, const std::complex<double>&, double, int);
 
 signals:
     void updateImage_preview(QImage);
@@ -77,19 +78,19 @@ signals:
 
     void one_ok();
 
+    void error_calc(int);
+
 public: // function
-    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString);
+    void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString, bool);
 
-    void setPath(QString);
+    void setData(std::vector<_var>[4], std::vector<_var>[4], int, double, double, int);
 
-    void setData(double[4][29][2], double[4][29][2], int, double, double, int);
+    void setTemplate2(std::complex<double> c);
 
-    void setVersion(bool);
+    void setTemplate4(const std::complex<double>& c1, std::complex<double> c2[10], const std::complex<double>& c3,
+                             const std::complex<double>& c4, const std::complex<double>& c5);
 
-    void setTemplate2(const Complex& c);
-
-    void setTemplate4(const Complex& c1, Complex* c2, const Complex& c3, const Complex& c4, const Complex& c5);
-
+    void setFormula(const std::vector<_var>&);
 public slots:
 
     void stop();

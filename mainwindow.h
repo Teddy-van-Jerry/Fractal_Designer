@@ -20,31 +20,26 @@
 #include <QButtonGroup>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
+#include <complex> // std::complex
 #include "login.h"
 #include "new_file.h"
-#include "open_file.h"
 #include "route_tool.h"
-#include "set_colour.h"
-#include "Complex.h"
 #include "create_image_info.h"
-#include "help.h"
 #include "search_result.h"
 #include "info_save.h"
 #include "route_info.h"
 #include "version.h"
-#include "frd_4_help.h"
 #include "new_features.h"
 #include "create_images_range.h"
 #include "create_image_task.h"
 #include "template_2_settings.h"
 #include "template_4_settings.h"
+#include "preview_setting.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
 #define _MAX_SAVE_    50
 #define curr_info     pre_info[current_info_v]
-#define HIGH_V_ONLY   if(!Version_Higher_Than_4) return;
-#define LOW_V_ONLY    if(Version_Higher_Than_4) return;
 #define EDIT_HERE     0
 #define EDIT_ALREADY  1
 
@@ -68,8 +63,9 @@
     QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
 #endif
 
-const QString Chinese_Help_Url = "https://blog.csdn.net/weixin_50012998/article/details/115678983";
-const QString Bug_Report_CSDN  = "https://blog.csdn.net/weixin_50012998/article/details/115679067";
+const QString Chinese_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh";
+const QString English_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help";
+const QString Bug_Report       = "https://github.com/Teddy-van-Jerry/Fractal_Designer/issues/11";
 
 class PeciseDoubleFactory : public QItemEditorFactory
 {
@@ -91,6 +87,7 @@ public:
             sb->setSingleStep(0.1);
             // sb->interpretText();
             return sb;
+#undef DBL_MAX
         }
         return QItemEditorFactory::createEditor(userType, parent);
     }
@@ -116,13 +113,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    bool Version_Higher_Than_4 = true;
-
     bool isRouteValid = false;
 
     bool NO_EDIT = false;
 
-    uint8_t FRD_Version[4] = {5, 5, 3, 0};
+    uint8_t FRD_Version[4] = {5, 6, 3, 3};
 
     QString Open_Location = "";
 
@@ -140,17 +135,13 @@ public:
 
     int redo_max_depth = 0;
 
-    double Colour_Data_S[2][4][29][2] = {0};
-
     int from_i = 0, to_i = -1;
 
     void setOpenLocation(QString);
 
     bool High_Version_Open(int type = 0);
 
-    void set_Colour_Dlg(int n);
-
-    bool save_or_not = false;    
+    bool save_or_not = false;
 
     void show_template_graph(); //
 
@@ -164,8 +155,6 @@ public:
 
     void saveElsewhere();
 
-    void showColourFormula();
-
     void Version_Dialog_Support(int index);
 
     void NewFeatures();
@@ -178,7 +167,11 @@ public:
 
     void deleteImage(int);
 
-    Complex _curr_complex(const Complex& c1, const Complex& c2, double t, double k = 0);
+    bool createImagePre(Create_Image_Task* task);
+
+    void customTemplatePre(Create_Image_Task* task);
+
+    std::complex<double> _curr_complex(const std::complex<double>& c1, const std::complex<double>& c2, double t, double k = 0);
 
 public slots:
 
@@ -206,7 +199,7 @@ private slots:
 
     void on_MainWindow_AboutTVJ_clicked();
 
-    void on_pushButton_clicked();
+    void on_pushButton_Chinese_Help_clicked();
 
     void on_actionNew_N_triggered();
 
@@ -216,15 +209,11 @@ private slots:
 
     void on_MainWindow_openfile_clicked();
 
-    void on_Convergent_setColour_clicked();
-
     void on_actionRoute_Tool_triggered();
 
     void resizeEvent(QResizeEvent *Event);
 
     void on_Tab_currentChanged(int index);
-
-    void on_Unconvergent_setColour_clicked();
 
     void on_actionSave_S_triggered();
 
@@ -235,6 +224,8 @@ private slots:
     void on_Template_Choice_3_toggled(bool checked);
 
     void on_Template_Choice_4_toggled(bool checked);
+
+    void on_Template_Choice_5_toggled(bool checked);
 
     void on_actionPreview_Refresh_triggered();
 
@@ -298,19 +289,9 @@ private slots:
 
     void on_actionCheck_Update_triggered();
 
-    void on_actionAuto_Refresh_triggered();
-
-    void on_actionNew_triggered();
-
-    void on_actionOpen_triggered();
-
-    void on_actionSave_triggered();
-
     void on_actionUndo_triggered();
 
     void on_actionRedo_triggered();
-
-    void on_actionFRD_H_Project_triggered();
 
     void on_Template_Choice_1_clicked();
 
@@ -319,6 +300,8 @@ private slots:
     void on_Template_Choice_3_clicked();
 
     void on_Template_Choice_4_clicked();
+
+    void on_Template_Choice_5_clicked();
 
     void routeEdit(QStandardItem*);
 
@@ -370,8 +353,6 @@ private slots:
 
     void on_pushButton_IV_clear3_clicked();
 
-    void on_actionFRD_4_Help_triggered();
-
     void on_actionClose_triggered();
 
     void on_commandLinkButton_3_clicked();
@@ -408,15 +389,30 @@ private slots:
 
     void on_MainWindow_AboutFD_clicked();
 
+    void on_actionEnglish_2_triggered();
+
+    void on_actionChinese_2_triggered();
+
+    void on_Convergent_Points_Colour_Formula_textChanged();
+
+    void on_Divergent_Points_Colour_Formula_textChanged();
+
+    void on_lineEdit_Custom_Formula_editingFinished();
+
+    void on_actionPreview_Settings_triggered();
+
+    void on_actionReset_Colour_Definition_triggered();
+
+    void on_checkBox_yInverse_stateChanged(int arg1);
+
+    void on_pushButton_Template_Help_clicked();
+
 signals:
 
     void Search_clicked(QString);
 
     void build_signal(double x, double y, double x_width, double y_height, int X, int Y, double rotate_angle, double t,
                       QString img_format, QString img_path, QString img_title, QString work_name);
-
-    //void build_signal_range(double x, double y, double x_width, double y_height, int X, int Y, double rotate_angle, double t,
-    //                        QString img_format, QString img_path, QString img_title, QString work_name, int from_i, int to_i);
 
     void pathShare(QString);
 
@@ -429,8 +425,6 @@ signals:
     void build_image_updateInfo_signal();
 
     void shareVersion(bool);
-
-    void shareData(double C1[4][29][2], double C2[4][29][2], int, double, double, int);
 
     void createImageStop();
 
@@ -455,11 +449,24 @@ private:
 
     PeciseDoubleFactory m_factory;
 
+    QTranslator *translator;
+
+    Template_2_Settings* template_2_dialog = new Template_2_Settings(this);
+
+    Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
+
+    Preview_Setting* preview_setting = new Preview_Setting(this);
+
 public:
 
     Route_Tool* route_tool_window;
 
-//    Build_Thread *bld_thread;
+    enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
+
+    void setLanguage(App_Language la);
+
+    bool language_setting_no_change_now = false;
+
 };
 
 #endif // MAINWINDOW_H
