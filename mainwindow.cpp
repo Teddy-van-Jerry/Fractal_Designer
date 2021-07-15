@@ -7,7 +7,6 @@
 #include <QSettings>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
-    permanent->setText("ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry");
+    permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
     ui->statusbar->addPermanentWidget(permanent);
     ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.6!"), 20000);
     show_template_graph();
@@ -460,66 +459,6 @@ void MainWindow::resizeEvent(QResizeEvent *Event)
     {
         ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
     }
-
-    /*
-    ui->label_Template_1->resize(ui->widget_T1->size());
-    int T1_w_width(ui->label_Template_1->width());
-    int T1_w_height(ui->label_Template_1->height());
-    double rate_w_T1 = static_cast<double>(T1_w_height) /T1_w_width;
-    double rate_i_T1 = static_cast<double>(image_T1.height()) / image_T1.width();
-    if(rate_i_T1 > rate_w_T1)
-    {
-
-        ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToHeight(T1_w_height));
-    }
-    else
-    {
-        ui->label_Template_1->setPixmap(QPixmap::fromImage(image_T1).scaledToWidth(T1_w_width));
-    }
-
-    ui->label_Template_2->resize(ui->widget_T2->size());
-    int T2_w_width(ui->label_Template_2->width());
-    int T2_w_height(ui->label_Template_2->height());
-    double rate_w_T2 = static_cast<double>(T2_w_height) /T2_w_width;
-    double rate_i_T2 = static_cast<double>(image_T2.height()) / image_T2.width();
-    if(rate_i_T2 > rate_w_T2)
-    {
-        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToHeight(T2_w_height));
-    }
-    else
-    {
-        ui->label_Template_2->setPixmap(QPixmap::fromImage(image_T2).scaledToWidth(T2_w_width));
-    }
-
-    ui->label_Template_3->resize(ui->widget_T3->size());
-    int T3_w_width(ui->label_Template_3->width());
-    int T3_w_height(ui->label_Template_3->height());
-    double rate_w_T3 = static_cast<double>(T3_w_height) /T3_w_width;
-    double rate_i_T3 = static_cast<double>(image_T3.height()) / image_T3.width();
-    if(rate_i_T3 > rate_w_T3)
-    {
-
-        ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToHeight(T3_w_height));
-    }
-    else
-    {
-        ui->label_Template_3->setPixmap(QPixmap::fromImage(image_T3).scaledToWidth(T3_w_width));
-    }
-
-    ui->label_Template_4->resize(ui->widget_T4->size());
-    int T4_w_width(ui->label_Template_4->width());
-    int T4_w_height(ui->label_Template_4->height());
-    double rate_w_T4 = static_cast<double>(T4_w_height) /T4_w_width;
-    double rate_i_T4 = static_cast<double>(image_T4.height()) / image_T4.width();
-    if(rate_i_T4 > rate_w_T4)
-    {
-
-        ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToHeight(T4_w_height));
-    }
-    else
-    {
-        ui->label_Template_4->setPixmap(QPixmap::fromImage(image_T4).scaledToWidth(T4_w_width));
-    }*/
 }
 
 void MainWindow::on_Tab_currentChanged(int index)
@@ -787,67 +726,43 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
 
     QString Pre_Img_Dir;
-    if(Version_Higher_Than_4)
+    QDir ck(QCoreApplication::applicationDirPath() + "/temp");
+    if(!ck.exists())
     {
-        QDir ck(QCoreApplication::applicationDirPath() + "/temp");
-        if(!ck.exists())
-        {
-            ck.mkdir(ck.absolutePath());
-        }
-        Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
+        ck.mkdir(ck.absolutePath());
+    }
+    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
 
-    }
-    else
-    {
-        Pre_Img_Dir = Project_Name;
-    }
     if(curr_info.template_ == 2)
     {
         double t = ui->doubleSpinBox_t->value();
         std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
         double& k = curr_info.Julia_c_rate;
         preview->setTemplate2(_curr_complex(c1, c2, t, k));
-        // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
     }
     else if(curr_info.template_ == 4)
     {
-        if(Version_Higher_Than_4)
+        double t = ui->doubleSpinBox_t->value();
+
+        double& k = curr_info.Newton_c_rate;
+
+        std::complex<double> arr[10];
+        for(int i = 0; i != 10; i++)
         {
-            double t = ui->doubleSpinBox_t->value();
-
-            double& k = curr_info.Newton_c_rate;
-
-            std::complex<double> arr[10];
-            for(int i = 0; i != 10; i++)
-            {
-                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
-            }
-
-            preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
-                                  arr,
-                                  _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
-                                  _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
-                                  _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
-            // preview->setImage(0, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
+            arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
         }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-            return;
-        }
+
+        preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
+                              arr,
+                              _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
+                              _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
+                              _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
     }
     else if(curr_info.template_ == 5)
     {
         customTemplatePre(preview);
     }
-    /*
-    if(curr_info.template_ == 1)
-        preview->setImage(-0.7, 0, 3.2, 2.4, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-    if(curr_info.template_ == 3)
-        preview->setImage(-0.4, 0.6, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-    if(curr_info.template_ == 5)
-        preview->setImage(0, 0, 4, 3, 800, 600, 0, ui->doubleSpinBox_t->value(), "png", Pre_Img_Dir, "Preview Image", "Preview");
-    */
+
     preview->setImage(curr_info.ps.centreX, curr_info.ps.centreY,
                       curr_info.ps.xWidth, curr_info.ps.yHeight,
                       curr_info.ps.width, curr_info.ps.height,
@@ -1278,304 +1193,210 @@ void MainWindow::on_actionCreate_Video_triggered()
 
     ui->statusbar->showMessage(tr("Creating Video..."), 300000);
 
-    if(Version_Higher_Than_4)
+    bool Alive[3] {false, false, false};
+    QFile video(video_file_path + "/" + video_file_name + "." + video_format);
+    if(video.exists())
     {
-        bool Alive[3] {false, false, false};
-        QFile video(video_file_path + "/" + video_file_name + "." + video_format);
-        if(video.exists())
+        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
+                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
         {
-            if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
-                                     + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
-            {
-                video.remove();
-            }
-            else
-            {
-                ui->statusbar->showMessage("", 30000);
-                return;
-            }
+            video.remove();
         }
-
-        qDebug() << "Creating Video...";
-
-        QProcess* create_video = new QProcess(this);
-        create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || defined (_WIN64)
-        qDebug() << ffmpeg_arg1;
-        create_video->start(ffmpeg_arg1);
-        QString file_suffix = "cmd";
-#elif defined(__linux__)
-        create_video->start(ffmpeg_arg1);
-        QString file_suffix = "sh";
-#endif
-        Alive[0] = create_video->waitForFinished(300000);
-        qDebug() << create_video->readAllStandardOutput();
-
-        if(!Alive[0])
+        else
         {
-            QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
-            create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-            QTextStream out1(&create_video_ps);
-            out1 << ffmpeg_arg1;
-            create_video_ps.close();
-
-            // Retry running shell file
-            QProcess* run_sh = new QProcess(this);
-            run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || (_WIN64)
-            run_sh->start("Create_Video.cmd");
-#elif defined (__linux__)
-            run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
-#endif
-            Alive[0] = run_sh->waitForFinished(300000);
-            if(Alive[0])
-            {
-                QFile ck(video_file_path + "/" +
-                            (ui->textBrowser_music->toPlainText().isEmpty() ?
-                             video_file_name + "." + video_format
-                           : video_file_name + "_temp." + video_format));
-                if(ck.exists())
-                {
-                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-                }
-                else
-                {
-                    Alive[0] = false;
-                }
-            }
-        }
-
-        if(ui->textBrowser_music->toPlainText().isEmpty())
-        {
-            if(Alive[0])
-            {
-                QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                               + "\nVideo Creating Finished!");
-                ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-                return;
-            }
-            else
-            {
-                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video." + file_suffix + " code instead.");                
-            }
+            ui->statusbar->showMessage("", 30000);
             return;
         }
-
-        ui->statusbar->showMessage(tr("Processing Music..."), 300000);
-
-        QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
-        Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out(&Music_Added_NoEnd_);
-        if(!curr_info.music_list.empty())
-        {
-            for(int i = 1; i <= curr_info.music_list.size(); i++)
-            {
-                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-                if(QFile::copy(curr_info.music_list[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
-                {
-                    out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
-                }
-            }
-            Music_Added_NoEnd_.close();
-        }
-#if defined (WIN32) || (WIN64)
-        QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#elif defined (__linux__)
-        QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#endif
-        qDebug() << ffmpeg_arg2;
-        create_video->start(ffmpeg_arg2);
-        Alive[1] = create_video->waitForFinished(300000);
-
-        ui->statusbar->showMessage(tr("Adding Music..."), 300000);
-
-#if defined (WIN32) || (WIN64)
-        QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
-#elif defined (__linux__)
-        QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-#endif
-        ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
-        ffmpeg_arg3.append(" -shortest -f mp4 ");
-        ffmpeg_arg3.append(video_file_name + "." + video_format);
-        if(Alive[0] && Alive[1])
-        {
-            qDebug() << ffmpeg_arg3;
-            create_video->start(ffmpeg_arg3);
-            Alive[2] = create_video->waitForFinished(60000);
-            QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
-            if(ck_result.exists())
-            {
-                QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-                QFile::remove(video_file_path + "/BGM.mp3");
-                QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-                for(int i = 1; i <= curr_info.music_list.size(); i++)
-                {
-                    QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-                }
-            }
-            else
-            {
-                Alive[2] = false;
-            }
-        }
-
-        if(!Alive[2])
-        {
-            QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
-            add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-            QTextStream out2(&add_music_ps);
-            out2 << ffmpeg_arg2 << Qt::endl;
-            out2 << ffmpeg_arg3;
-            add_music_ps.close();
-            // Retry running shell file
-            QProcess* run_sh = new QProcess(this);
-            run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-
-            if(Alive[0])
-            {
-#if defined (WIN32) || (_WIN64)
-                run_sh->start("Add_Music.cmd");
-#elif defined (__linux__)
-                run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
-#endif
-                Alive[2] = run_sh->waitForFinished(300000);
-                if(Alive[2])
-                {
-                    QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
-                    if(ck.exists())
-                    {
-                        QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-                        QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-                        QFile::remove(video_file_path + "/BGM.mp3");
-                        QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-                        for(int i = 1; i <= curr_info.music_list.size(); i++)
-                        {
-                            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-                        }
-                    }
-                    else
-                    {
-                        Alive[2] = false;
-                    }
-                }
-                if(!Alive[2])
-                {
-                    ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-                    QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music." + file_suffix + " code instead.");
-                }
-            }
-            else
-            {
-                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video." + file_suffix
-                                           + ",\nsecond run Add_Music." + file_suffix + ".");                
-            }
-        }
-
-        if(Alive[2])
-        {
-            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                           + "\nVideo Creating Finished!");
-        }
     }
-    else
-    {
-#if !(defined (WIN32) || (_WIN64))
-        QMessageBox::warning(this, "Can not create video", "Compatibility mode only supports Windows.");
-        return;
-#endif
-        QFile video(Project_Name + "/" + video_file_name + "." + video_format);
-        if(video.exists())
-        {
-            if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
-                                     + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
-            {
-                video.remove();
-            }
-            else return;
-        }
-        QProcess* create_video = new QProcess;
-        create_video->setWorkingDirectory(Project_Name);
-        QString cmd("powershell");
-        QStringList parameters1{ffmpeg_arg1};
-        create_video->start(cmd, parameters1);
-        create_video->waitForFinished();
 
-        QFile create_video_ps(Project_Name + "/Create_Video.ps1");
+    qDebug() << "Creating Video...";
+
+    QProcess* create_video = new QProcess(this);
+    create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || defined (_WIN64)
+    qDebug() << ffmpeg_arg1;
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "cmd";
+#elif defined(__linux__)
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "sh";
+#endif
+    Alive[0] = create_video->waitForFinished(300000);
+    qDebug() << create_video->readAllStandardOutput();
+
+    if(!Alive[0])
+    {
+        QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
         create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream out1(&create_video_ps);
         out1 << ffmpeg_arg1;
         create_video_ps.close();
 
-        QFile Music_Added_NoEnd_(Project_Name + "/Music_Added_NoEnd.txt");
-        Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out(&Music_Added_NoEnd_);
-        QFile music_bro(Project_Name + "/Music_Added.txt");
-        if(music_bro.exists())
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || (_WIN64)
+        run_sh->start("Create_Video.cmd");
+#elif defined (__linux__)
+        run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
+#endif
+        Alive[0] = run_sh->waitForFinished(300000);
+        if(Alive[0])
         {
-            int cnt = 1;
-            QString str;
-            QTextStream in(&music_bro);
-            music_bro.open(QIODevice::ReadOnly | QIODevice::Text);
-            while (cnt <= 100)
+            QFile ck(video_file_path + "/" +
+                        (ui->textBrowser_music->toPlainText().isEmpty() ?
+                         video_file_name + "." + video_format
+                       : video_file_name + "_temp." + video_format));
+            if(ck.exists())
             {
-                str = in.readLine();
-                if(str == "<End>") break;
-                QFile::remove(Project_Name + "/" + QString::number(cnt) + ".mp3"); // tomorrow think about replacing this mp3
-                if(QFile::copy(str, Project_Name + "/" + QString::number(cnt) + ".mp3"))
+                QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+            }
+            else
+            {
+                Alive[0] = false;
+            }
+        }
+    }
+
+    if(ui->textBrowser_music->toPlainText().isEmpty())
+    {
+        if(Alive[0])
+        {
+            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                           + "\nVideo Creating Finished!");
+            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+            return;
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video." + file_suffix + " code instead.");
+        }
+        return;
+    }
+
+    ui->statusbar->showMessage(tr("Processing Music..."), 300000);
+
+    QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
+    Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&Music_Added_NoEnd_);
+    if(!curr_info.music_list.empty())
+    {
+        for(int i = 1; i <= curr_info.music_list.size(); i++)
+        {
+            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            if(QFile::copy(curr_info.music_list[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
+            {
+                out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
+            }
+        }
+        Music_Added_NoEnd_.close();
+    }
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#elif defined (__linux__)
+    QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
+#endif
+    qDebug() << ffmpeg_arg2;
+    create_video->start(ffmpeg_arg2);
+    Alive[1] = create_video->waitForFinished(300000);
+
+    ui->statusbar->showMessage(tr("Adding Music..."), 300000);
+
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
+#elif defined (__linux__)
+    QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
+#endif
+    ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
+    ffmpeg_arg3.append(" -shortest -f mp4 ");
+    ffmpeg_arg3.append(video_file_name + "." + video_format);
+    if(Alive[0] && Alive[1])
+    {
+        qDebug() << ffmpeg_arg3;
+        create_video->start(ffmpeg_arg3);
+        Alive[2] = create_video->waitForFinished(60000);
+        QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
+        if(ck_result.exists())
+        {
+            QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+            QFile::remove(video_file_path + "/BGM.mp3");
+            QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+            for(int i = 1; i <= curr_info.music_list.size(); i++)
+            {
+                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            }
+        }
+        else
+        {
+            Alive[2] = false;
+        }
+    }
+
+    if(!Alive[2])
+    {
+        QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
+        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out2(&add_music_ps);
+        out2 << ffmpeg_arg2 << Qt::endl;
+        out2 << ffmpeg_arg3;
+        add_music_ps.close();
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+
+        if(Alive[0])
+        {
+#if defined (WIN32) || (_WIN64)
+            run_sh->start("Add_Music.cmd");
+#elif defined (__linux__)
+            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
+#endif
+            Alive[2] = run_sh->waitForFinished(300000);
+            if(Alive[2])
+            {
+                QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
+                if(ck.exists())
                 {
-                    out << "file '" << QString::number(cnt) + ".mp3'" << Qt::endl;
-                    qDebug() << "succeeded copy music_added";
+                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+                    QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+                    QFile::remove(video_file_path + "/BGM.mp3");
+                    QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+                    for(int i = 1; i <= curr_info.music_list.size(); i++)
+                    {
+                        QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+                    }
                 }
                 else
                 {
-                    qDebug() << "failed copy music_added";
+                    Alive[2] = false;
                 }
-                cnt++;
             }
-            music_bro.close();
-            Music_Added_NoEnd_.close();
+            if(!Alive[2])
+            {
+                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music." + file_suffix + " code instead.");
+            }
         }
-
-        QString PowerShell_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-        QStringList parameters2{PowerShell_arg2};
-        create_video->start(cmd, parameters2);
-        create_video->waitForFinished();
-
-        QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-        PowerShell_arg3.append(video_file_name + "_temp." + video_format);
-        PowerShell_arg3.append(" -shortest -f mp4 ");
-        PowerShell_arg3.append(video_file_name + "." + video_format);
-        QStringList parameters3(PowerShell_arg3);
-        create_video->start(cmd, parameters3);
-        create_video->waitForFinished(-1);
-
-        QFile::remove(Project_Name + "/" + video_file_name + "_temp." + video_format);
-        QFile::remove(Project_Name + "/BGM.mp3");
-        for(int i = 1; i <= 100; i++)
+        else
         {
-            QFile::remove(Project_Name + "/" + QString::number(i) + ".mp3");
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video." + file_suffix
+                                       + ",\nsecond run Add_Music." + file_suffix + ".");
         }
-
-        QFile add_music_ps(Project_Name + "/Add_Music.ps1");
-        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out2(&add_music_ps);
-        out2 << PowerShell_arg2 << Qt::endl;
-        out2 << PowerShell_arg3;
-        add_music_ps.close();
-
-        QMessageBox::information(this, "Information", "Video Creating Finished!");
     }
 
-    // qDebug() << "Create Video:" << PowerShell_arg1;
-
+    if(Alive[2])
+    {
+        ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+        QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                       + "\nVideo Creating Finished!");
+    }
 }
 
 void MainWindow::on_toolButton_videoPath_clicked()
 {
-    QString default_dir = Version_Higher_Than_4 ? QDir::homePath() : Project_Name;
+    QString default_dir = QDir::homePath();
     QString video_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     if(video_Path == "") return;
@@ -1623,110 +1444,61 @@ void MainWindow::on_pushButton_deleteMusic_clicked()
 
 void MainWindow::on_pushButton_UniformMotion_clicked()
 {
-    if(Version_Higher_Than_4)
+    if(!isRouteValid)
     {
-        if(!isRouteValid)
+        QMessageBox::warning(this, "Fail to set uniform motion", "The route is invalid.");
+        return;
+    }
+    NO_EDIT = true;
+    int total_index = curr_info.Route_.size();
+    double* L = new double[total_index - 1];
+    double* L_till = new double[total_index - 1];
+    double total_L = 0;
+    for(int current_index = 0; current_index != total_index - 1; current_index++)
+    {
+        double w1 = Tb(current_index, 4);
+        double w2 = Tb(current_index + 1, 4);
+        if(w1 * w2 <= 0)
         {
-            QMessageBox::warning(this, "Fail to set uniform motion", "The route is invalid.");
-            return;
-        }
-        NO_EDIT = true;
-        int total_index = curr_info.Route_.size();
-        double* L = new double[total_index - 1];
-        double* L_till = new double[total_index - 1];
-        double total_L = 0;
-        for(int current_index = 0; current_index != total_index - 1; current_index++)
-        {
-            double w1 = Tb(current_index, 4);
-            double w2 = Tb(current_index + 1, 4);
-            if(w1 * w2 <= 0)
-            {
-                QMessageBox::critical(this, "Fail to set uniform motion", "Mathematical Error!\nIllegal Width!");
-                display();
-                return;
-            }
-
-            double x1 = Tb(current_index, 1);
-            double x2 = Tb(current_index + 1, 1);
-            double y1 = Tb(current_index, 2);
-            double y2 = Tb(current_index + 1, 2);
-            double dL = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-            if(fabs(1 - w1 / w2) < 1E-5)
-            {
-                L[current_index] = (1 / (2 * w1) + 1 / (2 * w2)) * dL;
-            }
-            else
-            {
-                L[current_index] = (1 / w2 - 1 / w1) / log(w1 / w2) * dL;
-            }
-            L_till[current_index] = total_L;
-            total_L += L[current_index];
-        }
-        if(total_L == 0)
-        {
-            QMessageBox::critical(this, "Fail to set uniform motion", "Mathematical Error!\nTotal length equals to 0!");
+            QMessageBox::critical(this, "Fail to set uniform motion", "Mathematical Error!\nIllegal Width!");
             display();
             return;
         }
-        for(int current_index = 0; current_index != total_index - 1; current_index++)
-        {
-            SetTb(current_index, 0, L_till[current_index] / total_L);
-            SetTb(current_index, 5, 0);
-        }
-        SetTb(total_index - 1, 0, 1);
-        SetTb(total_index - 1, 5, 0);
-        delete[] L;
-        delete[] L_till;
 
-        NO_EDIT = false;
-        edit();
+        double x1 = Tb(current_index, 1);
+        double x2 = Tb(current_index + 1, 1);
+        double y1 = Tb(current_index, 2);
+        double y2 = Tb(current_index + 1, 2);
+        double dL = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        if(fabs(1 - w1 / w2) < 1E-5)
+        {
+            L[current_index] = (1 / (2 * w1) + 1 / (2 * w2)) * dL;
+        }
+        else
+        {
+            L[current_index] = (1 / w2 - 1 / w1) / log(w1 / w2) * dL;
+        }
+        L_till[current_index] = total_L;
+        total_L += L[current_index];
     }
-    else
+    if(total_L == 0)
     {
-        int total_index = 0;
-        QFile in_unfirom(Project_Name + "/Route_Info.txt");
-        if(in_unfirom.exists())
-        {
-            in_unfirom.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream in(&in_unfirom);
-            in >> total_index;
-            in_unfirom.close();
-            qDebug() << "Total_number:" << total_index;
-        }
-        double* L = new double[total_index - 1];
-        double* L_till = new double[total_index - 1];
-        double total_L = 0;
-        for(int current_index = 0; current_index != total_index - 1; current_index++)
-        {
-            double w1 = model->item(current_index, 4)->text().toDouble();
-            double w2 = model->item(current_index + 1, 4)->text().toDouble();
-
-            double x1 = model->item(current_index, 1)->text().toDouble();
-            double x2 = model->item(current_index + 1, 1)->text().toDouble();
-            double y1 = model->item(current_index, 2)->text().toDouble();
-            double y2 = model->item(current_index + 1, 2)->text().toDouble();
-            double dL = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-            if(fabs(1 - w1 / w2) < 1E-5)
-            {
-                L[current_index] = (1 / (2 * w1) + 1 / (2 * w2)) * dL;
-            }
-            else
-            {
-                L[current_index] = (1 / w2 - 1 / w1) / log(w1 / w2) * dL;
-            }
-            L_till[current_index] = total_L;
-            total_L += L[current_index];
-        }
-        for(int current_index = 0; current_index != total_index - 1; current_index++)
-        {
-            model->item(current_index, 0)->setText(QString::number(L_till[current_index] / total_L, 'g', 10));
-            model->item(current_index, 5)->setText("0");
-        }
-        model->item(total_index - 1, 0)->setText("1");
-        model->item(total_index - 1, 5)->setText("0");
-        delete[] L;
-        delete[] L_till;
+        QMessageBox::critical(this, "Fail to set uniform motion", "Mathematical Error!\nTotal length equals to 0!");
+        display();
+        return;
     }
+    for(int current_index = 0; current_index != total_index - 1; current_index++)
+    {
+        SetTb(current_index, 0, L_till[current_index] / total_L);
+        SetTb(current_index, 5, 0);
+    }
+    SetTb(total_index - 1, 0, 1);
+    SetTb(total_index - 1, 5, 0);
+    delete[] L;
+    delete[] L_till;
+
+    NO_EDIT = false;
+    edit();
 }
 
 void MainWindow::on_actionFFmpeg_triggered()
@@ -1738,11 +1510,11 @@ void MainWindow::on_actionFFmpeg_triggered()
     FFmpeg_Process.start(programme);
     if(FFmpeg_Process.waitForFinished(5000))
     {
-        QMessageBox::information(this, "Information", "Successfully install FFmpeg!");
+        QMessageBox::information(this, "Information", "FFmpeg already installed!");
     }
     else
     {
-        QMessageBox::warning(this, "Information", "Failed to install FFmpeg!");
+        QMessageBox::warning(this, "Information", "Dependency ffmpeg.exe fails!");
     }
 #elif defined (__linux__)
     if (!QDesktopServices::openUrl(QUrl("http://www.ffmpeg.org/download.html#build-linux")))
@@ -1756,33 +1528,16 @@ void MainWindow::on_actionFFmpeg_triggered()
 
 void MainWindow::on_actionCheck_Update_triggered()
 {
-    if (!QDesktopServices::openUrl(QUrl("https://blog.csdn.net/weixin_50012998/article/details/113389239")))
+    if (!QDesktopServices::openUrl(QUrl("https://frd.teddy-van-jerry.org/downloads/")))
     {
         QMessageBox::warning(this, "Information", "Can not access the web site.");
     }
-}
-
-void MainWindow::on_actionAuto_Refresh_triggered()
-{
-    /*
-    if(ui->actionAuto_Refresh->isChecked())
-    {
-        ui->actionAuto_Refresh->setChecked(false);
-        // curr_info.config1 = 0;
-    }
-    else
-    {
-        ui->actionAuto_Refresh->setChecked(true);
-        // curr_info.config1 = 1;
-    }
-    */
 }
 
 void MainWindow::edit(int mode) // default as EDIT_HERE
 {
     if(NO_EDIT) return;
 
-    HIGH_V_ONLY
     save_or_not = false;
 
     qDebug() << "High Version Edit:";
@@ -1868,8 +1623,6 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
 
 void MainWindow::display()
 {
-    HIGH_V_ONLY
-
     NO_EDIT = true;
 
     qDebug() << "   =====Display=====";
@@ -2016,8 +1769,6 @@ void MainWindow::display()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    HIGH_V_ONLY
-
     if(!ui->actionUndo->isEnabled()) return;
 
     NO_EDIT = true;
@@ -2046,8 +1797,6 @@ void MainWindow::on_actionUndo_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    HIGH_V_ONLY
-
     if(!ui->actionUndo->isEnabled()) return;
 
     NO_EDIT = true;
@@ -2072,16 +1821,6 @@ void MainWindow::on_actionRedo_triggered()
     buff_info = curr_info;
 
     NO_EDIT = false;
-}
-
-void MainWindow::on_actionFRD_H_Project_triggered()
-{
-    LOW_V_ONLY
-
-    Version_Higher_Than_4 = true;
-    save_or_not = false;
-    edit();
-    on_actionSave_S_triggered();
 }
 
 void MainWindow::on_Template_Choice_1_clicked()
@@ -2111,8 +1850,6 @@ void MainWindow::on_Template_Choice_5_clicked()
 
 void MainWindow::routeEdit(QStandardItem* it)
 {
-    HIGH_V_ONLY
-
     if(NO_EDIT) return;
     // NO_EDIT = true;
     bool ok;
@@ -2155,42 +1892,36 @@ void MainWindow::saveElsewhere()
 
 void MainWindow::on_Min_class_value_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->Min_class_value->value() == curr_info.min_class_v) return;
     edit();
 }
 
 void MainWindow::on_Max_class_value_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->Max_class_value->value() == curr_info.max_class_v) return;
     edit();
 }
 
 void MainWindow::on_Max_loop_time_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->Max_loop_time->value() == curr_info.max_loop_t) return;
     edit();
 }
 
 void MainWindow::dealRouteSort(int)
 {
-    HIGH_V_ONLY
     edit();
     display(); // used to check the validity
 }
 
 void MainWindow::on_Image_size_X_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->Image_size_X->value() == curr_info.image_size_x) return;
     edit();
 }
 
 void MainWindow::on_Image_size_Y_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->Image_size_Y->value() == curr_info.image_size_y) return;
     edit();
 }
@@ -2203,28 +1934,24 @@ void MainWindow::on_comboBox_fps_currentIndexChanged(int index)
 
 void MainWindow::on_timeEdit_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->timeEdit->time().toString("mmss") == curr_info.total_time_str) return;
     edit();
 }
 
 void MainWindow::on_lineEdit_imagePath_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->lineEdit_imagePath->text() == curr_info.img_path) return;
     edit();
 }
 
 void MainWindow::on_lineEdit_imagePrefix_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->lineEdit_imagePrefix->text() == curr_info.img_prefix) return;
     edit();
 }
 
 void MainWindow::on_lineEdit_videoPath_editingFinished()
 {
-    HIGH_V_ONLY
     if(ui->lineEdit_videoPath->text() == curr_info.video_path) return;
     edit();
 }
@@ -2287,7 +2014,6 @@ void MainWindow::on_actionNew_Features_triggered()
 
 void MainWindow::on_pushButton_Min_class_default_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1:
@@ -2317,7 +2043,6 @@ void MainWindow::on_pushButton_Min_class_default_clicked()
 
 void MainWindow::on_pushButton_Max_value_default_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1: case 2: case 3:
@@ -2337,7 +2062,6 @@ void MainWindow::on_pushButton_Max_value_default_clicked()
 
 void MainWindow::on_pushButton_Max_loop_default_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1: case 3:
@@ -2362,7 +2086,6 @@ void MainWindow::on_pushButton_Max_loop_default_clicked()
 
 void MainWindow::on_pushButton_IV_clear1_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1:
@@ -2377,7 +2100,6 @@ void MainWindow::on_pushButton_IV_clear1_clicked()
 
 void MainWindow::on_pushButton_IV_clear2_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1:
@@ -2392,7 +2114,6 @@ void MainWindow::on_pushButton_IV_clear2_clicked()
 
 void MainWindow::on_pushButton_IV_clear3_clicked()
 {
-    HIGH_V_ONLY
     switch(curr_info.template_)
     {
     case 1:
@@ -2405,11 +2126,6 @@ void MainWindow::on_pushButton_IV_clear3_clicked()
     }
 }
 
-void MainWindow::on_actionFRD_4_Help_triggered()
-{
-
-}
-
 void MainWindow::NewFeatures()
 {
     on_actionNew_Features_triggered();
@@ -2417,8 +2133,6 @@ void MainWindow::NewFeatures()
 
 void MainWindow::on_actionClose_triggered()
 {
-    HIGH_V_ONLY
-
     if(save_or_not) on_actionSave_S_triggered();
     setWindowTitle("Fractal Designer - Unsaved Project");
     Open_Location = "";
@@ -2435,7 +2149,6 @@ void MainWindow::on_actionClose_triggered()
     display();
 
     ui->actionClose->setDisabled(true);
-    Version_Higher_Than_4 = true;
 }
 
 void MainWindow::on_commandLinkButton_3_clicked()
@@ -2459,13 +2172,13 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         return;
     }
 
-    if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
+    if(Open_Location == "")
     {
         QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
         return;
     }
 
-    if(Version_Higher_Than_4 && !isRouteValid)
+    if(!isRouteValid)
     {
         QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
         return;
@@ -2553,41 +2266,25 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
         }
         if(curr_info.template_ == 2)
         {
-            if(Version_Higher_Than_4)
-            {
-                std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-                double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
-            }
-            else
-            {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-                return;
-            }
+            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            double k = curr_info.Julia_c_rate;
+            create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
         }
         if(curr_info.template_ == 4)
         {
-            if(Version_Higher_Than_4)
-            {
-                double& k = curr_info.Newton_c_rate;
+            double& k = curr_info.Newton_c_rate;
 
-                std::complex<double> arr[10];
-                for(int i = 0; i != 10; i++)
-                {
-                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
-                }
-
-                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
-                                      arr,
-                                      _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
-                                      _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
-                                      _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
-            }
-            else
+            std::complex<double> arr[10];
+            for(int i = 0; i != 10; i++)
             {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-                return;
+                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
             }
+
+            create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                  arr,
+                                  _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                  _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                  _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
         }
         if(i != to_i)
         {
@@ -2680,41 +2377,25 @@ void MainWindow::createImagesInList(const QList<int>& list)
 
         if(curr_info.template_ == 2)
         {
-            if(Version_Higher_Than_4)
-            {
-                std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-                double k = curr_info.Julia_c_rate;
-                create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
-            }
-            else
-            {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 2!");
-                return;
-            }
+            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+            double k = curr_info.Julia_c_rate;
+            create_images->setTemplate2(c1 + (c2 - c1) * std::complex<double>((1 - k) * T + k * T * T));
         }
         if(curr_info.template_ == 4)
         {
-            if(Version_Higher_Than_4)
-            {
-                double& k = curr_info.Newton_c_rate;
+            double& k = curr_info.Newton_c_rate;
 
-                std::complex<double> arr[10];
-                for(int i = 0; i != 10; i++)
-                {
-                    arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
-                }
-
-                create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
-                                      arr,
-                                      _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
-                                      _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
-                                      _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
-            }
-            else
+            std::complex<double> arr[10];
+            for(int i = 0; i != 10; i++)
             {
-                QMessageBox::warning(this, "Error", "Compatibility Mode does not support Template 4!");
-                return;
+                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
             }
+
+            create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
+                                  arr,
+                                  _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
+                                  _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
+                                  _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
         }
 
         // qDebug() << t << current_index << x << y << width << angle;
@@ -2795,13 +2476,13 @@ void MainWindow::on_actionCheck_Images_triggered()
                 return;
             }
 
-            if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
+            if(Open_Location == "")
             {
                 QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
                 return;
             }
 
-            if(Version_Higher_Than_4 && !isRouteValid)
+            if(!isRouteValid)
             {
                 QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
                 return;
@@ -2833,13 +2514,13 @@ void MainWindow::on_actionCheck_Images_triggered()
                 return;
             }
 
-            if((!Version_Higher_Than_4 && (Project_Template == "" || Project_Template == "Undefined")) || (Version_Higher_Than_4 && Open_Location == ""))
+            if(Open_Location == "")
             {
                 QMessageBox::warning(this, "Can not create images", "You have not chosen a template.");
                 return;
             }
 
-            if(Version_Higher_Than_4 && !isRouteValid)
+            if(!isRouteValid)
             {
                 QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
                 return;
@@ -2964,7 +2645,7 @@ void MainWindow::on_actionVersion_6_triggered() // Version 1 of Sample Video Tem
 
 void MainWindow::on_MainWindow_AboutFD_clicked()
 {
-    on_actionGitHub_Repository_triggered();
+    QDesktopServices::openUrl(QUrl("https://frd.teddy-van-jerry.org/about/"));
 }
 
 void MainWindow::on_actionChinese_2_triggered() // language Chinese
@@ -3095,4 +2776,9 @@ void MainWindow::on_checkBox_yInverse_stateChanged(int arg1)
 {
     buff_info.y_inverse = arg1;
     edit(EDIT_ALREADY);
+}
+
+void MainWindow::on_pushButton_Template_Help_clicked()
+{
+    QDesktopServices::openUrl(QUrl("https://frd.teddy-van-jerry.org/sample/fractal-designer-5-6-lts-sample-1/"));
 }
