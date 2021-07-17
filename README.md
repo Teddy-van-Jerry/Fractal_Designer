@@ -20,6 +20,7 @@ Release for Linux will be published in the near future.
   - [Help (Chinese Version)](https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh)
   - [Mandelbrot Sample](https://frd.teddy-van-jerry.org/sample/fractal-designer-5-6-lts-sample-1)
   - [Fractal Designer Website](https://frd.teddy-van-jerry.org)
+ - To build the project, you need to **update translation**.
 
 ## Username and Passcode
 You can use any of them to log in the application:
