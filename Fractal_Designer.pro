@@ -4,13 +4,15 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 5.6.3.3
+VERSION = 6.0.0.1
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Info.cpp \
+    Interpreter.cpp \
     String_Evaluate.cpp \
     create_image_info.cpp \
     create_image_task.cpp \
@@ -30,6 +32,8 @@ SOURCES += \
     version.cpp
 
 HEADERS += \
+    Info.h \
+    Interpreter.h \
     String_Evaluate.h \
     create_image_info.h \
     create_image_task.h \
