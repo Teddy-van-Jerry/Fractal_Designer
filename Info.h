@@ -66,7 +66,8 @@ public:
 class music_ {
 public:
     QVector<QString> List;
-    QVector<double> From, To; // the beginning and ending time of music
+    QVector<double> From; /**< the beginning time of music */
+    QVector<double> To;   /**< the ending time of music */
     double Rate;
 };
 
@@ -87,18 +88,31 @@ public:
     bool AutoRefresh;
 };
 
+enum error_type_ {
+    _FRD_ERROR_COMMENT_UNFINISHED_,
+    _FRD_ERROR_OTHER_ = 9000
+};
+
+class error_ {
+public:
+    error_type_ errorType;
+    size_t row, column;
+};
+
 class FRD {
 public:
     QVector<layer_> Layers;
-    music_ Music;   // global variable
-    output_ Output; // global variable
-    config_ Config; // global variable
+    music_ Music;   /**< global variable */
+    output_ Output; /**< global variable */
+    config_ Config; /**< global variable */
+    QVector<error_> errors; /**< error list */
 };
 
 class Info {
 public:
-    QVector<FRD> all; // historical info
-    int i = 0;        // current info index
+    QVector<FRD> all;       /**< historic info */
+    int i = 0;              /**< current info index */
+    FRD editor;             /**< current info of editor */
 };
 
 #endif // INFO_H
