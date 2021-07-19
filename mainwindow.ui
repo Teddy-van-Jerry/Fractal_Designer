@@ -1712,37 +1712,61 @@ p, li { white-space: pre-wrap; }
           <property name="currentIndex">
            <number>0</number>
           </property>
+          <widget class="QWidget" name="Run_tab">
+           <attribute name="title">
+            <string>Run</string>
+           </attribute>
+          </widget>
           <widget class="QWidget" name="Search_tab">
            <attribute name="title">
             <string>Search</string>
            </attribute>
           </widget>
-          <widget class="QWidget" name="tab_4">
-           <attribute name="title">
-            <string>Tab 2</string>
-           </attribute>
-          </widget>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QTabWidget" name="Error_Terminal_widget">
+         <widget class="QTabWidget" name="Editor_Button_widget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Error</string>
-           </attribute>
-          </widget>
-          <widget class="QWidget" name="tab_2">
+          <widget class="QWidget" name="tab_terminal">
            <attribute name="title">
             <string>Terminal</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
-             <widget class="QPlainTextEdit" name="plainTextEdit"/>
+             <widget class="QPlainTextEdit" name="plainTextEdit_terminal">
+              <property name="font">
+               <font>
+                <family>Consolas</family>
+               </font>
+              </property>
+              <property name="plainText">
+               <string>FRD 6.0.0 &gt;</string>
+              </property>
+             </widget>
             </item>
            </layout>
+          </widget>
+          <widget class="QWidget" name="tab_error">
+           <attribute name="title">
+            <string>Error</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_15">
+            <item row="0" column="0">
+             <widget class="QTableView" name="tableView_error"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_property">
+           <attribute name="title">
+            <string>Property</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_Help">
+           <attribute name="title">
+            <string>Help</string>
+           </attribute>
           </widget>
          </widget>
         </item>
@@ -2896,9 +2920,9 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
-  <include location="Icon.qrc"/>
-  <include location="Icon_resources.qrc"/>
   <include location="EXE_Icons.qrc"/>
+  <include location="Icon_resources.qrc"/>
+  <include location="Icon.qrc"/>
  </resources>
  <connections/>
 </ui>
