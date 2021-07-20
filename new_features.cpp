@@ -7,6 +7,7 @@ New_Features::New_Features(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
 }
 
 New_Features::~New_Features()
