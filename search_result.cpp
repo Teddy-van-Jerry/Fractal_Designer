@@ -116,6 +116,7 @@ void Search_Result::getSearch(QString search)
         new_btn->setText(result.Text);
         new_btn->setToolTip(result.Tip);
         new_btn->setStyleSheet(Button_qss_str);
+        new_btn->setObjectName("Search_Result_Button");
         btn.push_back(new_btn);
         switch(result.index)
         {
@@ -161,6 +162,8 @@ void Search_Result::getSearch(QString search)
         ui->gridLayout_search->addWidget(label);
         Help_E = new QPushButton();
         Help_C = new QPushButton();
+        Help_C->setObjectName("Help_C_Button");
+        Help_E->setObjectName("Help_E_Button");
         Help_E->setText(All_P[3].Text);
         Help_E->setToolTip(All_P[3].Tip);
         Help_E->setStyleSheet(Button_qss_str);

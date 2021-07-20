@@ -130,6 +130,7 @@ void Create_Image_Task::run()
     if(work_name == "Route") emit updateImage_route(image_build);
     if(work_name == "Create_Image") emit one_ok();
     if(work_name == "Create_Image_Last") emit finished();
+
 }
 
 void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y_height_, int X_, int Y_, double rotate_angle_, double t_,

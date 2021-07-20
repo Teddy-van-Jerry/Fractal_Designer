@@ -13,6 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ReadStyle();
+
+//    this->setWindowFlags(Qt::FramelessWindowHint);
+
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
     permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
@@ -45,11 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     Button_Login_MainWindow = new QPushButton();
     Button_Login_MainWindow->setText(tr("Log In"));
-    QFile Button_Login_MainWindow_qss(":/StyleSheet/Button_Login_MainWindow.qss");
-    Button_Login_MainWindow_qss.open(QFile::ReadOnly);
-    QString Button_Login_MainWindow_qss_str = QLatin1String(Button_Login_MainWindow_qss.readAll());
-    Button_Login_MainWindow_qss.close();
-    Button_Login_MainWindow->setStyleSheet(Button_Login_MainWindow_qss_str);
+    Button_Login_MainWindow->setObjectName("Button_Login_MainWindow");
     ui->toolBar->insertWidget(NULL, Button_Login_MainWindow);
     connect(Button_Login_MainWindow, SIGNAL(clicked()), this, SLOT(on_Button_Login_MainWindow_clicked()));
 
@@ -58,22 +59,18 @@ MainWindow::MainWindow(QWidget *parent)
     Label_User_Name->setStyleSheet("color: green; font: Consolas; font-size: 14px;");
     ui->toolBar->insertWidget(NULL, Label_User_Name);
 
-    //setStyleSheet("background-color: ");
-    //qDebug() << QCoreApplication::applicationDirPath();
-
-    //ui->progressBar_Preview->setVisible(false);
     QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
     Button_Quick_Option_qss.open(QFile::ReadOnly);
     QString Button_Quick_Option_qss_str = QLatin1String(Button_Quick_Option_qss.readAll());
     Button_Quick_Option_qss.close();
-    ui->MainWindow_AboutFD->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->MainWindow_AboutTVJ->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->MainWindow_HelpEnglish->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->pushButton_Chinese_Help->setStyleSheet(Button_Quick_Option_qss_str);
-    ui->pushButton_Template_Help->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_AboutFD->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_AboutTVJ->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_HelpEnglish->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->pushButton_Chinese_Help->setStyleSheet(Button_Quick_Option_qss_str);
+//    ui->pushButton_Template_Help->setStyleSheet(Button_Quick_Option_qss_str);
 
     model->setColumnCount(6);
     model->setHeaderData(0, Qt::Horizontal, "t");
@@ -98,6 +95,8 @@ MainWindow::MainWindow(QWidget *parent)
     route_tool_window = new Route_Tool(this);
 
     show_preview_image();
+
+    useWhiteIcon();
 }
 
 MainWindow::~MainWindow()
@@ -2782,3 +2781,331 @@ void MainWindow::on_pushButton_Template_Help_clicked()
 {
     QDesktopServices::openUrl(QUrl("https://frd.teddy-van-jerry.org/sample/fractal-designer-5-6-lts-sample-1/"));
 }
+
+void MainWindow::useDarkIcon()
+{
+    ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Check Images.svg"));
+    ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/dark/Close.svg"));
+    ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Create Image.svg"));
+    ui->actionCreate_Images_in_Range->setIcon(QIcon(":/icon/Menu Icon/dark/Create Images in Range.svg"));
+    ui->actionCreate_Video->setIcon(QIcon(":/icon/Menu Icon/dark/Create Video.svg"));
+    ui->actionDelete->setIcon(QIcon(":/icon/Menu Icon/dark/Delete.svg"));
+    ui->actionDelete_Images->setIcon(QIcon(":/icon/Menu Icon/dark/DeleteImage.svg"));
+    ui->actionDelete_All_Parameters->setIcon(QIcon(":/icon/Menu Icon/dark/Delete.svg"));
+    ui->actionExit_E->setIcon(QIcon(":/icon/Menu Icon/dark/Exit.svg"));
+    ui->actionStop->setIcon(QIcon(":/icon/Menu Icon/dark/Stop.svg"));
+    ui->actionUndo->setIcon(QIcon(":/icon/Menu Icon/dark/Undo.svg"));
+    ui->actionRoute_Tool->setIcon(QIcon(":/icon/Menu Icon/dark/Route_Tool.svg"));
+    ui->actionSave_S->setIcon(QIcon(":/icon/Menu Icon/dark/Save.svg"));
+    ui->actionSave_As_A->setIcon(QIcon(":/icon/Menu Icon/dark/SaveAs.svg"));
+    ui->actionOpen_O->setIcon(QIcon(":/icon/Menu Icon/dark/Open.svg"));
+    ui->actionVersion->setIcon(QIcon(":/icon/Menu Icon/dark/Version.png"));
+    ui->menuPreview->setIcon(QIcon(":/icon/Menu Icon/dark/Preview.png"));
+    ui->actionGitHub_Repository->setIcon(QIcon(":/icon/Menu Icon/dark/GitHub.png"));
+    ui->actionRedo->setIcon(QIcon(":/icon/Menu Icon/dark/Redo.svg"));
+    ui->actionNew_N->setIcon(QIcon(":/icon/Menu Icon/dark/New.svg"));
+
+    ui->actionPreview_Refresh->setIcon(QIcon(":/icon/Menu Icon/dark/Refresh.svg"));
+    Button_Search->setIcon(QIcon(":/icon/Menu Icon/dark/Search.svg"));
+    ui->menuWizard->setIcon(QIcon(":/icon/Menu Icon/dark/Wizard.svg"));
+    // ui->action->setIcon(QIcon(":/icon/Menu Icon/dark/Previous.svg"));
+    ui->toolButton_imagePath->setIcon(QIcon(":/icon/Menu Icon/dark/FolderBrowser.svg"));
+    ui->toolButton_videoPath->setIcon(QIcon(":/icon/Menu Icon/dark/FolderBrowser.svg"));
+    ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/dark/Help.svg"));
+    // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/dark/Image.svg"));
+    // ui->action->setIcon(QIcon(":/icon/Menu Icon/dark/Next.svg"));
+}
+
+void MainWindow::useWhiteIcon()
+{
+    ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/Check Images.svg"));
+    ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/Close.svg"));
+    ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/Create Image.svg"));
+    ui->actionCreate_Images_in_Range->setIcon(QIcon(":/icon/Menu Icon/Create Images in Range.svg"));
+    ui->actionCreate_Video->setIcon(QIcon(":/icon/Menu Icon/Create Video.svg"));
+    ui->actionDelete->setIcon(QIcon(":/icon/Menu Icon/Delete.svg"));
+    ui->actionDelete_Images->setIcon(QIcon(":/icon/Menu Icon/DeleteImage.svg"));
+    ui->actionDelete_All_Parameters->setIcon(QIcon(":/icon/Menu Icon/Delete.svg"));
+    ui->actionExit_E->setIcon(QIcon(":/icon/Menu Icon/Exit.svg"));
+    ui->actionStop->setIcon(QIcon(":/icon/Menu Icon/Stop.svg"));
+    ui->actionUndo->setIcon(QIcon(":/icon/Menu Icon/Undo.svg"));
+    ui->actionRoute_Tool->setIcon(QIcon(":/icon/Menu Icon/Route_Tool.svg"));
+    ui->actionSave_S->setIcon(QIcon(":/icon/Menu Icon/Save.svg"));
+    ui->actionSave_As_A->setIcon(QIcon(":/icon/Menu Icon/SaveAs.svg"));
+    ui->actionOpen_O->setIcon(QIcon(":/icon/Menu Icon/Open.svg"));
+    ui->actionVersion->setIcon(QIcon(":/icon/Menu Icon/Version.png"));
+    ui->menuPreview->setIcon(QIcon(":/icon/Menu Icon/Preview.png"));
+    ui->actionGitHub_Repository->setIcon(QIcon(":/icon/Menu Icon/GitHub.png"));
+    ui->actionRedo->setIcon(QIcon(":/icon/Menu Icon/Redo.svg"));
+    ui->actionNew_N->setIcon(QIcon(":/icon/Menu Icon/New.svg"));
+
+    ui->actionPreview_Refresh->setIcon(QIcon(":/icon/Menu Icon/Refresh.svg"));
+    Button_Search->setIcon(QIcon(":/icon/Menu Icon/Search.svg"));
+    ui->menuWizard->setIcon(QIcon(":/icon/Menu Icon/Wizard.svg"));
+    // ui->action->setIcon(QIcon(":/icon/Menu Icon/Previous.svg"));
+    ui->toolButton_imagePath->setIcon(QIcon(":/icon/Menu Icon/FolderBrowser.svg"));
+    ui->toolButton_videoPath->setIcon(QIcon(":/icon/Menu Icon/FolderBrowser.svg"));
+    ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/Help.svg"));
+    // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/Image.svg"));
+    // ui->action->setIcon(QIcon(":/icon/Menu Icon/Next.svg"));
+}
+
+void MainWindow::on_actionTheme_Light_triggered()
+{
+    useWhiteIcon();
+    ui->actionTheme_Light->setChecked(true);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/Default.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Light");
+}
+
+void MainWindow::on_actionTheme_Amoled_triggered()
+{
+    useDarkIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(true);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/AMOLED.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Amoled");
+}
+
+
+void MainWindow::on_actionTheme_Aqua_triggered()
+{
+    useWhiteIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(true);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/Aqua.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Aqua");
+}
+
+
+void MainWindow::on_actionTheme_Console_triggered()
+{
+    useDarkIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(true);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/ConsoleStyle.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Console");
+}
+
+
+void MainWindow::on_actionTheme_Elegant_triggered()
+{
+    useDarkIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(true);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/ElegantDark.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Elegant");
+}
+
+
+void MainWindow::on_actionTheme_Macos_triggered()
+{
+    useWhiteIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(true);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/MacOS.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Macos");
+}
+
+
+void MainWindow::on_actionTheme_ManjaroMix_triggered()
+{
+    useDarkIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(true);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/ManjaroMix.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_ManjaroMix");
+}
+
+
+void MainWindow::on_actionTheme_MaterialDark_triggered()
+{
+    useDarkIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(true);
+    ui->actionTheme_Ubuntu->setChecked(false);
+    QFile styleFile( ":/StyleSheet/MaterialDark.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_MaterialDark");
+}
+
+
+void MainWindow::on_actionTheme_Ubuntu_triggered()
+{
+    useWhiteIcon();
+    ui->actionTheme_Light->setChecked(false);
+    ui->actionTheme_Amoled->setChecked(false);
+    ui->actionTheme_Aqua->setChecked(false);
+    ui->actionTheme_Console->setChecked(false);
+    ui->actionTheme_Elegant->setChecked(false);
+    ui->actionTheme_Macos->setChecked(false);
+    ui->actionTheme_ManjaroMix->setChecked(false);
+    ui->actionTheme_MaterialDark->setChecked(false);
+    ui->actionTheme_Ubuntu->setChecked(true);
+    QFile styleFile( ":/StyleSheet/Ubuntu.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    setStyleSheet( style );
+    WriteInit("StyleSheet", "actionTheme_Ubuntu");
+}
+
+void MainWindow::ReadInit(const QString& key, QString &value)
+{
+    value.clear();
+    QString path = "Config.ini";
+
+    //创建配置文件操作对象
+    QSettings config(path, QSettings::IniFormat);
+    QVariant variant = config.value(QString("config/") + key);
+    value = variant.value<QString>();
+
+    //qDebug() << "still alive";
+   // delete config;
+}
+
+void MainWindow::WriteInit(const QString& key, const QString& value)
+{
+    QString path = "Config.ini";
+    //创建配置文件操作对象
+    QSettings config(path, QSettings::IniFormat);
+
+    QVariant variant;
+    variant.setValue(value);
+    //将信息写入配置文件
+    config.beginGroup("config");
+    config.setValue(key, variant);
+    config.endGroup();
+   // delete config;rrrrrrrrrrr
+
+//    QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
+//    setting.beginGroup("LANGUAGE");
+//    setting.setValue("Language", "CHINESE");
+//    setting.endGroup();
+}
+
+void MainWindow::ReadStyle()
+{
+    QString style;
+    ReadInit("StyleSheet", style);
+    if(style=="actionTheme_Light")
+    {
+        on_actionTheme_Light_triggered();
+    }
+    else if(style=="actionTheme_Amoled")
+    {
+        on_actionTheme_Amoled_triggered();
+    }
+    else if(style=="actionTheme_Aqua")
+    {
+        on_actionTheme_Aqua_triggered();
+    }
+    else if(style=="actionTheme_Console")
+    {
+        on_actionTheme_Console_triggered();
+    }
+    else if(style=="actionTheme_Elegant")
+    {
+        on_actionTheme_Elegant_triggered();
+    }
+    else if(style=="actionTheme_Macos")
+    {
+        on_actionTheme_Macos_triggered();
+    }
+    else if(style=="actionTheme_ManjaroMix")
+    {
+        on_actionTheme_ManjaroMix_triggered();
+    }
+    else if(style=="actionTheme_MaterialDark")
+    {
+        on_actionTheme_MaterialDark_triggered();
+    }
+    else if(style=="actionTheme_Ubuntu")
+    {
+        on_actionTheme_Ubuntu_triggered();
+    }
+    else
+    {
+        // Default;
+        on_actionTheme_Light_triggered();
+    }
+}
+

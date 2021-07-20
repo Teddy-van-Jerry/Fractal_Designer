@@ -407,6 +407,24 @@ private slots:
 
     void on_pushButton_Template_Help_clicked();
 
+    void on_actionTheme_Light_triggered();
+
+    void on_actionTheme_Amoled_triggered();
+
+    void on_actionTheme_Aqua_triggered();
+
+    void on_actionTheme_Console_triggered();
+
+    void on_actionTheme_Elegant_triggered();
+
+    void on_actionTheme_Macos_triggered();
+
+    void on_actionTheme_ManjaroMix_triggered();
+
+    void on_actionTheme_MaterialDark_triggered();
+
+    void on_actionTheme_Ubuntu_triggered();
+
 signals:
 
     void Search_clicked(QString);
@@ -427,6 +445,13 @@ signals:
     void shareVersion(bool);
 
     void createImageStop();
+
+private:
+    void useDarkIcon();
+    void useWhiteIcon();
+    void ReadInit(const QString& key, QString &value);
+    void WriteInit(const QString& key, const QString& value);
+    void ReadStyle();
 
 private:
     Ui::MainWindow *ui;
