@@ -1525,10 +1525,25 @@ void MainWindow::on_actionFFmpeg_triggered()
 
 void MainWindow::on_actionCheck_Update_triggered()
 {
-    if (!QDesktopServices::openUrl(QUrl("https://frd.teddy-van-jerry.org/downloads/")))
-    {
-        QMessageBox::warning(this, "Information", "Can not access the web site.");
-    }
+    QNetworkRequest quest;
+    quest.setUrl(QUrl("https://frd.teddy-van-jerry.org/FRD-Maintenance/software_update.json")); //包含最新版本软件的下载地址
+    quest.setHeader(QNetworkRequest::UserAgentHeader, "RT-Thread ART");
+    QNetworkAccessManager manager;
+    QNetworkReply *response = manager.get(quest);
+    QEventLoop event;
+    connect(response, SIGNAL(finished()), &event, SLOT(quit()));
+    event.exec();
+    QString json_content = response->readAll();
+    qDebug() << json_content;
+
+    QJsonDocument doc = QJsonDocument::fromJson(json_content.toUtf8());
+
+    //get the jsonObject
+    QJsonObject jUpdateInfo = doc.object();
+    QJsonValue value = jUpdateInfo.value(QString("Windows"));
+    QString Latest_Version = value["LatestVersion"].toString();
+    QString Update_Info = "Latest version is " + Latest_Version;
+    QMessageBox::information(this, "Update Info", Update_Info);
 }
 
 void MainWindow::edit(int mode) // default as EDIT_HERE

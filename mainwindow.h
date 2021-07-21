@@ -20,6 +20,13 @@
 #include <QButtonGroup>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDialog>
 #include <complex> // std::complex
 #include "login.h"
 #include "new_file.h"
