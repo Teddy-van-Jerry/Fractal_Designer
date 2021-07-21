@@ -449,7 +449,7 @@ signals:
 private:
     void useDarkIcon();
     void useWhiteIcon();
-    void ReadInit(const QString& key, QString &value);
+    QString ReadInit(const QString& key);
     void WriteInit(const QString& key, const QString& value);
     void ReadStyle();
 
