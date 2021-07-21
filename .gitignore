@@ -31,6 +31,7 @@ Makefile*
 *build-*
 *.qm
 *.prl
+*.stash
 
 # Qt unit tests
 target_wrapper.*
@@ -53,6 +54,8 @@ compile_commands.json
 
 # This Project
 /Outdated/
-/release/
-/debug/
-/Doxygen/
+/src/release/
+/src/debug/
+/bin/
+!lib/qscintilla2_qt6.dll
+!lib/qscintilla2_qt6d.dll

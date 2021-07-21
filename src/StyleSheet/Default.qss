@@ -1,0 +1,91 @@
+
+QPushButton#Button_Login_MainWindow
+{
+    border: 2px solid lightskyblue;
+    border-radius: 5px;
+    background-color: mintcream;
+    color: darkorange;
+    font: Consolas;
+    font-size: 16px;
+}
+
+QPushButton#Button_Login_MainWindow:hover
+{
+    border: 2px solid blue;
+    border-radius: 5px;
+    background-color: mintcream;
+    color: red;
+    font: Consolas;
+    font-size: 16px;
+}
+
+QPushButton#Button_Login_MainWindow:pressed
+{
+    border: 2px solid green;
+    border-radius: 5px;
+    border-style: inset;
+    background-color: mintcream;
+    color: red;
+    font: Consolas;
+    font-size: 16px;
+}
+
+QPushButton#MainWindow_AboutFD,#MainWindow_AboutTVJ,#MainWindow_HelpEnglish,#MainWindow_Newfile,#MainWindow_exit,#MainWindow_openfile,#pushButton_Chinese_Help,#pushButton_Template_Help
+{
+    border: 3px solid orange;
+    background-color: seashell;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+QPushButton#MainWindow_AboutFD:hover,#MainWindow_AboutTVJ:hover,#MainWindow_HelpEnglish:hover,#MainWindow_Newfile:hover,#MainWindow_exit:hover,#MainWindow_openfile:hover,#pushButton_Chinese_Help:hover,#pushButton_Template_Help:hover
+{
+    border: 3px transparent;
+    background-color: mintcream;
+    color: blue;
+    background-color:mintcream;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+QPushButton#MainWindow_AboutFD:pressed,#MainWindow_AboutTVJ:pressed,#MainWindow_HelpEnglish:pressed,#MainWindow_Newfile:pressed,#MainWindow_exit:pressed,#MainWindow_openfile:pressed,#pushButton_Chinese_Help:pressed,#pushButton_Template_Help:pressed
+{
+    border: 3px solid green;
+    background-color: mintcream;
+    color: blue;
+    background-color:mintcream;
+    padding: 10px;
+    font-size: 16px;
+    border-style: inset;
+    border-radius: 15px;
+}
+
+QPushButton#Search_Result_Button,#Help_C_Button,#Help_E_Button
+{
+    border: 3px transparent;
+    background-color: transparent;
+    font-size: 16px;
+    padding: 10px;
+}
+
+QPushButton#Search_Result_Button:hover,#Help_C_Button:hover,#Help_E_Button:hover
+{
+    border: 3px transparent;
+    background-color: mintcream;
+    color: blue;
+    font-size: 16px;
+    padding: 10px;
+}
+
+QPushButton#Search_Result_Button:pressed,#Help_C_Button:pressed,#Help_E_Button:pressed
+{
+    border: 3px solid green;
+    background-color: mintcream;
+    color: blue;
+    padding: 10px;
+    font-size: 16px;
+    border-style: inset;
+}
+
