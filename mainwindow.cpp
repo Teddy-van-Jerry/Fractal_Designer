@@ -14,15 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ReadStyle();
-
 //    this->setWindowFlags(Qt::FramelessWindowHint);
 
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
     permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
     ui->statusbar->addPermanentWidget(permanent);
-    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 5.6!"), 20000);
+    ui->statusbar->showMessage(tr("Welcome to Fractal Designer 6.0!"), 20000);
     show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
@@ -96,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     show_preview_image();
 
-    useWhiteIcon();
+    ReadStyle();
 }
 
 MainWindow::~MainWindow()
@@ -2852,6 +2850,7 @@ void MainWindow::useWhiteIcon()
 
 void MainWindow::on_actionTheme_Light_triggered()
 {
+    qDebug() << "here";
     useWhiteIcon();
     ui->actionTheme_Light->setChecked(true);
     ui->actionTheme_Amoled->setChecked(false);
@@ -3028,44 +3027,30 @@ void MainWindow::on_actionTheme_Ubuntu_triggered()
     WriteInit("StyleSheet", "actionTheme_Ubuntu");
 }
 
-void MainWindow::ReadInit(const QString& key, QString &value)
+QString MainWindow::ReadInit(const QString& key)
 {
-    value.clear();
-    QString path = "Config.ini";
+    QString path = QApplication::applicationDirPath() + "/Config.ini";
 
-    //创建配置文件操作对象
     QSettings config(path, QSettings::IniFormat);
     QVariant variant = config.value(QString("config/") + key);
-    value = variant.value<QString>();
-
-    //qDebug() << "still alive";
-   // delete config;
+    return variant.value<QString>();
 }
 
 void MainWindow::WriteInit(const QString& key, const QString& value)
 {
-    QString path = "Config.ini";
-    //创建配置文件操作对象
+    QString path = QApplication::applicationDirPath() + "/Config.ini";
     QSettings config(path, QSettings::IniFormat);
 
     QVariant variant;
     variant.setValue(value);
-    //将信息写入配置文件
     config.beginGroup("config");
     config.setValue(key, variant);
     config.endGroup();
-   // delete config;rrrrrrrrrrr
-
-//    QSettings setting(QCoreApplication::applicationDirPath() + "/Language.ini", QSettings::IniFormat);
-//    setting.beginGroup("LANGUAGE");
-//    setting.setValue("Language", "CHINESE");
-//    setting.endGroup();
 }
 
 void MainWindow::ReadStyle()
 {
-    QString style;
-    ReadInit("StyleSheet", style);
+    QString style = ReadInit("StyleSheet");
     if(style=="actionTheme_Light")
     {
         on_actionTheme_Light_triggered();
@@ -3104,7 +3089,7 @@ void MainWindow::ReadStyle()
     }
     else
     {
-        // Default;
+        // Default
         on_actionTheme_Light_triggered();
     }
 }
