@@ -14,6 +14,7 @@ New_File::New_File(QWidget *parent) :
 {
     ui->setupUi(this);
     MainWindow* p = (MainWindow*) parentWidget();
+
 }
 
 New_File::~New_File()

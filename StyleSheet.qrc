@@ -1,7 +1,14 @@
 <RCC>
     <qresource prefix="/">
-        <file>StyleSheet/Button_Login_MainWindow.qss</file>
-        <file>StyleSheet/Button_Search_Result.qss</file>
-        <file>StyleSheet/Button_Quick_Option.qss</file>
+        <file>StyleSheet/Default.qss</file>
+        <file>StyleSheet/AMOLED.qss</file>
+        <file>StyleSheet/Aqua.qss</file>
+        <file>StyleSheet/ConsoleStyle.qss</file>
+        <file>StyleSheet/ElegantDark.qss</file>
+        <file>StyleSheet/MacOS.qss</file>
+        <file>StyleSheet/ManjaroMix.qss</file>
+        <file>StyleSheet/MaterialDark.qss</file>
+        <file>StyleSheet/NeonButtons.qss</file>
+        <file>StyleSheet/Ubuntu.qss</file>
     </qresource>
 </RCC>
