@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Keywords/Global_Variables.txt</file>
+        <file>Keywords/Keywords.txt</file>
+        <file>Keywords/Maths_Functions.txt</file>
+        <file>Keywords/Preset_Classes.txt</file>
+        <file>Keywords/Preset_Func.txt</file>
+    </qresource>
+</RCC>

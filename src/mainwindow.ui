@@ -49,7 +49,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="Welcome">
        <property name="minimumSize">
@@ -102,7 +102,7 @@
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:9.07563pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Welcome!&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:20pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is an application that enables you to draw fractals and make videos at your command!&lt;/span&gt;&lt;/p&gt;
@@ -134,12 +134,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * Bilibili      : &lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/631883409&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;Teddy_van_Jerry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;  * E-mail        : &lt;/span&gt;&lt;a href=&quot;mailto:me@teddy-van-jerry.org&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;me@teddy-van-jerry.org&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt; color:#000000;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#646464;&quot;&gt;    Fractal Designer 6.0 uses:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#646464;&quot;&gt;     ● FFmpeg&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#646464;&quot;&gt;     ● QScintilla&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#646464;&quot;&gt;     ● Visual Studio 2019 Image Library&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#646464;&quot;&gt;     ● Qt (Community)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#646464;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt; color:#646464;&quot;&gt;    Fractal Designer 6.0 uses:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt; color:#646464;&quot;&gt;     ● FFmpeg&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt; color:#646464;&quot;&gt;     ● QScintilla&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt; color:#646464;&quot;&gt;     ● Visual Studio 2019 Image Library&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt; color:#646464;&quot;&gt;     ● Qt (Community)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt; color:#646464;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="openExternalLinks">
@@ -674,7 +674,7 @@ p, li { white-space: pre-wrap; }
                <x>0</x>
                <y>0</y>
                <width>413</width>
-               <height>416</height>
+               <height>417</height>
               </rect>
              </property>
              <attribute name="label">
@@ -932,7 +932,7 @@ A = 255;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>360</width>
+               <width>358</width>
                <height>181</height>
               </rect>
              </property>
@@ -996,7 +996,7 @@ A = 255;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>425</width>
+               <width>422</width>
                <height>439</height>
               </rect>
              </property>
@@ -1708,7 +1708,13 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QGridLayout" name="gridLayout_14" rowstretch="5,1" columnstretch="4,1">
         <item row="0" column="0">
-         <widget class="QWidget" name="Editor_widget" native="true"/>
+         <widget class="QWidget" name="Editor_widget" native="true">
+          <layout class="QGridLayout" name="Editor_layout">
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_Editor"/>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QTabWidget" name="Tool_widget">
@@ -1730,7 +1736,7 @@ p, li { white-space: pre-wrap; }
         <item row="1" column="0" colspan="2">
          <widget class="QTabWidget" name="Editor_Button_widget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_terminal">
            <attribute name="title">
@@ -2655,7 +2661,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="Icon.qrc">
+    <iconset>
      <normaloff>:/Menu Icon/Close.svg</normaloff>:/Menu Icon/Close.svg</iconset>
    </property>
    <property name="text">
@@ -2941,9 +2947,8 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
-  <include location="Icon_resources.qrc"/>
   <include location="EXE_Icons.qrc"/>
-  <include location="Icon.qrc"/>
+  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>

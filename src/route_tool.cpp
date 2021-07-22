@@ -322,11 +322,11 @@ void Route_Tool::on_pushButton_Save_clicked()
 {
     MainWindow* p = (MainWindow*)parentWidget();
     p->on_pushButton_routeAdd_clicked();
-    p->model->item(p->model->rowCount() - 1, 0)->setData(QVariant(ui->doubleSpinBox_t->value()), Qt::EditRole);
-    p->model->item(p->model->rowCount() - 1, 1)->setData(QVariant(ui->doubleSpinBox_centreX->value()), Qt::EditRole);
-    p->model->item(p->model->rowCount() - 1, 2)->setData(QVariant(ui->doubleSpinBox_centreY->value()), Qt::EditRole);
-    p->model->item(p->model->rowCount() - 1, 3)->setData(QVariant(ui->doubleSpinBox_angle->value()), Qt::EditRole);
-    p->model->item(p->model->rowCount() - 1, 4)->setData(QVariant(ui->doubleSpinBox_size->value() * width_to_size), Qt::EditRole);
+    p->table_route_model->item(p->table_route_model->rowCount() - 1, 0)->setData(QVariant(ui->doubleSpinBox_t->value()), Qt::EditRole);
+    p->table_route_model->item(p->table_route_model->rowCount() - 1, 1)->setData(QVariant(ui->doubleSpinBox_centreX->value()), Qt::EditRole);
+    p->table_route_model->item(p->table_route_model->rowCount() - 1, 2)->setData(QVariant(ui->doubleSpinBox_centreY->value()), Qt::EditRole);
+    p->table_route_model->item(p->table_route_model->rowCount() - 1, 3)->setData(QVariant(ui->doubleSpinBox_angle->value()), Qt::EditRole);
+    p->table_route_model->item(p->table_route_model->rowCount() - 1, 4)->setData(QVariant(ui->doubleSpinBox_size->value() * width_to_size), Qt::EditRole);
 }
 
 void Route_Tool::on_actionSave_Point_triggered()
