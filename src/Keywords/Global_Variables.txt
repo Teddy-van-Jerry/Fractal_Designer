@@ -1,0 +1,8 @@
+$Version
+$VideoDir
+$VideoName
+$VideoFormat
+$Fps
+$TotalTime
+$ImagePrefix
+$ImageFormat
