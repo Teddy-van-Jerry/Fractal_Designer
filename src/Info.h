@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QVector>
+#include <QVariant>
 #include <complex>
 
 class FRD;
@@ -17,18 +18,37 @@ class config_;
 class output_;
 class range_;
 
-class range_ {
+class frd_class_base_ {
+public:
+    // get member of the class
+    const QVariant& operator[](const QString& name) const;
+
+    QVariant operator[](const QString& name);
+
+    int index(const QString& name) const;
+
+    bool contains(const QString& name) const;
+
+    QStringList members() const;
+
+protected:
+    // list of all members of a class
+    // need to be specified in constructor
+    QStringList members_;
+};
+
+class range_ : public frd_class_base_ {
 public:
     double From, To;
 };
 
-class color_ {
+class color_ : public frd_class_base_  {
 public:
     enum type_ {_RGB_, _HSV_} Type;
     QString R, G, B, H, S, V, A; // color formulas
 };
 
-class template_ {
+class template_ : public frd_class_base_  {
 public:
     QString Formula;
     double MIN, MAX;
@@ -36,26 +56,26 @@ public:
     bool YInverse = false;
 };
 
-class point_ {
+class point_ : public frd_class_base_  {
 public:
     double X, Y;
 };
 
-class path_point_ {
+class path_point_ : public frd_class_base_  {
 public:
     point_ Point;
     double T;
     double Rotation;
 };
 
-class path_ {
+class path_ : public frd_class_base_  {
 public:
     enum type_ {_FORMUALA_, _POINTS_} Type;
     QString X, Y, Width, Rotation;
     QVector<path_point_> Points;
 };
 
-class layer_ {
+class layer_ : public frd_class_base_  {
 public:
     range_ Range;
     template_ Template;
@@ -63,7 +83,7 @@ public:
     path_ Path;
 };
 
-class music_ {
+class music_ : public frd_class_base_  {
 public:
     QVector<QString> List;
     QVector<double> From; /**< the beginning time of music */
@@ -71,7 +91,7 @@ public:
     double Rate;
 };
 
-class output_ {
+class output_ : public frd_class_base_  {
 public:
     int Time;
     int Fps;
@@ -80,7 +100,7 @@ public:
     QString ImagePrefix, ImageDir, VideoName, VideoDir;
 };
 
-class config_ {
+class config_ : public frd_class_base_  {
 public:
     double PreviewX, PreviewY;
     double PreviewWidth, PreviewHeight;
@@ -99,6 +119,11 @@ enum FRD_class_ {
     _FRD_CLASS_CONFIG_,
     _FRD_CLASS_OUTPUT_,
     _FRD_CLASS_RANGE_,
+    _FRD_CLASS_INT_,
+    _FRD_CLASS_DOUBLE_,
+    _FRD_CLASS_STRING_,
+    _FRD_CLASS_BOOL_,
+    _FRD_CLASS_FORMULA_,
     _FRD_CLASS_CUSTOM_ = -1
 };
 
@@ -106,6 +131,14 @@ class FRD_var_ {
 public:
     FRD_class_ varClass;
     QString varName;
+    QVariant value;
+    int row, col;
+};
+
+class FRD_fun_ {
+public:
+    FRD_class_ funClass;
+    QString funName;
     int row, col;
 };
 
@@ -116,14 +149,33 @@ public:
 };
 
 enum error_type_ {
+    _FRD_ERROR_UNEXPECTED_TOKEN_ = 1000,
     _FRD_ERROR_COMMENT_UNFINISHED_,
-    _FRD_ERROR_OTHER_ = 9000
+    _FRD_ERROR_OTHER_,
+    _FRD_WARNING_DECLARATION_ONLY_,
+    _FRD_WARNING_OTHER
 };
 
 class error_ {
 public:
     error_type_ errorType;
     int row, col;
+    int length = 1;
+};
+
+class FRD_var_list_ : public QVector<FRD_var_> {
+public:
+    int index(const QString& name) const;
+
+    bool contains(const QString& name) const;
+
+    // No range check
+    FRD_var_ operator[](const QString& name) const;
+
+    // No range check
+    FRD_var_& operator[](const QString& name);
+
+    void addVar(const FRD_class_& cls, const QString& name, const QVariant& value, int row_, int col_);
 };
 
 class FRD {
@@ -132,7 +184,8 @@ public:
     music_ Music;   /**< global variable */
     output_ Output; /**< global variable */
     config_ Config; /**< global variable */
-    QVector<FRD_var_> Vars;
+    FRD_var_list_ Vars;
+    QVector<FRD_fun_> Funs;
     QVector<custom_class_> CustomClasses;
     QVector<error_> Errors; /**< error list */
 };

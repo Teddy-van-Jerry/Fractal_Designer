@@ -12,8 +12,19 @@ bool Interpreter::interpret(const QString& text, FRD& info) {
 }
 
 bool Interpreter::interpret() {
+
+    struct bracket_ {
+        QChar type;
+        int row, col;
+    };
+
     bool error = false;
     error |= !removeComments();
+
+    QStack<bracket_> brackets;
+    while (1) {
+
+    }
     return !error;
 }
 
@@ -37,7 +48,9 @@ bool Interpreter::removeComments() {
         if (line.length() < 2) {
             // no chance of being the beginning or end of comments
             // If inside multi-line comments, just clear it out.
+            // But here ensures that it has length 1.
             if (comment_row) line.clear();
+            line.push_back(' ');
             continue;
         }
         for (auto i = 0; i + 1 != line.length(); i++) {
@@ -91,10 +104,97 @@ bool Interpreter::readDef() {
     return true;
 }
 
-QChar Interpreter::nextChar(int* lines) {
+bool Interpreter::readBlock() {
+    return readBlock(_FRD_BLOCK_BLANK_, QString::number(block_count++));
+}
+
+bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
+    bool ok = true;
+    // when it has not reached the end
+    while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
+        if (curr == '}') return ok;
+        else if (curr == ';') continue;
+        else if (curr == '#') {
+            // marco
+            row++, col = 0;
+        }
+        else if (curr == '$') {
+            int init_col = col;
+            QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+            if (info_ptr->Vars.contains(name + "." + var_name)) {
+                FRD_var_ frd_var = info_ptr->Vars[name + "." + var_name];
+                FRD_class_ frd_class = frd_var.varClass;
+                QChar c = nextChar();
+                if (c == ';') {
+                    // meaningless, just skip
+                    info_ptr->Errors.push_back({_FRD_WARNING_DECLARATION_ONLY_, row, init_col, (int)var_name.length()});
+                }
+                else if (c == '=') {
+                    c = nextChar();
+                    if (c == '{') {
+                        ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, name + "." + var_name);
+                    }
+                    else {
+                        // assignment
+                        // example: $x = $y;
+                        if (frd_class == _FRD_CLASS_INT_) {
+                            // read the rvalue variable
+                            c = nextChar();
+                            if (c == '~') {
+                                // global variable
+                                QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                                FRD_var_ frd_var = info_ptr->Vars[var_name_r];
+                                // TODO
+                            }
+                            else {
+                                col--; // go back one character
+                                QString frd_var_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                                // TODO
+                            }
+                        }
+                    }
+                }
+                else if (c == '{') {
+                    ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, var_name);
+                }
+            }
+            else {
+                info_ptr->Errors.push_back({_FRD_ERROR_UNEXPECTED_TOKEN_, row, init_col, (int)var_name.length()});
+                ok = false;
+            }
+        }
+        else if (curr == '@') {
+
+        }
+        else if (curr == '%') {
+            // function
+        }
+        else {
+            int init_col = col;
+            col--; // go back one character
+            int length = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`").length(); // skip the token
+            info_ptr->Errors.push_back({_FRD_ERROR_UNEXPECTED_TOKEN_, row, init_col, length});
+        }
+    }
+}
+
+QChar Interpreter::nextChar() {
     while (row <= strings.size()) {
-        if (!strings[row - 1][++col - 1].isSpace()) return strings[row - 1][col - 1];
-        if (col - 1 == strings[row - 1].size()) row++, (*lines)++, col = 0;
+        if (++col - 1 == strings[row - 1].size()) row++, col = 0; // go to next line
+        else if (!strings[row - 1][col - 1].isSpace()) return strings[row - 1][col - 1];
     }
     return QChar(EOF);
+}
+
+// on the same line
+QString Interpreter::nextString(QString end_of_string, bool discard_space) {
+    QString ret;
+    while (++col != strings[row + 1].size() &&
+           (discard_space ? 1 : !strings[row + 1][col + 1].isSpace()) &&
+           !end_of_string.contains(strings[row - 1][col - 1]) &&
+           strings[row - 1][col - 1] != ';') {
+        ret.push_back(strings[row + 1][col + 1]);
+    }
+    col--;
+    return ret;
 }

@@ -14,7 +14,9 @@
 #define INTERPRETER_H
 
 #include <QString>
+#include <QStack>
 #include <Info.h>
+#include "String_Evaluate.h"
 
 /**
  * \brief the FRD script interpreter
@@ -59,6 +61,13 @@ public:
     bool interpret();
 
 private:
+
+    enum FRD_block_content_ {
+        _FRD_BLOCK_BLANK_,
+        _FRD_BLOCK_VARIABLE_,
+        _FRD_BLOCK_FUNCTION_,
+        _FRD_BLOCK_CLASS_
+    };
 
     /**
      * \brief set strings
@@ -120,12 +129,24 @@ private:
 
     bool readDef();
 
-    QChar nextChar(int* lines = nullptr);
+    bool readBlock();
+
+    bool readBlock(FRD_block_content_ content, const QString& name);
+
+    QChar nextChar();
+
+    QString nextString(QString end_of_string = _empty_string, bool discard_space = false);
 
     QStringList strings; /**< text to be interpreted stored by lines */
     FRD* info_ptr;       /**< the pointer to current info */
+    QChar curr;
     int row = 1;         /**< row count that starts at 1 */
-    int col = 1;         /**< column count that starts at 1 */
+    int col = 0;         /**< column count that starts at 1 */
+    bool reach_end = false;
+
+    int block_count = 0;
+
+    static const QString _empty_string;
 
 };
 
