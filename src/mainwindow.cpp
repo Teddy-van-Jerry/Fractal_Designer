@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QThread>
 #include <QSettings>
+#include <QCursor>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -14,14 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-//    this->setWindowFlags(Qt::FramelessWindowHint);
-
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
     permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
     ui->statusbar->addPermanentWidget(permanent);
     ui->statusbar->showMessage(tr("Welcome to Fractal Designer 6.0!"), 20000);
-    show_template_graph();
     show_preview_image();
     Project_Name = "Unsaved project";
     Project_Template = "Undefined";
@@ -57,40 +55,49 @@ MainWindow::MainWindow(QWidget *parent)
     Label_User_Name->setStyleSheet("color: green; font: Consolas; font-size: 14px;");
     ui->toolBar->insertWidget(NULL, Label_User_Name);
 
-    QFile Button_Quick_Option_qss(":/StyleSheet/Button_Quick_Option.qss");
-    Button_Quick_Option_qss.open(QFile::ReadOnly);
-    QString Button_Quick_Option_qss_str = QLatin1String(Button_Quick_Option_qss.readAll());
-    Button_Quick_Option_qss.close();
-//    ui->MainWindow_AboutFD->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->MainWindow_AboutTVJ->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->MainWindow_HelpEnglish->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->MainWindow_Newfile->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->MainWindow_exit->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->MainWindow_openfile->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->pushButton_Chinese_Help->setStyleSheet(Button_Quick_Option_qss_str);
-//    ui->pushButton_Template_Help->setStyleSheet(Button_Quick_Option_qss_str);
-
-    model->setColumnCount(6);
-    model->setHeaderData(0, Qt::Horizontal, "t");
-    model->setHeaderData(1, Qt::Horizontal, "x");
-    model->setHeaderData(2, Qt::Horizontal, "y");
-    model->setHeaderData(3, Qt::Horizontal, "angle");
-    model->setHeaderData(4, Qt::Horizontal, "width");
-    model->setHeaderData(5, Qt::Horizontal, "v rate");
+    table_route_model->setColumnCount(6);
+    table_route_model->setHeaderData(0, Qt::Horizontal, "t");
+    table_route_model->setHeaderData(1, Qt::Horizontal, "x");
+    table_route_model->setHeaderData(2, Qt::Horizontal, "y");
+    table_route_model->setHeaderData(3, Qt::Horizontal, "angle");
+    table_route_model->setHeaderData(4, Qt::Horizontal, "width");
+    table_route_model->setHeaderData(5, Qt::Horizontal, "v rate");
     QStyledItemDelegate* preciseDoubleDelegate = new QStyledItemDelegate(ui->tableView_Route);
     preciseDoubleDelegate->setItemEditorFactory(&m_factory);
     ui->tableView_Route->setItemDelegate(preciseDoubleDelegate);
-    ui->tableView_Route->setModel(model);
+    ui->tableView_Route->setModel(table_route_model);
     ui->tableView_Route->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView_Route->setSortingEnabled(true);
-    model->setSortRole(Qt::AscendingOrder);
+    table_route_model->setSortRole(Qt::AscendingOrder);
     //ui->tableView_Route->setItemDelegate;
-    connect(model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(routeEdit(QStandardItem*)));
+    connect(table_route_model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(routeEdit(QStandardItem*)));
     connect(ui->tableView_Route->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(dealRouteSort(int)));
 
     ui->actionStop->setDisabled(true);
 
     route_tool_window = new Route_Tool(this);
+
+    editor = new FRD_Editor(ui->gridLayout_Editor);
+
+    // Route custom menu
+    table_route_menu = new QMenu(ui->tableView_Route);
+    table_route_action[0] = new QAction(tr("Move up"), ui->tableView_Route);
+    table_route_action[1] = new QAction(tr("Move down"), ui->tableView_Route);
+    table_route_action[2] = new QAction(tr("Insert before"), ui->tableView_Route);
+    table_route_action[3] = new QAction(tr("Insert after"), ui->tableView_Route);
+    table_route_action[4] = new QAction(tr("Delete this row"), ui->tableView_Route);
+    connect(table_route_action[0], SIGNAL(triggered()), this, SLOT(tableRouteMoveUp()));
+    connect(table_route_action[1], SIGNAL(triggered()), this, SLOT(tableRouteMoveDown()));
+    connect(table_route_action[2], SIGNAL(triggered()), this, SLOT(tableRouteInsertBefore()));
+    connect(table_route_action[3], SIGNAL(triggered()), this, SLOT(tableRouteInsertAfter()));
+    connect(table_route_action[4], SIGNAL(triggered()), this, SLOT(tableRouteDeleteRow()));
+    ui->tableView_Route->setContextMenuPolicy(Qt::CustomContextMenu);
+    table_route_menu->addActions({table_route_action[0], table_route_action[1]});
+    table_route_menu->addSeparator();
+    table_route_menu->addActions({table_route_action[2], table_route_action[3]});
+    table_route_menu->addSeparator();
+    table_route_menu->addActions({table_route_action[4]});
+    connect(ui->tableView_Route, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tableRouteCustomMenuRequested(QPoint)));
 
     show_preview_image();
 
@@ -156,11 +163,6 @@ bool MainWindow::High_Version_Open(int type)
 
     uint8_t version[4];
     in >> version[0] >> version[1] >> version[2] >> version[3];
-    if (version[0] < 5 || version[1] < 6)
-    {
-        // QMessageBox::critical(this, tr("Fail to open"), tr("The version is too low to support."));
-        // return false;
-    }
 
     while(!FRD_R.atEnd())
     {
@@ -382,11 +384,6 @@ void MainWindow::on_actionOpen_O_triggered()
 void MainWindow::on_MainWindow_openfile_clicked()
 {
     MainWindow::on_actionOpen_O_triggered();
-}
-
-void MainWindow::show_template_graph()
-{
-//    ui->label_Template_1->setPixmap(QPixmap::fromImage());
 }
 
 void MainWindow::show_preview_image()
@@ -883,7 +880,7 @@ void MainWindow::iniRouteInfo(QVector<double> vec)
 {
     for(int i = 0; i != vec.size(); i++)
     {
-        model->setItem(i / 6, i % 6, new QStandardItem(QString::number(vec[i], 'g', 11)));
+        table_route_model->setItem(i / 6, i % 6, new QStandardItem(QString::number(vec[i], 'g', 11)));
     }
 }
 
@@ -931,24 +928,23 @@ void MainWindow::on_doubleSpinBox_t_editingFinished()
 
 void MainWindow::on_pushButton_routeAdd_clicked()
 {
-    int row_count_now = model->rowCount();
+    int row_count_now = table_route_model->rowCount();
     for(int i = 0; i != 6; i++)
     {
-        model->setItem(row_count_now, i, new QStandardItem("0"));
-        //qDebug() << "alive";
+        table_route_model->setItem(row_count_now, i, new QStandardItem("0"));
     }
 }
 
 void MainWindow::on_pushButton_routeRemove_clicked()
 {
-    model->removeRow(model->rowCount() - 1);
+    table_route_model->removeRow(table_route_model->rowCount() - 1);
     edit();
     display();
 }
 
 void MainWindow::on_pushButton_routeClear_clicked()
 {
-    model->setRowCount(0);
+    table_route_model->setRowCount(0);
     edit();
 }
 
@@ -997,7 +993,7 @@ void MainWindow::on_actionCreate_Images_triggered()
     for(int i = 0; i < total_image - 1; i++)
     {
         double T = static_cast<double>(i) / total_image;
-        while(current_index + 2 < model->rowCount() && T > Tb(current_index + 1, 0))
+        while(current_index + 2 < table_route_model->rowCount() && T > Tb(current_index + 1, 0))
         {
             current_index++;
         }
@@ -1079,12 +1075,12 @@ void MainWindow::on_actionCreate_Images_triggered()
                                     curr_info.Newton_cos_2,
                                     curr_info.Newton_ex_2);
     }
-    create_images->setImage(Tb(model->rowCount() - 1, 1),
-                            Tb(model->rowCount() - 1, 2),
-                            Tb(model->rowCount() - 1, 4),
-                            Tb(model->rowCount() - 1, 4) * Y / X,
+    create_images->setImage(Tb(table_route_model->rowCount() - 1, 1),
+                            Tb(table_route_model->rowCount() - 1, 2),
+                            Tb(table_route_model->rowCount() - 1, 4),
+                            Tb(table_route_model->rowCount() - 1, 4) * Y / X,
                             X, Y,
-                            Tb(model->rowCount() - 1, 3),
+                            Tb(table_route_model->rowCount() - 1, 3),
                             1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
                             curr_info.y_inverse);
     QThreadPool::globalInstance()->start(create_images);
@@ -1526,7 +1522,8 @@ void MainWindow::on_actionFFmpeg_triggered()
 void MainWindow::on_actionCheck_Update_triggered()
 {
     QNetworkRequest quest;
-    quest.setUrl(QUrl("https://frd.teddy-van-jerry.org/FRD-Maintenance/software_update.json")); //包含最新版本软件的下载地址
+    // fetch online update information
+    quest.setUrl(QUrl("https://frd.teddy-van-jerry.org/FRD-Maintenance/software_update.json"));
     quest.setHeader(QNetworkRequest::UserAgentHeader, "RT-Thread ART");
     QNetworkAccessManager manager;
     QNetworkReply *response = manager.get(quest);
@@ -1540,7 +1537,11 @@ void MainWindow::on_actionCheck_Update_triggered()
 
     //get the jsonObject
     QJsonObject jUpdateInfo = doc.object();
+#if defined (WIN32) || defined (WIN64)
     QJsonValue value = jUpdateInfo.value(QString("Windows"));
+#elif defined(_linux_)
+    QJsonValue value = jUpdateInfo.value(QString("Linux"));
+#endif
     QString Latest_Version = value["LatestVersion"].toString();
     QString Update_Info = "Latest version is " + Latest_Version;
     QMessageBox::information(this, "Update Info", Update_Info);
@@ -1598,7 +1599,7 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
 
         // Route Info
         QList<Route_Info> Route;
-        for(int i = 0; i != model->rowCount(); i++)
+        for(int i = 0; i != table_route_model->rowCount(); i++)
         {
             Route_Info temp {Tb(i, 0), Tb(i, 1), Tb(i, 2), Tb(i, 3), Tb(i, 4), Tb(i, 5)};
             Route.push_back(temp);
@@ -1692,13 +1693,13 @@ void MainWindow::display()
 
     // Route Info
     isRouteValid = true;
-    int preRowCount = model->rowCount();
-    model->setRowCount(curr_info.Route_.size());
+    int preRowCount = table_route_model->rowCount();
+    table_route_model->setRowCount(curr_info.Route_.size());
     for(int i = preRowCount; i < curr_info.Route_.size(); i++)
     {
         for(int j = 0; j != 6; j++)
         {
-            model->setItem(i, j, new QStandardItem("0"));
+            table_route_model->setItem(i, j, new QStandardItem("0"));
         }
     }
 
@@ -1713,38 +1714,38 @@ void MainWindow::display()
         SetTb(i, 5, curr_info.Route_[i].v_rate);
         if(i == 0 && Tb(0, 0) != 0)
         {
-            model->item(0, 0)->setForeground(QBrush(Qt::red));
-            model->item(0, 0)->setToolTip("The first t should be 0.");
+            table_route_model->item(0, 0)->setForeground(QBrush(Qt::red));
+            table_route_model->item(0, 0)->setToolTip("The first t should be 0.");
             isRouteValid = false;
         }
         else if(i == curr_info.Route_.size() - 1 && Tb(i, 0) != 1)
         {
-            model->item(i, 0)->setForeground(QBrush(Qt::red));
-            model->item(i, 0)->setToolTip("The last t should be 1.");
+            table_route_model->item(i, 0)->setForeground(QBrush(Qt::red));
+            table_route_model->item(i, 0)->setToolTip("The last t should be 1.");
             isRouteValid = false;
         }
         else if(i != 0 && Tb(i - 1, 0) > Tb(i, 0))
         {
-            model->item(i, 0)->setForeground(QBrush(Qt::red));
-            model->item(i, 0)->setToolTip("It is not in order.");
+            table_route_model->item(i, 0)->setForeground(QBrush(Qt::red));
+            table_route_model->item(i, 0)->setToolTip("It is not in order.");
             isRouteValid = false;
         }
         else
         {
-            model->item(i, 0)->setForeground(QBrush(Qt::black));
-            model->item(i, 0)->setToolTip("");
+            table_route_model->item(i, 0)->setForeground(QBrush(Qt::black));
+            table_route_model->item(i, 0)->setToolTip("");
         }
 
         if(Tb(i, 4) <= 0)
         {
-            model->item(i, 4)->setForeground(QBrush(Qt::red));
-            model->item(i, 4)->setToolTip("It should be larger than 0");
+            table_route_model->item(i, 4)->setForeground(QBrush(Qt::red));
+            table_route_model->item(i, 4)->setToolTip("It should be larger than 0");
             isRouteValid = false;
         }
         else
         {
-            model->item(i, 4)->setForeground(QBrush(Qt::black));
-            model->item(i, 4)->setToolTip("");
+            table_route_model->item(i, 4)->setForeground(QBrush(Qt::black));
+            table_route_model->item(i, 4)->setToolTip("");
         }
     }
     if(curr_info.Route_.size() == 0) isRouteValid = false;
@@ -1877,9 +1878,9 @@ void MainWindow::routeEdit(QStandardItem* it)
     // qDebug() << "SIGNAL - routeEdit";
 
     QList<Route_Info> model_list;
-    for(int i = 0; i != model->rowCount(); i++)
+    for(int i = 0; i != table_route_model->rowCount(); i++)
     {
-        if(!model->item(i, 5)) return;
+        if(!table_route_model->item(i, 5)) return;
         Route_Info temp_info {Tb(i, 0), Tb(i, 1), Tb(i, 2), Tb(i, 3), Tb(i, 4), Tb(i, 5)};
         model_list.push_back(temp_info);
     }
@@ -2234,7 +2235,7 @@ void MainWindow::on_actionCreate_Images_in_Range_triggered()
     for(int i = 0; i <= total_image - 1; i++)
     {
         double T = static_cast<double>(i) / total_image;
-        while(current_index + 2 < model->rowCount() && T > Tb(current_index + 1, 0))
+        while(current_index + 2 < table_route_model->rowCount() && T > Tb(current_index + 1, 0))
         {
             current_index++;
         }
@@ -2346,7 +2347,7 @@ void MainWindow::createImagesInList(const QList<int>& list)
     for(int i = 0; i <= total_image - 1; i++)
     {
         double T = static_cast<double>(i) / total_image;
-        while(current_index + 2 < model->rowCount() && T > Tb(current_index + 1, 0))
+        while(current_index + 2 < table_route_model->rowCount() && T > Tb(current_index + 1, 0))
         {
             current_index++;
         }
@@ -3109,3 +3110,61 @@ void MainWindow::ReadStyle()
     }
 }
 
+void MainWindow::tableRouteCustomMenuRequested(QPoint pos)
+{
+    table_route_line = ui->tableView_Route->indexAt(pos).row();
+    table_route_action[0]->setEnabled(true);
+    table_route_action[1]->setEnabled(true);
+    table_route_action[2]->setEnabled(true);
+    table_route_action[3]->setEnabled(true);
+    table_route_action[4]->setEnabled(true);
+    if (table_route_line < 0)
+    {
+        // outside the table
+        table_route_action[0]->setDisabled(true);
+        table_route_action[1]->setDisabled(true);
+        table_route_action[2]->setDisabled(true);
+        table_route_action[4]->setDisabled(true);
+    }
+    else
+    {
+        if (table_route_line == table_route_model->rowCount() - 1)
+        {
+            // the last row
+            table_route_action[1]->setDisabled(true);
+        }
+        if (table_route_line == 0)
+        {
+            // the first row
+            table_route_action[0]->setDisabled(true);
+        }
+    }
+    table_route_menu->popup(ui->tableView_Route->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::tableRouteMoveUp()
+{
+    table_route_model->insertRow(table_route_line - 1, table_route_model->takeRow(table_route_line));
+}
+
+void MainWindow::tableRouteMoveDown()
+{
+    table_route_model->insertRow(table_route_line, table_route_model->takeRow(table_route_line + 1));
+}
+
+void MainWindow::tableRouteInsertBefore()
+{
+    on_pushButton_routeAdd_clicked();
+    table_route_model->insertRow(table_route_line, table_route_model->takeRow(table_route_model->rowCount()));
+}
+
+void MainWindow::tableRouteInsertAfter()
+{
+    on_pushButton_routeAdd_clicked();
+    table_route_model->insertRow(table_route_line + 1, table_route_model->takeRow(table_route_model->rowCount()));
+}
+
+void MainWindow::tableRouteDeleteRow()
+{
+    table_route_model->removeRow(table_route_line);
+}

@@ -25,7 +25,11 @@
 
 #include <Qsci/qsciglobal.h>
 #include <Qsci/qscilexer.h>
+#include <QSci/qscistyle.h>
+#include <QSci/qsciscintilla.h>
 
+class QsciScintilla;
+class QsciStyle;
 
 //! \brief The QsciLexerFRD class encapsulates the Scintilla C++
 //! lexer.
@@ -151,6 +155,9 @@ public:
         //! An escape sequence.
         EscapeSequence = 27,
         InactiveEscapeSequence = EscapeSequence + 64,
+
+        //! FRD
+        FRD_Var = 2021
     };
 
     //! Construct a QsciLexerFRD with parent \a parent.  \a parent is typically
@@ -393,6 +400,52 @@ private:
 
     QsciLexerFRD(const QsciLexerFRD &);
     QsciLexerFRD &operator=(const QsciLexerFRD &);
+
+    // From QsciLexerCustom
+
+public:
+
+    //! The next \a length characters starting from the current styling
+    //! position have their style set to style number \a style.  The current
+    //! styling position is moved.  The styling position is initially set by
+    //! calling startStyling().
+    //!
+    //! \sa startStyling(), styleText()
+    void setStyling(int length, int style);
+
+    //! The next \a length characters starting from the current styling
+    //! position have their style set to style \a style.  The current styling
+    //! position is moved.  The styling position is initially set by calling
+    //! startStyling().
+    //!
+    //! \sa startStyling(), styleText()
+    void setStyling(int length, const QsciStyle &style);
+
+    //! The styling position is set to \a start.  \a styleBits is unused.
+    //!
+    //! \sa setStyling(), styleBitsNeeded(), styleText()
+    void startStyling(int pos, int styleBits = 0);
+
+    //! This is called when the section of text beginning at position \a start
+    //! and up to position \a end needs to be styled.  \a start will always be
+    //! at the start of a line.  The text is styled by calling startStyling()
+    //! followed by one or more calls to setStyling().  It must be
+    //! re-implemented by a sub-class.
+    //!
+    //! \sa setStyling(), startStyling(), QsciScintilla::bytes(),
+    //! QsciScintilla::text()
+    virtual void styleText(int start, int end);
+
+    //! \reimp
+    virtual void setEditor(QsciScintilla *editor);
+
+    //! \reimp This re-implementation returns 5 as the number of style bits
+    //! needed.
+    virtual int styleBitsNeeded() const;
+
+private slots:
+    void handleStyleNeeded(int pos);
+
 };
 
 #endif

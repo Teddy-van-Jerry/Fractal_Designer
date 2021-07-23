@@ -114,10 +114,18 @@ private:
      */
     bool readFun();
 
+    bool readClass();
+
+    bool customClass();
+
+    bool readDef();
+
+    QChar nextChar(int* lines = nullptr);
+
     QStringList strings; /**< text to be interpreted stored by lines */
     FRD* info_ptr;       /**< the pointer to current info */
-    size_t row = 1;      /**< row count that starts at 1 */
-    size_t col = 1;      /**< column count that starts at 1 */
+    int row = 1;         /**< row count that starts at 1 */
+    int col = 1;         /**< column count that starts at 1 */
 
 };
 

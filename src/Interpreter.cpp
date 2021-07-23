@@ -29,9 +29,9 @@ void Interpreter::setInfoPtr(FRD& ptr) {
 }
 
 bool Interpreter::removeComments() {
-    size_t comment_row = 0; // the row that "/*" occurs
-    size_t comment_col = 0; // the row that "/*" occurs
-    size_t current_row = 0; // the current line number
+    int comment_row = 0; // the row that "/*" occurs
+    int comment_col = 0; // the row that "/*" occurs
+    int current_row = 0; // the current line number
     for (auto& line : strings) {
         current_row++;
         if (line.length() < 2) {
@@ -70,7 +70,7 @@ bool Interpreter::removeComments() {
     // If comment_row is not set to 0,
     // there are unfinshed comments.
     if (comment_row) {
-        info_ptr->errors.push_back({_FRD_ERROR_COMMENT_UNFINISHED_, comment_row, comment_col});
+        info_ptr->Errors.push_back({_FRD_ERROR_COMMENT_UNFINISHED_, comment_row, comment_col});
     }
     return !comment_row;
 }
@@ -81,4 +81,20 @@ bool Interpreter::readVar() {
 
 bool Interpreter::readFun() {
     return true;
+}
+
+bool Interpreter::readClass() {
+    return true;
+}
+
+bool Interpreter::readDef() {
+    return true;
+}
+
+QChar Interpreter::nextChar(int* lines) {
+    while (row <= strings.size()) {
+        if (!strings[row - 1][++col - 1].isSpace()) return strings[row - 1][col - 1];
+        if (col - 1 == strings[row - 1].size()) row++, (*lines)++, col = 0;
+    }
+    return QChar(EOF);
 }

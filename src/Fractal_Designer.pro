@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 6.0.1.0
+VERSION = 6.0.2.0
 
 TARGET = Fractal_Designer.pro
 
@@ -15,6 +15,7 @@ DESTDIR = ../bin
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    FRD_Editor.cpp \
     Info.cpp \
     Interpreter.cpp \
     String_Evaluate.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
     version.cpp
 
 HEADERS += \
+    FRD_Editor.h \
     Info.h \
     Interpreter.h \
     String_Evaluate.h \
@@ -76,6 +78,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     EXE_Icons.qrc \
+    Editor_Keywords.qrc \
     Icon.qrc \
     Icon_resources.qrc \
     Languages.qrc \
@@ -103,3 +106,11 @@ win32 {
         "EXE Icons/FRD.ico" \
         "EXE Icons/FRD_File.ico"
 }
+
+# QScintilla lib (specially compiled for FRD language)
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/ -lqscintilla2_qt6
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/ -lqscintilla2_qt6d
+else:unix: LIBS += -L$$PWD/../lib/ -lqscintilla2_qt6
+
+INCLUDEPATH += $$PWD/../include
+DEPENDPATH += $$PWD/../include

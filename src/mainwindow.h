@@ -42,6 +42,7 @@
 #include "template_2_settings.h"
 #include "template_4_settings.h"
 #include "preview_setting.h"
+#include "FRD_Editor.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -50,8 +51,8 @@
 #define EDIT_HERE     0
 #define EDIT_ALREADY  1
 
-#define Tb(i, j)       model->item(i, j)->data(Qt::EditRole).value<double>()
-#define SetTb(i, j, v) model->item(i, j)->setData(QVariant(v), Qt::EditRole)
+#define Tb(i, j)       table_route_model->item(i, j)->data(Qt::EditRole).value<double>()
+#define SetTb(i, j, v) table_route_model->item(i, j)->setData(QVariant(v), Qt::EditRole)
 
 #define NameIs(C1_, C2_) (name_1 == C1_ && name_2 == C2_)
 
@@ -134,7 +135,7 @@ public:
 
     QString User_Name;
 
-    QStandardItemModel* model = new QStandardItemModel();
+    QStandardItemModel* table_route_model = new QStandardItemModel();
 
     Info_Save pre_info[_MAX_SAVE_], buff_info;
 
@@ -149,8 +150,6 @@ public:
     bool High_Version_Open(int type = 0);
 
     bool save_or_not = false;
-
-    void show_template_graph(); //
 
     void show_preview_image(); //
 
@@ -432,6 +431,18 @@ private slots:
 
     void on_actionTheme_Ubuntu_triggered();
 
+    void tableRouteCustomMenuRequested(QPoint pos);
+
+    void tableRouteMoveUp();
+
+    void tableRouteMoveDown();
+
+    void tableRouteInsertBefore();
+
+    void tableRouteInsertAfter();
+
+    void tableRouteDeleteRow();
+
 signals:
 
     void Search_clicked(QString);
@@ -483,6 +494,12 @@ private:
 
     QTranslator *translator;
 
+    QMenu* table_route_menu;
+
+    QAction* table_route_action[5];
+
+    int table_route_line = -1;
+
     Template_2_Settings* template_2_dialog = new Template_2_Settings(this);
 
     Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
@@ -492,6 +509,8 @@ private:
 public:
 
     Route_Tool* route_tool_window;
+
+    FRD_Editor* editor;
 
     enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
 

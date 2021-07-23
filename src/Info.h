@@ -73,10 +73,10 @@ public:
 
 class output_ {
 public:
-    size_t Time;
-    size_t Fps;
-    size_t Width;
-    size_t Height;
+    int Time;
+    int Fps;
+    int Width;
+    int Height;
     QString ImagePrefix, ImageDir, VideoName, VideoDir;
 };
 
@@ -84,8 +84,35 @@ class config_ {
 public:
     double PreviewX, PreviewY;
     double PreviewWidth, PreviewHeight;
-    size_t PreviewImageWidth, PreviewImageHeight;
+    int PreviewImageWidth, PreviewImageHeight;
     bool AutoRefresh;
+};
+
+enum FRD_class_ {
+    _FRD_CLASS_LAYER_,
+    _FRD_CLASS_MUSIC_,
+    _FRD_CLASS_TEMPLATE_,
+    _FRD_CLASS_COLOR_,
+    _FRD_CLASS_PATH_,
+    _FRD_CLASS_PATH_POINT_,
+    _FRD_CLASS_POINT_,
+    _FRD_CLASS_CONFIG_,
+    _FRD_CLASS_OUTPUT_,
+    _FRD_CLASS_RANGE_,
+    _FRD_CLASS_CUSTOM_ = -1
+};
+
+class FRD_var_ {
+public:
+    FRD_class_ varClass;
+    QString varName;
+    int row, col;
+};
+
+class custom_class_ {
+public:
+    QString className;
+    int row, col;
 };
 
 enum error_type_ {
@@ -96,7 +123,7 @@ enum error_type_ {
 class error_ {
 public:
     error_type_ errorType;
-    size_t row, column;
+    int row, col;
 };
 
 class FRD {
@@ -105,7 +132,9 @@ public:
     music_ Music;   /**< global variable */
     output_ Output; /**< global variable */
     config_ Config; /**< global variable */
-    QVector<error_> errors; /**< error list */
+    QVector<FRD_var_> Vars;
+    QVector<custom_class_> CustomClasses;
+    QVector<error_> Errors; /**< error list */
 };
 
 class Info {
