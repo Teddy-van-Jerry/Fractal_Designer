@@ -1,9 +1,10 @@
 #include "FRD_Editor.h"
 
-FRD_Editor::FRD_Editor(QLayout* layout_)
+FRD_Editor::FRD_Editor(QLayout* layout_, int waiting)
+    : layout(layout_), waiting_time(waiting)
 {
     editor = new QsciScintilla(this);
-    layout = layout_;
+    timer = new QTimer(this);
 
     QsciLexerFRD* textLexer = new QsciLexerFRD; // create a lexer highlighter
     editor->setLexer(textLexer);
@@ -74,7 +75,130 @@ FRD_Editor::FRD_Editor(QLayout* layout_)
     editor->setCaretLineVisible(true);                   // highlight current line
     editor->setCaretLineBackgroundColor(0xF5FFFA);       // background colour of the current line (mintcream)
 
+    // Indicators (Used to highlight variables, functions, classes and error informations)
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_VARIABLE, QsciScintillaBase::INDIC_TEXTFORE);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_FUNCTION, QsciScintillaBase::INDIC_TEXTFORE);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_CLASS   , QsciScintillaBase::INDIC_TEXTFORE);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_ERROR   , QsciScintillaBase::INDIC_SQUIGGLE);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_WARNING , QsciScintillaBase::INDIC_SQUIGGLE);
+    editor->setIndicatorForegroundColor(0xff0000, FRD_INDIC_VARIABLE);
+    editor->setIndicatorForegroundColor(0x17ccc6, FRD_INDIC_FUNCTION);
+    editor->setIndicatorForegroundColor(0x0000ff, FRD_INDIC_CLASS);
+    editor->setIndicatorForegroundColor(0xff0000, FRD_INDIC_ERROR);
+    editor->setIndicatorForegroundColor(0x007f00, FRD_INDIC_WARNING);
+
     layout->addWidget(editor);
 
-    connect(editor, SIGNAL(textChanged()), this, SLOT(updateHighlight()));
+    connect(editor, SIGNAL(textChanged()), this, SLOT(waitToUpdateHighlight()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateHighlight()));
+}
+
+FRD_Editor::~FRD_Editor()
+{
+    delete editor;
+    delete layout;
+    delete timer;
+}
+
+QString FRD_Editor::text() const
+{
+    return editor->text();
+}
+
+void FRD_Editor::setText(const QString &text)
+{
+    editor->setText(text);
+}
+
+bool FRD_Editor::isEndString(QChar c) const
+{
+    if (c.isSpace()) return true;
+    QString endString("!@#$%^&*-+=~`'\":;,.?()[]{}<>|\\");
+    return endString.contains(c);
+}
+
+bool FRD_Editor::isComment(int pos) const
+{
+    int style = editor->SendScintilla(QsciScintillaBase::SCI_GETSTYLEAT, pos);
+    return
+            style == QsciLexerFRD::Comment                || style == QsciLexerFRD::InactiveComment                ||
+            style == QsciLexerFRD::CommentDoc             || style == QsciLexerFRD::InactiveCommentDoc             ||
+            style == QsciLexerFRD::CommentDocKeyword      || style == QsciLexerFRD::InactiveCommentDocKeyword      ||
+            style == QsciLexerFRD::CommentDocKeywordError || style == QsciLexerFRD::InactiveCommentDocKeywordError ||
+            style == QsciLexerFRD::CommentLine            || style == QsciLexerFRD::InactiveCommentLine            ||
+            style == QsciLexerFRD::CommentLineDoc         || style == QsciLexerFRD::InactiveCommentLineDoc;
+}
+
+bool FRD_Editor::isString(int pos) const
+{
+    int style = editor->SendScintilla(QsciScintillaBase::SCI_GETSTYLEAT, pos);
+    return
+            style == QsciLexerFRD::SingleQuotedString         || style == QsciLexerFRD::InactiveSingleQuotedString         ||
+            style == QsciLexerFRD::DoubleQuotedString         || style == QsciLexerFRD::InactiveDoubleQuotedString         ||
+            style == QsciLexerFRD::TripleQuotedVerbatimString || style == QsciLexerFRD::InactiveTripleQuotedVerbatimString ||
+            style == QsciLexerFRD::HashQuotedString           || style == QsciLexerFRD::InactiveHashQuotedString           ||
+            style == QsciLexerFRD::RawString                  || style == QsciLexerFRD::InactiveRawString                  ||
+            style == QsciLexerFRD::UnclosedString             || style == QsciLexerFRD::InactiveUnclosedString             ||
+            style == QsciLexerFRD::VerbatimString             || style == QsciLexerFRD::InactiveVerbatimString;
+}
+
+void FRD_Editor::setIndicator(int start, int length, FRD_Indicator indicator)
+{
+    if (indicator < 0)
+    {
+        // clear all range between start and end
+        if (length > 0) length = -length;
+        setIndicator(start, length, FRD_INDIC_VARIABLE);
+        setIndicator(start, length, FRD_INDIC_FUNCTION);
+        setIndicator(start, length, FRD_INDIC_CLASS);
+        setIndicator(start, length, FRD_INDIC_ERROR);
+        setIndicator(start, length, FRD_INDIC_WARNING);
+    }
+    else
+    {
+        if (length < 0)
+        {
+            // clear range
+            editor->SendScintilla(QsciScintillaBase::SCI_SETINDICATORCURRENT, indicator);
+            editor->SendScintilla(QsciScintillaBase::SCI_INDICATORCLEARRANGE, start, -length);
+        }
+        else
+        {
+            // fill range
+            editor->SendScintilla(QsciScintillaBase::SCI_SETINDICATORCURRENT, indicator);
+            editor->SendScintilla(QsciScintillaBase::SCI_INDICATORFILLRANGE, start, length);
+        }
+    }
+}
+
+FRD_Editor::FRD_Indicator FRD_Editor::indicatorFromSymbol(QChar symbol) const
+{
+    if (symbol == '$') return FRD_INDIC_VARIABLE;
+    else if (symbol == '%') return FRD_INDIC_FUNCTION;
+    else if (symbol == '@') return FRD_INDIC_CLASS;
+    else return FRD_INDIC_CLEAR;
+}
+
+void FRD_Editor::updateHighlight()
+{
+
+    timer->stop(); // Stop the timer since text has been updated
+    auto text = editor->text(); // get text in the editor
+    setIndicator(0, text.length(), FRD_INDIC_CLEAR); // clear all indicators
+    for (int i = 0; i < text.length(); i++)
+    {
+        if (isComment(i) || isString(i)) continue;
+        if (text[i] == '$' || text[i] == '%' || text[i] == '@')
+        {
+            int length = 0;
+            while (i + (++length) < text.length() && !isEndString(text[i + length]));
+            setIndicator(i, length, indicatorFromSymbol(text[i]));
+            i = i + length - 1;
+        }
+    }
+}
+
+void FRD_Editor::waitToUpdateHighlight()
+{
+    timer->start(waiting_time);
 }
