@@ -1,13 +1,16 @@
 #include "Interpreter.h"
 
+#define tr QObject::tr // translation
+#define info (*info_ptr)
+
 Interpreter::Interpreter() {
 
 }
 
-bool Interpreter::interpret(const QString& text, FRD& info) {
+bool Interpreter::interpret(const QString& text, FRD_Json& json) {
     Interpreter interpreter;
     interpreter.setStrings(text);
-    interpreter.setInfoPtr(info);
+    interpreter.setInfoPtr(json);
     return interpreter.interpret();
 }
 
@@ -34,7 +37,7 @@ void Interpreter::setStrings(const QString& text) {
     strings = text.split('\n', Qt::KeepEmptyParts);
 }
 
-void Interpreter::setInfoPtr(FRD& ptr) {
+void Interpreter::setInfoPtr(FRD_Json& ptr) {
     // get the address of ptr
     info_ptr = &ptr;
 }
@@ -83,7 +86,9 @@ bool Interpreter::removeComments() {
     // If comment_row is not set to 0,
     // there are unfinshed comments.
     if (comment_row) {
-        info_ptr->Errors.push_back({_FRD_ERROR_COMMENT_UNFINISHED_, comment_row, comment_col});
+        info_ptr->addError(_FRD_ERROR_COMMENT_UNFINISHED_,
+                           tr("Unfinished Comments"),
+                           comment_row, comment_col, 2);
     }
     return !comment_row;
 }
@@ -121,13 +126,15 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
         else if (curr == '$') {
             int init_col = col;
             QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-            if (info_ptr->Vars.contains(name + "." + var_name)) {
-                FRD_var_ frd_var = info_ptr->Vars[name + "." + var_name];
-                FRD_class_ frd_class = frd_var.varClass;
+            if (info_ptr->contains(name + "." + var_name)) {
+                auto frd_var = info[name + "." + var_name];
+                auto json_type = frd_var.type();
                 QChar c = nextChar();
                 if (c == ';') {
                     // meaningless, just skip
-                    info_ptr->Errors.push_back({_FRD_WARNING_DECLARATION_ONLY_, row, init_col, (int)var_name.length()});
+                    info_ptr->addError(_FRD_WARNING_DECLARATION_ONLY_,
+                                       tr("There is only declaration for ") + var_name + tr(" but its value is never used."),
+                                       row, init_col, (int)var_name.length());
                 }
                 else if (c == '=') {
                     c = nextChar();
@@ -137,20 +144,23 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
                     else {
                         // assignment
                         // example: $x = $y;
-                        if (frd_class == _FRD_CLASS_INT_) {
+                        if (json_type == QJsonValue::Double) {
                             // read the rvalue variable
-                            c = nextChar();
-                            if (c == '~') {
-                                // global variable
-                                QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-                                FRD_var_ frd_var = info_ptr->Vars[var_name_r];
+                            QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                            auto frd_var_r = info[var_name_r];
+                            auto json_type_r = frd_var.type();
+                            if (json_type_r == QJsonValue::Double) {
                                 // TODO
                             }
                             else {
-                                col--; // go back one character
-                                QString frd_var_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-                                // TODO
+                                info_ptr->addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
+                                                   tr("Assignment from rvalue ") + var_name_r + tr(" to lvalue ")
+                                                   + var_name + tr("is invalid"),
+                                                   row, init_col, var_name.length());
                             }
+                        }
+                        else {
+                            // TODO
                         }
                     }
                 }
@@ -159,7 +169,9 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
                 }
             }
             else {
-                info_ptr->Errors.push_back({_FRD_ERROR_UNEXPECTED_TOKEN_, row, init_col, (int)var_name.length()});
+                info_ptr->addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                                   tr("Unexpected token: ") + var_name,
+                                   row, init_col, var_name.length());
                 ok = false;
             }
         }
@@ -172,10 +184,13 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
         else {
             int init_col = col;
             col--; // go back one character
-            int length = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`").length(); // skip the token
-            info_ptr->Errors.push_back({_FRD_ERROR_UNEXPECTED_TOKEN_, row, init_col, length});
+            QString unexpected_token = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`"); // skip the token
+            info_ptr->addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                               tr("Unexpected token: ") + unexpected_token,
+                               row, init_col, unexpected_token.length());
         }
     }
+    return ok;
 }
 
 QChar Interpreter::nextChar() {
@@ -184,6 +199,12 @@ QChar Interpreter::nextChar() {
         else if (!strings[row - 1][col - 1].isSpace()) return strings[row - 1][col - 1];
     }
     return QChar(EOF);
+}
+
+QString Interpreter::pureName(const QString& name) const {
+    QStringList names =  name.split('.', Qt::SkipEmptyParts);
+    if (names.isEmpty()) return "";
+    else return names.last();
 }
 
 // on the same line
@@ -198,3 +219,6 @@ QString Interpreter::nextString(QString end_of_string, bool discard_space) {
     col--;
     return ret;
 }
+
+#undef tr
+#undef info

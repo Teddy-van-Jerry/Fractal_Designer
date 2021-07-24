@@ -49,7 +49,7 @@ public:
      * This is a static function, you can call it by:
      * \code{.cpp}bool ok = Interpreter::interpret(text, info);\endcode
      */
-    static bool interpret(const QString& text, FRD& info);
+    static bool interpret(const QString& text, FRD_Json& info);
 
     /**
      * \brief interpret strings
@@ -81,7 +81,7 @@ private:
      *
      * \param info the current info
      */
-    void setInfoPtr(FRD& info);
+    void setInfoPtr(FRD_Json& info);
 
     /**
      * \brief change comments into whitespace
@@ -135,10 +135,12 @@ private:
 
     QChar nextChar();
 
+    QString pureName(const QString& name) const;
+
     QString nextString(QString end_of_string = _empty_string, bool discard_space = false);
 
     QStringList strings; /**< text to be interpreted stored by lines */
-    FRD* info_ptr;       /**< the pointer to current info */
+    FRD_Json* info_ptr;  /**< the pointer to current info */
     QChar curr;
     int row = 1;         /**< row count that starts at 1 */
     int col = 0;         /**< column count that starts at 1 */
