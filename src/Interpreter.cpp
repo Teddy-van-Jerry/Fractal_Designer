@@ -1,6 +1,7 @@
 #include "Interpreter.h"
 
-#define tr QObject::tr // translation
+// translation
+#define tr QObject::tr
 #define info (*info_ptr)
 
 Interpreter::Interpreter() {
@@ -150,12 +151,18 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
                             auto frd_var_r = info[var_name_r];
                             auto json_type_r = frd_var.type();
                             if (json_type_r == QJsonValue::Double) {
-                                // TODO
+                                // It can be a maths expression, need to call string_evaluate
+                                getNext();
+                                int start_row = row, start_col = col;
+                                QString expr = nextString(";", true, true);
+                                bool ok_here;
+                                evalExpr(expr, name, start_row, start_col, &ok_here);
+                                ok = ok && ok_here;
                             }
                             else {
                                 info_ptr->addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
-                                                   tr("Assignment from rvalue ") + var_name_r + tr(" to lvalue ")
-                                                   + var_name + tr("is invalid"),
+                                                   tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
+                                                   + pureName(var_name) + tr("is invalid"),
                                                    row, init_col, var_name.length());
                             }
                         }
@@ -193,6 +200,29 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
     return ok;
 }
 
+double Interpreter::evalExpr(const QString& expr, const QString& block_name, int start_row, int start_col, bool* ok) {
+    std::vector<std::string> expr_vars;
+    QVector<int> rows;
+    QVector<int> cols;
+    int curr_row = start_row;
+    int curr_col = start_col;
+    for (int i = 0; i != expr.size(); i++) {
+        if (expr[i] != '$') {
+            if (expr[i] == '\r') curr_col--; // skip '\r'
+            else if (expr[i] == '\n') curr_row++, curr_col = 0;
+            continue;
+        }
+        std::string str;
+        while (++i != expr.size() && !expr[i].isSpace() && !QString("+-*/*").contains(expr[i])) {
+            str.push_back(expr[i].toLatin1());
+        }
+        expr_vars.push_back(str);
+        rows.push_back(curr_row);
+        cols.push_back(curr_col - str.length());
+    }
+    // TODO
+}
+
 QChar Interpreter::nextChar() {
     while (row <= strings.size()) {
         if (++col - 1 == strings[row - 1].size()) row++, col = 0; // go to next line
@@ -208,14 +238,17 @@ QString Interpreter::pureName(const QString& name) const {
 }
 
 // on the same line
-QString Interpreter::nextString(QString end_of_string, bool discard_space) {
+QString Interpreter::nextString(QString end_of_string, bool discard_space, bool discard_linebreak) {
     QString ret;
-    while (++col != strings[row + 1].size() &&
-           (discard_space ? 1 : !strings[row + 1][col + 1].isSpace()) &&
-           !end_of_string.contains(strings[row - 1][col - 1]) &&
-           strings[row - 1][col - 1] != ';') {
-        ret.push_back(strings[row + 1][col + 1]);
-    }
+    do {
+        while (++col != strings[row - 1].size() &&
+               (discard_space ? 1 : !strings[row - 1][col - 1].isSpace()) &&
+               !end_of_string.contains(strings[row - 1][col - 1]) &&
+               strings[row - 1][col - 1] != ';') {
+            ret.push_back(strings[row - 1][col - 1]);
+        }
+    } // the last one "(col = 0), ++row" aims to prepare for next round
+    while (!discard_space && !discard_linebreak && col == strings[row + 1].size() && row != strings.size() && (col = 0), ++row);
     col--;
     return ret;
 }

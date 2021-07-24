@@ -133,11 +133,14 @@ private:
 
     bool readBlock(FRD_block_content_ content, const QString& name);
 
+    double evalExpr(const QString& expr, const QString& block_name, int start_row, int start_col, bool* ok = nullptr);
+
     QChar nextChar();
 
     QString pureName(const QString& name) const;
 
-    QString nextString(QString end_of_string = _empty_string, bool discard_space = false);
+    QString nextString(QString end_of_string = _empty_string,
+                       bool discard_space = false, bool discard_linebreak = false);
 
     QStringList strings; /**< text to be interpreted stored by lines */
     FRD_Json* info_ptr;  /**< the pointer to current info */
