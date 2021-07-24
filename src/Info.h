@@ -18,96 +18,6 @@ class config_;
 class output_;
 class range_;
 
-class frd_class_base_ {
-public:
-    // get member of the class
-    const QVariant& operator[](const QString& name) const;
-
-    QVariant operator[](const QString& name);
-
-    int index(const QString& name) const;
-
-    bool contains(const QString& name) const;
-
-    QStringList members() const;
-
-protected:
-    // list of all members of a class
-    // need to be specified in constructor
-    QStringList members_;
-};
-
-class range_ : public frd_class_base_ {
-public:
-    double From, To;
-};
-
-class color_ : public frd_class_base_  {
-public:
-    enum type_ {_RGB_, _HSV_} Type;
-    QString R, G, B, H, S, V, A; // color formulas
-};
-
-class template_ : public frd_class_base_  {
-public:
-    QString Formula;
-    double MIN, MAX;
-    QString Compare = "abs($z)";
-    bool YInverse = false;
-};
-
-class point_ : public frd_class_base_  {
-public:
-    double X, Y;
-};
-
-class path_point_ : public frd_class_base_  {
-public:
-    point_ Point;
-    double T;
-    double Rotation;
-};
-
-class path_ : public frd_class_base_  {
-public:
-    enum type_ {_FORMUALA_, _POINTS_} Type;
-    QString X, Y, Width, Rotation;
-    QVector<path_point_> Points;
-};
-
-class layer_ : public frd_class_base_  {
-public:
-    range_ Range;
-    template_ Template;
-    color_ Con, Div;
-    path_ Path;
-};
-
-class music_ : public frd_class_base_  {
-public:
-    QVector<QString> List;
-    QVector<double> From; /**< the beginning time of music */
-    QVector<double> To;   /**< the ending time of music */
-    double Rate;
-};
-
-class output_ : public frd_class_base_  {
-public:
-    int Time;
-    int Fps;
-    int Width;
-    int Height;
-    QString ImagePrefix, ImageDir, VideoName, VideoDir;
-};
-
-class config_ : public frd_class_base_  {
-public:
-    double PreviewX, PreviewY;
-    double PreviewWidth, PreviewHeight;
-    int PreviewImageWidth, PreviewImageHeight;
-    bool AutoRefresh;
-};
-
 enum FRD_class_ {
     _FRD_CLASS_LAYER_,
     _FRD_CLASS_MUSIC_,
@@ -140,6 +50,134 @@ public:
     FRD_class_ funClass;
     QString funName;
     int row, col;
+};
+
+class frd_class_base_ {
+public:
+    // get member of the class
+    virtual QVariant operator[](const QString& name) const = 0;
+
+    virtual QVariant& operator[](const QString& name) = 0;
+
+    QVariant operator[](int index) const;
+
+    QVariant& operator[](int index);
+
+    int index(const QString& name) const;
+
+    bool contains(const QString& name) const;
+
+    QStringList members() const;
+
+protected:
+    // list of all members of a class
+    // need to be specified in constructor
+    QStringList member_names;
+
+    QVector<QVariant> member_vars;
+};
+
+class range_ : public frd_class_base_ {
+public:
+    // double From, To;
+
+    FRD_var_ From { _FRD_CLASS_DOUBLE_, "From",  };
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class color_ : public frd_class_base_  {
+public:
+    enum type_ {_RGB_, _HSV_} Type;
+    QString R, G, B, H, S, V, A; // color formulas
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class template_ : public frd_class_base_  {
+public:
+    QString Formula;
+    double MIN, MAX;
+    QString Compare = "abs($z)";
+    bool YInverse = false;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class point_ : public frd_class_base_  {
+public:
+    double X, Y;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class path_point_ : public frd_class_base_  {
+public:
+    point_ Point;
+    double T;
+    double Rotation;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class path_ : public frd_class_base_  {
+public:
+    enum type_ {_FORMUALA_, _POINTS_} Type;
+    QString X, Y, Width, Rotation;
+    QVector<path_point_> Points;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class layer_ : public frd_class_base_  {
+public:
+    range_ Range;
+    template_ Template;
+    color_ Con, Div;
+    path_ Path;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class music_ : public frd_class_base_  {
+public:
+    QVector<QString> List;
+    QVector<double> From; /**< the beginning time of music */
+    QVector<double> To;   /**< the ending time of music */
+    double Rate;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class output_ : public frd_class_base_  {
+public:
+    int Time;
+    int Fps;
+    int Width;
+    int Height;
+    QString ImagePrefix, ImageDir, VideoName, VideoDir;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
+};
+
+class config_ : public frd_class_base_  {
+public:
+    double PreviewX, PreviewY;
+    double PreviewWidth, PreviewHeight;
+    int PreviewImageWidth, PreviewImageHeight;
+    bool AutoRefresh;
+
+    QVariant operator[](const QString& name) const override;
+    QVariant& operator[](const QString& name) override;
 };
 
 class custom_class_ {

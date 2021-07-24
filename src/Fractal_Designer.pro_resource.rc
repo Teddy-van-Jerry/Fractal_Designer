@@ -4,8 +4,8 @@ IDI_ICON1	ICON	"D:\\GitHub\\TVJ Group\\Fractal_Designer\\src\\EXE Icons\\FRD.ico
 IDI_ICON2	ICON	"D:\\GitHub\\TVJ Group\\Fractal_Designer\\src\\EXE Icons\\FRD_File.ico"
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 6,0,2,0
-	PRODUCTVERSION 6,0,2,0
+	FILEVERSION 6,0,2,1
+	PRODUCTVERSION 6,0,2,1
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -22,11 +22,11 @@ VS_VERSION_INFO VERSIONINFO
 			BEGIN
 				VALUE "CompanyName", "Teddy van Jerry\0"
 				VALUE "FileDescription", "Fractal Designer\0"
-				VALUE "FileVersion", "6.0.2.0\0"
+				VALUE "FileVersion", "6.0.2.1\0"
 				VALUE "LegalCopyright", "Copyright (C) 2021 Teddy van Jerry\0"
 				VALUE "OriginalFilename", "Fractal_Designer.pro.exe\0"
 				VALUE "ProductName", "Fractal Designer\0"
-				VALUE "ProductVersion", "6.0.2.0\0"
+				VALUE "ProductVersion", "6.0.2.1\0"
 				VALUE "InternalName", "\0"
 				VALUE "Comments", "\0"
 				VALUE "LegalTrademarks", "\0"
