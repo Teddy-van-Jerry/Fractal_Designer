@@ -43,6 +43,7 @@
 #include "template_4_settings.h"
 #include "preview_setting.h"
 #include "FRD_Editor.h"
+#include "Interpreter.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
@@ -442,6 +443,8 @@ private slots:
     void tableRouteInsertAfter();
 
     void tableRouteDeleteRow();
+
+    void on_pushButton_CodeRun_clicked();
 
 signals:
 

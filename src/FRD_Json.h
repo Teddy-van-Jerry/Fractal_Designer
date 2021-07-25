@@ -96,8 +96,11 @@ public:
     // add error information
     void addError(FRD_error_type error_type, const QString& msg, int row, int col, int length);
 
+    QString toJson(QJsonDocument::JsonFormat = QJsonDocument::JsonFormat::Indented) const;
+
+    QString varsToJson(QJsonDocument::JsonFormat = QJsonDocument::JsonFormat::Indented) const;
+
 private:
-    QJsonDocument doc;
     QJsonObject main;  // main object of doc
     QJsonObject vars;  // key by their names
 };

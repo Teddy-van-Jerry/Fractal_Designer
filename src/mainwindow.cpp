@@ -77,6 +77,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     route_tool_window = new Route_Tool(this);
 
+    ui->splitter_Editor_Up->setStretchFactor(0, 4);
+    ui->splitter_Editor_Up->setStretchFactor(1, 1);
+    ui->splitter_Editor->setStretchFactor(0, 4);
+    ui->splitter_Editor->setStretchFactor(1, 1);
+
     editor = new FRD_Editor(ui->gridLayout_Editor);
 
     // Route custom menu
@@ -3167,4 +3172,14 @@ void MainWindow::tableRouteInsertAfter()
 void MainWindow::tableRouteDeleteRow()
 {
     table_route_model->removeRow(table_route_line);
+}
+
+void MainWindow::on_pushButton_CodeRun_clicked()
+{
+    FRD_Json jsonFile;
+    Interpreter::interpret(editor->text(), jsonFile);
+    qDebug() << jsonFile.toJson();
+    ui->plainTextEdit_terminal->appendPlainText(jsonFile.toJson());
+    qDebug() << jsonFile.varsToJson();
+    ui->plainTextEdit_terminal->appendPlainText(jsonFile.varsToJson());
 }

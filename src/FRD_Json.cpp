@@ -51,11 +51,12 @@ QString FRD_Json::type(const QStringList& names) const {
 bool FRD_Json::addBaseVar(const QString &name, const QString &class_name){
     // must ensure that not the same name
     // only the first part of name will be used.
+    qDebug() << "set base var" << name << class_name;
     QJsonObject obj;
-    if (class_name == "number") {
+    // if (class_name == "number") {
         obj.insert("TYPE", "Number");
-        obj.insert("OBJECT", 0);
-    }
+        obj.insert("OBJECT", QJsonValue::Object);
+    /* }
     else if (class_name == "complex") {
         obj.insert("TYPE", "Complex");
         QJsonObject complex_;
@@ -79,7 +80,7 @@ bool FRD_Json::addBaseVar(const QString &name, const QString &class_name){
         obj.insert("TYPE", "Formula");
         obj.insert("OBJECT", "");
     }
-    else return false;
+    else return false;*/
 
     vars.insert(name, obj);
     return true;
@@ -173,7 +174,11 @@ FRD_error_type FRD_Json::setValue(const QStringList& names, const QString& type,
 
     QJsonValueRef v = vars[names[0]];
     if (v.isNull()) {
-        if (force) addBaseVar(names[0], type);
+        if (force) {
+            addBaseVar(names[0], type);
+            v = vars[names[0]];
+            qDebug() << "After addBaseVar" << v;
+        }
         else return _FRD_ERROR_UNDEFINED_VARIABLE_;
     }
     v = v.toObject()["OBJECT"];
@@ -184,6 +189,7 @@ FRD_error_type FRD_Json::setValue(const QStringList& names, const QString& type,
             if (force) {
                 v.toObject().insert(names[i], QJsonValue::Object);
                 v = v = v.toObject()[names[i]];
+                qDebug() << "Insert new to object" << vars;
             }
             else {
                 return _FRD_ERROR_UNDEFINED_VARIABLE_;
@@ -225,4 +231,14 @@ void FRD_Json::addError(FRD_error_type error_type, const QString& msg, int row, 
     main["Errors"].toObject().insert("Row", row);
     main["Errors"].toObject().insert("Col", col);
     main["Errors"].toObject().insert("Length", length);
+}
+
+QString FRD_Json::toJson(QJsonDocument::JsonFormat format) const {
+    QJsonDocument doc(main);
+    return doc.toJson(format);
+}
+
+QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
+    QJsonDocument doc(vars);
+    return doc.toJson(format);
 }

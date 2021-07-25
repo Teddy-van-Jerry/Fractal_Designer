@@ -85,6 +85,8 @@ bool Interpreter::removeComments() {
 }
 
 bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool existed, QString new_class_name) {
+    qDebug() << "readVar" << name << new_class_name;
+
     bool ok = true;
     int init_col = col;
     QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
@@ -95,7 +97,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool 
                           row, init_col, (int)var_name.length());
         }
         else if (!existed) {
-            info.addBaseVar(name, new_class_name);
+            // info.addBaseVar(name, new_class_name);
         }
         auto frd_var = info[name + "." + var_name];
         // auto json_type = frd_var.type();
@@ -114,18 +116,22 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool 
                 ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, name + "." + var_name);
             }
             else {
+                col--;
                 // assignment
                 // example: $x = $y;
-                if (frd_var.isDouble() || isComplexJsonValue(frd_var)) {
+                if (frd_var.isDouble() || isComplexJsonValue(frd_var) || (!existed && new_class_name == "number")) {
                     // can have maths expression
-                    nextChar();
+                    // nextChar();
                     int start_row = row, start_col = col;
                     QString expr = nextString(";", true, true);
+                    qDebug() << "rvalue Expr" << expr;
                     bool ok_here;
                     std::complex<double> ret = evalExpr(expr, name, start_row, start_col, &ok_here);
+                    qDebug() << "eval result" << ret.real();
                     ok = ok && ok_here;
-                    if (frd_var.isDouble()) {
-                        info.setValue(name + "." + var_name, info.type(name + "." + var_name), ret.real());
+                    if (frd_var.isDouble() || (!existed && new_class_name == "number")) {
+                        info.setValue(name + "." + var_name, "Number", ret.real());
+                        qDebug() << "setValue here";
                         // Theoretically, there should be no error.
                     }
                     else {
@@ -243,7 +249,9 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
     bool ok = true;
     // when it has not reached the end
     QChar curr;
-    while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
+    qDebug() << "Entrance of readBlock";
+    while (curr = nextChar(), curr != QChar(0)) { // while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
+        qDebug() << "Inside readBlock while";
         if (curr == '}') return ok;
         else if (curr == ';') continue;
         else if (curr == '#') {
@@ -257,7 +265,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
             // class
             QString class_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
             // This version does not support user-defined class.
-            if (nextChar() != '$') {
+            if (nextChar() == '$') {
                 ok = ok && readVar(content, name, false, class_name);
             }
             else {
@@ -286,6 +294,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
             ok = false;
         }
     }
+    qDebug() << "Exit of readBlock";
     return ok;
 }
 
@@ -360,11 +369,13 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
 }
 
 QChar Interpreter::nextChar() {
+    qDebug() << "Entrance of nextChar" << row << col << strings.size();
     while (row <= strings.size()) {
-        if (++col - 1 == strings[row - 1].size()) row++, col = 0; // go to next line
+        if (++col - 1 >= strings[row - 1].size()) row++, col = 0; // go to next line
         else if (!strings[row - 1][col - 1].isSpace()) return strings[row - 1][col - 1];
     }
-    return QChar(EOF);
+    qDebug() << "Exit of nextChar";
+    return QChar(0);
 }
 
 QString Interpreter::pureName(const QString& name) const {
@@ -377,15 +388,17 @@ QString Interpreter::pureName(const QString& name) const {
 QString Interpreter::nextString(QString end_of_string, bool discard_space, bool discard_linebreak) {
     QString ret;
     do {
-        while (++col != strings[row - 1].size() &&
+        qDebug() << row << col;
+        while (++col <= strings[row - 1].size() &&
                (discard_space ? 1 : !strings[row - 1][col - 1].isSpace()) &&
                !end_of_string.contains(strings[row - 1][col - 1]) &&
-               strings[row - 1][col - 1] != ';') {
+               strings[row - 1][col - 1] != ';' && strings[row - 1][col - 1] != QChar(0)) {
             ret.push_back(strings[row - 1][col - 1]);
         }
-    } // the last one "(col = 0), ++row" aims to prepare for next round
-    while (!discard_space && !discard_linebreak && col == strings[row + 1].size() && row != strings.size() && (col = 0), ++row);
+    } // the last one "++row + (col = 0)" aims to prepare for next round
+    while (!discard_space && !discard_linebreak && col == strings[row - 1].size() && row + 1 <= strings.size() && ++row + (col = 0));
     col--;
+    qDebug() << "Exit of nextString";
     return ret;
 }
 
