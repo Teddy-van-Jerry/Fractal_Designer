@@ -35,8 +35,14 @@ enum FRD_error_type {
     _FRD_ERROR_UNDEFINED_VARIABLE_,
     _FRD_ERROR_ASSIGNMENT_NO_MATCH_,
     _FRD_ERROR_WRONG_PARAPETER_TYPE_,
+    _FRD_ERROR_NON_NUMBER_VALUE_,
+    _FRD_ERROR_EVAL_,
+    _FRD_ERROR_FUNCTION_SYNTAX_,
     _FRD_ERROR_OTHER_,
-    _FRD_WARNING_DECLARATION_ONLY_,
+    _FRD_WARNING_VARIABLE_DECLARATION_ONLY_,
+    _FRD_WARNING_VARIABLE_REDEFINITION_,
+    _FRD_WARNING_FUNCTION_DECLARATION_ONLY_,
+    _FRD_WARNING_FUNCTION_REDEFINITION_,
     _FRD_WARNING_OTHER
 };
 
@@ -45,6 +51,16 @@ public:
     FRD_Json();
 
     QJsonValue operator[](const QString& name) const;
+
+    QString type(const QString& name) const;
+
+    QString type(const QStringList& names) const;
+
+//    QString absoluteType(const QString& name) const;
+
+//    QString absoluteType(const QStringList& names) const;
+
+    bool addBaseVar(const QString& name, const QString& class_name);
 
     bool absoluteGetValue(const QString& name, QJsonValue& value) const;
 
@@ -70,9 +86,9 @@ public:
 
     // set the value
     // if name does not exist, create it
-    FRD_error_type setValue(const QString& name, const QString& type, QJsonValue value);
+    FRD_error_type setValue(const QString& name, const QString& type, QJsonValue value, bool force = true);
 
-    FRD_error_type setValue(const QStringList& names, const QString& type, QJsonValue value);
+    FRD_error_type setValue(const QStringList& names, const QString& type, QJsonValue value, bool force = true);
 
     // put the value into main
     FRD_error_type useValue(const QString& varName);
@@ -86,15 +102,19 @@ private:
     QJsonObject vars;  // key by their names
 };
 
-QString json2string(QJsonValue type) {
-    if (type == QJsonValue::Array)     return "Array";
-    if (type == QJsonValue::Bool)      return "Bool";
-    if (type == QJsonValue::Double)    return "Double";
-    if (type == QJsonValue::Null)      return "Null";
-    if (type == QJsonValue::Object)    return "Object";
-    if (type == QJsonValue::String)    return "String";
-    if (type == QJsonValue::Undefined) return "Undefined";
-    return "Unknown";
+//QString json2string(QJsonValue type) {
+//    if (type == QJsonValue::Array)     return "Array";
+//    if (type == QJsonValue::Bool)      return "Bool";
+//    if (type == QJsonValue::Double)    return "Double";
+//    if (type == QJsonValue::Null)      return "Null";
+//    if (type == QJsonValue::Object)    return "Object";
+//    if (type == QJsonValue::String)    return "String";
+//    if (type == QJsonValue::Undefined) return "Undefined";
+//    return "Unknown";
+//}
+
+inline bool isComplexJsonValue(QJsonValue v) {
+    return v.isObject() && v.toObject().contains("Real") && v.toObject().contains("Imag");
 }
 
 #endif // FRD_JSON_H
