@@ -82,13 +82,18 @@ public:
 
     // set the value
     // if name does not exist, check in the wider block
-    FRD_error_type setGlobalValue(const QString& name, const QString& type, QJsonValue value);
+    // FRD_error_type setGlobalValue(const QString& name, const QString& type, QJsonValue value);
 
     // set the value
     // if name does not exist, create it
-    FRD_error_type setValue(const QString& name, const QString& type, QJsonValue value, bool force = true);
+    // FRD_error_type setValue(const QString& name, const QString& type, QJsonValue value, bool force = true);
 
-    FRD_error_type setValue(const QStringList& names, const QString& type, QJsonValue value, bool force = true);
+    // FRD_error_type setValue(const QStringList& names, const QString& type, QJsonValue value, bool force = true);
+
+    // type will only appear if it is a variablw definition
+    FRD_error_type setValue(const QString& block, const QString& name, const QString& type, QJsonValue value);
+
+    FRD_error_type setExistedValue(const QString& block, const QString& name, const QString& type, QJsonValue value);
 
     // put the value into main
     FRD_error_type useValue(const QString& varName);

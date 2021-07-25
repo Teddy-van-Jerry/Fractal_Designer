@@ -112,7 +112,7 @@ private:
      * \retval true There is no error in reading variable.
      * \retval false There is error in reading variable.
      */
-    bool readVar(FRD_block_content_ content, const QString& name, bool existed = true, QString new_class_name = "");
+    // bool readVar(FRD_block_content_ content, const QString& name, bool existed = true, QString new_class_name = "");
 
     /**
      * \brief read function defination

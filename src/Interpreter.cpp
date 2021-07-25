@@ -18,7 +18,9 @@ bool Interpreter::interpret(const QString& text, FRD_Json& json) {
 bool Interpreter::interpret() {
     bool error = false;
     error |= !removeComments();
-    error |= !readBlock();
+    // error |= !readBlock();
+    info.setValue("1.2.3.", "num.X", "Number", 123);
+    info.setExistedValue("1.2.3.", "num.X", "", -1234);
     return !error;
 }
 
@@ -83,7 +85,7 @@ bool Interpreter::removeComments() {
     }
     return !comment_row;
 }
-
+/*
 bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool existed, QString new_class_name) {
     qDebug() << "readVar" << name << new_class_name;
 
@@ -177,7 +179,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool 
     }
     return ok;
 }
-
+*/
 bool Interpreter::readFun(FRD_block_content_ content, const QString& name) {
     bool ok = true;
     QString fun_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
@@ -259,14 +261,14 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
             row++, col = 0;
         }
         else if (curr == '$') {
-            ok = ok && readVar(content, name, true);
+            // ok = ok && readVar(content, name, true);
         }
         else if (curr == '@') {
             // class
             QString class_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
             // This version does not support user-defined class.
             if (nextChar() == '$') {
-                ok = ok && readVar(content, name, false, class_name);
+                // ok = ok && readVar(content, name, false, class_name);
             }
             else {
                 // unexpected token
