@@ -585,3 +585,7 @@ QScrollBar::down-arrow:vertical {
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
   	background: none;
 }
+QMenuBar{
+        height: 30px;
+        background: rgb(0,0,0);
+}

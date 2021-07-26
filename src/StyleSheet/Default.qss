@@ -89,3 +89,7 @@ QPushButton#Search_Result_Button:pressed,#Help_C_Button:pressed,#Help_E_Button:p
     border-style: inset;
 }
 
+QMenuBar{
+    height: 30px;
+    background: rgb(240,240,240);
+}

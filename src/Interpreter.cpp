@@ -152,7 +152,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
                             auto json_type_r = frd_var.type();
                             if (json_type_r == QJsonValue::Double) {
                                 // It can be a maths expression, need to call string_evaluate
-                                getNext();
+                                nextChar();
                                 int start_row = row, start_col = col;
                                 QString expr = nextString(";", true, true);
                                 bool ok_here;
@@ -220,7 +220,7 @@ double Interpreter::evalExpr(const QString& expr, const QString& block_name, int
         rows.push_back(curr_row);
         cols.push_back(curr_col - str.length());
     }
-    // TODO
+    return 0;
 }
 
 QChar Interpreter::nextChar() {

@@ -103,7 +103,7 @@ private:
      * \remarks
      * This will update the value of row and col.
      */
-    char getNext();
+    // char getNext();
 
     /**
      * \brief read variable defination

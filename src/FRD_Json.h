@@ -86,15 +86,15 @@ private:
     QJsonObject vars;  // key by their names
 };
 
-QString json2string(QJsonValue type) {
-    if (type == QJsonValue::Array)     return "Array";
-    if (type == QJsonValue::Bool)      return "Bool";
-    if (type == QJsonValue::Double)    return "Double";
-    if (type == QJsonValue::Null)      return "Null";
-    if (type == QJsonValue::Object)    return "Object";
-    if (type == QJsonValue::String)    return "String";
-    if (type == QJsonValue::Undefined) return "Undefined";
-    return "Unknown";
-}
+//QString json2string(QJsonValue type) {
+//    if (type == QJsonValue::Array)     return "Array";
+//    if (type == QJsonValue::Bool)      return "Bool";
+//    if (type == QJsonValue::Double)    return "Double";
+//    if (type == QJsonValue::Null)      return "Null";
+//    if (type == QJsonValue::Object)    return "Object";
+//    if (type == QJsonValue::String)    return "String";
+//    if (type == QJsonValue::Undefined) return "Undefined";
+//    return "Unknown";
+//}
 
 #endif // FRD_JSON_H

@@ -2,5 +2,14 @@
     <qresource prefix="/">
         <file>EXE Icons/FRD.ico</file>
         <file>EXE Icons/FRD_File.ico</file>
+        <file>EXE Icons/Close.svg</file>
+        <file>EXE Icons/Close_White.svg</file>
+        <file>EXE Icons/FRD_icon.png</file>
+        <file>EXE Icons/Maximize.svg</file>
+        <file>EXE Icons/Maximize_white.svg</file>
+        <file>EXE Icons/Minimize.svg</file>
+        <file>EXE Icons/Minimize_white.svg</file>
+        <file>EXE Icons/Restore.svg</file>
+        <file>EXE Icons/Restore_white.svg</file>
     </qresource>
 </RCC>
