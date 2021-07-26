@@ -1,7 +1,7 @@
 #include "FRD_Json.h"
 
 FRD_Json::FRD_Json() {
-    main.insert("Version", "6.0.3");
+    main.insert("Version", "6.0.4");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -37,34 +37,60 @@ QString FRD_Json::type(const QString& block, const QStringList& names) const {
             return "template";
         else if (QVector<QString>({"Con", "Div"}).contains(member))
             return "color";
-        else if (QVector<QString>({"R", "G", "B", "H", "S", "V", "A", "X", "Y"}).contains(member))
+        else if (QVector<QString>({"Formula", "R", "G", "B", "H", "S", "V", "A", "X", "Y"}).contains(member))
             return "formula";
-        else if (QVector<QString>({"VideoDir"}).contains(member))
+        else if (QVector<QString>({"VideoDir", "ImageDir", "VideoFormat", "VideoName", "ImagePrefix", "Name", "Type"}).contains(member))
             return "string";
-        else if (QVector<QString>({"Fps", "Time"}).contains(member))
+        else if (QVector<QString>({"Fps", "Time", "PreviewCentreX", "PreviewCentreY", "PreviewWidth", "PreviewHeight", "PreviewImageWidth", "PreviewImageHeight"}).contains(member))
             return "number";
+        else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates"}).contains(member))
+            return "array";
+        else if (QVector<QString>({"InverseYAxis"}).contains(member))
+            return "bool";
         else {
-            // TODO
-            return "";
+            QVector<QString> candidates;
+            for (auto key : vars.keys()) {
+                QStringList key_names = key.split('.', Qt::SkipEmptyParts);
+                if (!key_names.isEmpty()) {
+                    if (key_names.last() == names.last()) candidates.push_back(key);
+                }
+            }
+            if (candidates.isEmpty()) return "string";
+            else {
+                // TODO in the future
+                return vars[candidates[0]].toObject()["TYPE"].toString();
+            }
         }
     }
 }
 
-QJsonValue FRD_Json::getValue(const QString& block, const QString& name) const {
-    QStringList names = name.split('.', Qt::SkipEmptyParts);
-    return getValue(block, names);
+QJsonValue FRD_Json::getValue(const QString& block, const QString& base_name, const QString& var_name) const {
+    QStringList base_names = base_name.split('.', Qt::SkipEmptyParts);
+    QStringList var_names = var_name.split('.', Qt::SkipEmptyParts);
+    return getValue(block, base_names, var_names);
 }
 
-QJsonValue FRD_Json::getValue(const QString& block, const QStringList& names_) const {
-    QStringList names = names_;
-    if (names.size() == 0) return QJsonValue::Null;
-
+QJsonValue FRD_Json::getValue(const QString& block, const QStringList& base_names_, const QStringList& var_names_) const {
+    QStringList base_names = base_names_;
+    QStringList var_names  = var_names_;
+    if (var_names_.size() == 0) return QJsonValue::Null;
+    qDebug() << "=========>>>>>> getValue " << base_names_ << var_names_;
     QString block_ = block;
-    while(!vars.contains(block_ + names[0])) {
-        do { block_.chop(1); } while(!block_.isEmpty() && block_.last(1) != ".");
+    QString base_names_str;
+    for (const auto& name : base_names_) base_names_str += name;
+    while(!base_names.isEmpty() && !vars.contains(block_ + base_names_str + var_names[0])) {
+        // if the beginning of names is not the same,
+        // they must be in the different block
+        if (vars.contains(block_ + var_names[0])) {
+            QString new_var_name = var_names.last();
+            var_names.pop_back();
+            return getValue(block_, var_names, {new_var_name});
+        }
+        do { block_.chop(1); } while(!block_.isEmpty() && block_.last(1) != ".");  
         if (block_.isEmpty()) return QJsonValue::Null;
     }
     QJsonValue value;
+    QStringList names = base_names + var_names;
     value = vars[block_ + names[0]].toObject()["OBJECT"];
     for (int i = 1; i != names.size(); i++) {
         if (value.toObject().contains(names[i])) value = value.toObject()[names[i]];
@@ -91,12 +117,22 @@ bool FRD_Json::contains(const QString& block, const QString &name) const {
     return true;
 }
 
-FRD_error_type FRD_Json::setValue(const QString& block, const QString& name, const QString& type, QJsonValue value) {
-    QStringList names = name.split('.', Qt::SkipEmptyParts);
+FRD_error_type FRD_Json::setValue(const QString& block, const QString& base_name, const QString& var_name, const QString& type, QJsonValue value) {
+    // If it is in place, set its value
+    // if (setExistantValue(block, base_name, var_name, type, value) == _FRD_NO_ERROR_) return _FRD_NO_ERROR_;
+
+    // Otherwise, create it
+    QStringList names = (base_name + var_name).split('.', Qt::SkipEmptyParts);
     if (names.empty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // change into empty variable name
     QString key = block + names[0];
 
+    qDebug() << "setValue reaches here with key" << key;
+
     QVector<QJsonValueRef> refs;
+//    if (vars.contains(key) && names.size() == 1) {
+//        vars[key].toObject()["OBJECT"] = value;
+//        return _FRD_NO_ERROR_;
+//    }
     if (vars.contains(key)) {
         refs.push_back(vars[key].toObject()["OBJECT"]);
     }
@@ -123,18 +159,42 @@ FRD_error_type FRD_Json::setValue(const QString& block, const QString& name, con
     return _FRD_NO_ERROR_;
 }
 
-FRD_error_type FRD_Json::setExistantValue(const QString& block, const QString& name, const QString&, QJsonValue value) {
-    QStringList names = name.split('.', Qt::SkipEmptyParts);
-    if (names.empty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // change into empty variable name
+FRD_error_type FRD_Json::setExistantValue(const QString& block, const QString& base_name, const QString& var_name, const QString& type, QJsonValue value) {
+    QStringList base_names = base_name.split('.', Qt::SkipEmptyParts);
+    QStringList var_names  = var_name.split('.', Qt::SkipEmptyParts);
+    return setExistantValue(block, base_names, var_names, type, value);
+}
+
+FRD_error_type FRD_Json::setExistantValue(const QString& block, const QStringList& base_names_, const QStringList& var_names_, const QString& type, QJsonValue value) {
+    qDebug() << vars;
+    QStringList base_names = base_names_;
+    QStringList var_names  = var_names_;
+    if (var_names.isEmpty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // change into empty variable name
 
     QString block_ = block;
-    while(!vars.contains(block_ + names[0])) {
+    QString base_names_str;
+    for (const auto& name : base_names_) base_names_str += name;
+    while(!base_names.isEmpty() && !vars.contains(block_ + base_names_str + var_names[0])) {
+        // if the beginning of names is not the same,
+        // they must be in the different block
+        if (vars.contains(block_ + var_names[0])) {
+            QString new_var_name = var_names.last();
+            var_names.pop_back();
+            return setExistantValue(block_, var_names, {new_var_name}, type, value);
+        }
         do { block_.chop(1); } while(!block_.isEmpty() && block_.last(1) != ".");
         if (block_.isEmpty()) return _FRD_ERROR_UNDEFINED_VARIABLE_;
     }
+
     QVector<QJsonValueRef> refs;
+    QStringList names = base_names + var_names;
+    if (names.size() == 1) {
+        vars[block_ + names[0]].toObject()["OBJECT"] = value;
+        return _FRD_NO_ERROR_;
+    }
+
     refs.push_back(vars[block_ + names[0]].toObject()["OBJECT"]);
-    for (int i = 1; i != names.size(); i++) {
+    for (int i = 1; i < names.size(); i++) {
         if (refs.last().toObject().contains(names[i])) {
             refs.push_back(refs.last().toObject()[names[i]]);
         }
@@ -143,13 +203,14 @@ FRD_error_type FRD_Json::setExistantValue(const QString& block, const QString& n
         }
     }
     refs.last() = value;
+    qDebug() << vars;
     return _FRD_NO_ERROR_;
 }
 
 FRD_error_type FRD_Json::useValue(const QString& block, const QString& name) {
     qDebug() << "Entrance of useValue";
     if (!contains(block, name)) return _FRD_ERROR_UNDEFINED_VARIABLE_;
-    auto var_value = getValue(block, name);
+    auto var_value = getValue(block, {}, name);
     auto var_type = type(block, name);
     qDebug() << "useValue var_type:" << var_type;
     if (var_type.isEmpty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // no type

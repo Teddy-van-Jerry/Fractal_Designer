@@ -97,18 +97,19 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
     bool ok = true;
     int init_col = col;
     QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-    if (!existed || info.contains(block, name)) {
-        if (existed && info.contains(block, name + var_name)) {
+    qDebug() << "readVar" << var_name << block << name;
+    if (!existed || info.contains(block, name + var_name) || info.contains(block, name)) {
+        if (!existed && info.contains(block, name + var_name)) {
             info.addError(_FRD_WARNING_VARIABLE_REDEFINITION_,
                           tr("Redefinition of ") + var_name,
                           row, init_col, (int)var_name.length());
         }
         else if (!existed) {
-            info.setValue(block, name + var_name, new_class_name, QJsonValue::Null);
+            info.setValue(block, name, var_name, new_class_name, QJsonValue::Null);
             qDebug() << "Create an empty value for it" << info.varsToJson();
         }
-        auto frd_var = info.getValue(block, name + var_name);
-        // auto json_type = frd_var.type();
+        auto frd_var = info.getValue(block, name, var_name);
+        auto var_type = info.type(block, name + var_name);
         QChar c = nextChar();
         if (c == ';') {
             if (existed) {
@@ -123,7 +124,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
             if (c == '{') {
                 if (!name.split('.', Qt::SkipEmptyParts).isEmpty()) {
                     // Member variable
-                    info.setValue(block, name + var_name, "", QJsonValue::Null);
+                    info.setValue(block, name, var_name, "", QJsonValue::Null);
                 }
                 ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, block, name + var_name + ".");
             }
@@ -143,49 +144,89 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     qDebug() << "eval result" << ret.real();
                     ok = ok && ok_here;
                     if (info.type(block, name + var_name + ".") == "number" || (!existed && new_class_name == "number")) {
-                        info.setValue(block, name + var_name + ".", "number", ret.real());
+                        info.setValue(block, name, var_name, "number", ret.real());
                         qDebug() << "setValue here";
                         // Theoretically, there should be no error.
                     }
                     else {
                         // it is a complex number
-                        info.setValue(block, name + var_name + "." + "Real.", "Real", ret.real());
-                        info.setValue(block, name + var_name + "." + "Imag.", "Imag", ret.imag());
+                        info.setValue(block, name, var_name + ".Real", "", ret.real());
+                        info.setValue(block, name, var_name + ".Imag", "", ret.imag());
                         // Theoretically, there should be no error.
                     }
                 }
                 else {
                     // read the rvalue variable
-                    if (c == '$') {
+                    if (c == '$' && var_type != "formula") {
+                        nextChar();
                         QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                        qDebug() << "var_name_r" << var_name_r << "name" << name;
+                        qDebug() << info.type(block, name + var_name) << info.type(block, name + var_name_r);
                         // type must match
                         if (info.type(block, name + var_name) == info.type(block, name + var_name_r)) {
                             auto error_ = info.setValue(block,
-                                                        name + var_name,
+                                                        name,
+                                                        var_name,
                                                         info.type(block, name + var_name),
-                                                        info.getValue(block, name + var_name_r));
+                                                        info.getValue(block, name, var_name_r));
                             if (error_ != _FRD_NO_ERROR_) {
                                 info.addError(error_,
-                                              tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
-                                              + pureName(var_name) + tr("is invalid"),
+                                              tr("Assignment from rvalue ") + var_name_r + tr(" to lvalue ")
+                                              + var_name + tr(" is invalid"),
                                               row, init_col, var_name_r.length());
                             }
                         }
                         else {
                             info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
                                           tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
-                                          + pureName(var_name) + tr("is invalid"),
+                                          + pureName(var_name) + tr(" is invalid"),
                                           row, init_col, var_name.length());
                             ok = false;
                         }
+                    }
+                    else if (var_type == "array") {
+                        col--;
+                        int init_row = row, init_col = col;
+                        QString value = nextString(";", true, true);
+                        QStringList nums = value.split(',', Qt::SkipEmptyParts);
+                        QJsonArray arr;
+                        bool num_ok;
+                        for (const auto& num : nums) {
+                            arr.append(num.toDouble(&num_ok));
+                            if (!num_ok) {
+                                info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                                              num + tr(" is not a number"),
+                                              init_row, init_col, 2);
+                            }
+                        }
+                        info.setValue(block, name, var_name, "array", arr);
+                    }
+                    else if (var_type == "bool") {
+                        col--;
+                        int init_row = row, init_col = col;
+                        bool result = true;
+                        QString value = nextString(";", true, true);
+                        if (value.simplified() == "false" || value.simplified() == "_FALSE_") {
+                            result = false;
+                        }
+                        else if (value.simplified() == "true" || value.simplified() == "_TRUE_") {
+                            result = true;
+                        }
+                        else {
+                            info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                                          tr("This should be an boolean value"),
+                                          init_row, init_col, value.length());
+                        }
+                        info.setValue(block, name, var_name, "bool", result);
                     }
                     else {
                         // value by string
 
                         col--;
                         QString value = nextString(";", true, true);
+                        value = value.trimmed(); // remove spaces in the front and the end
                         qDebug() << "value by string" << value;
-                        auto error_ = info.setValue(block, name + var_name, "", value);
+                        auto error_ = info.setValue(block, name, var_name, "", value);
                         qDebug() << info.varsToJson();
                         if (error_ != _FRD_NO_ERROR_) {
                             info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
@@ -231,14 +272,14 @@ bool Interpreter::readFun(FRD_block_content_ content, const QString& block, cons
                 cols.push_back(col - param.length());
                 param.clear();
             }
-            if (c == '$') {
+            else if (c == '$') {
                 if (param.isEmpty()) {
                     param.push_back('.');
                 }
                 else {
-                    // lack of a comma
+                    // miss of a comma
                     info.addError(_FRD_ERROR_FUNCTION_SYNTAX_,
-                                  tr("Miss of a comma in function: ") + fun_name,
+                                  tr("Missing comma in function: ") + fun_name,
                                   row, col - 1, 1);
                     ok = false;
                 }
@@ -367,7 +408,7 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
     for (int i = 0; i != rows.size(); i++) { // expr_vars, rows, cols have the same size
         QJsonValue v = 0;
         QString v_type = info.type(block, name + QString::fromStdString(expr_vars[i]));
-        v = info.getValue(block, name + QString::fromStdString(expr_vars[i]));
+        v = info.getValue(block, name, QString::fromStdString(expr_vars[i]));
         if (v_type == "number") {
             // a real number
             vars_value.push_back(v.toDouble());
