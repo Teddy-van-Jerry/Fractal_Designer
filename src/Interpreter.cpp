@@ -18,9 +18,10 @@ bool Interpreter::interpret(const QString& text, FRD_Json& json) {
 bool Interpreter::interpret() {
     bool error = false;
     error |= !removeComments();
-    // error |= !readBlock();
-    info.setValue("1.2.3.", "num.X", "Number", 123);
-    info.setExistedValue("1.2.3.", "num.X", "", -1234);
+    error |= !readBlock();
+//    info.setValue("1.2.3.", "num.X.", "Number", 123);
+//    info.setExistantValue("1.2.3.", "num.X.", "", -1234);
+//    qDebug() << info.type("1.2.3.", "num.X.") << info.type("1.2.3.", "num.");
     return !error;
 }
 
@@ -58,9 +59,13 @@ bool Interpreter::removeComments() {
                     comment_row = comment_col = 0;
                     continue;
                 }
+                else {
+                    line[i] = ' ';
+                }
             }
             else {
                 // check if it is the beginning of comments
+                if (i + 1 >= line.length()) break;
                 if (line[i] != '/') continue;
                 if (line[i + 1] == '/') {
                     // single-line comments
@@ -85,23 +90,24 @@ bool Interpreter::removeComments() {
     }
     return !comment_row;
 }
-/*
-bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool existed, QString new_class_name) {
+
+bool Interpreter::readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed, QString new_class_name) {
     qDebug() << "readVar" << name << new_class_name;
 
     bool ok = true;
     int init_col = col;
     QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-    if (!existed || info.contains(name + "." + var_name)) {
-        if (existed && info.contains(name + "." + var_name)) {
+    if (!existed || info.contains(block, name)) {
+        if (existed && info.contains(block, name + var_name)) {
             info.addError(_FRD_WARNING_VARIABLE_REDEFINITION_,
-                          tr("Redefinition of ") + pureName(var_name),
+                          tr("Redefinition of ") + var_name,
                           row, init_col, (int)var_name.length());
         }
         else if (!existed) {
-            // info.addBaseVar(name, new_class_name);
+            info.setValue(block, name + var_name, new_class_name, QJsonValue::Null);
+            qDebug() << "Create an empty value for it" << info.varsToJson();
         }
-        auto frd_var = info[name + "." + var_name];
+        auto frd_var = info.getValue(block, name + var_name);
         // auto json_type = frd_var.type();
         QChar c = nextChar();
         if (c == ';') {
@@ -115,60 +121,84 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool 
         else if (c == '=') {
             c = nextChar();
             if (c == '{') {
-                ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, name + "." + var_name);
+                if (!name.split('.', Qt::SkipEmptyParts).isEmpty()) {
+                    // Member variable
+                    info.setValue(block, name + var_name, "", QJsonValue::Null);
+                }
+                ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, block, name + var_name + ".");
             }
             else {
                 col--;
                 // assignment
                 // example: $x = $y;
-                if (frd_var.isDouble() || isComplexJsonValue(frd_var) || (!existed && new_class_name == "number")) {
+                if (info.type(block, name + var_name) == "number" || info.type(block, name + var_name) == "complex") {
                     // can have maths expression
                     // nextChar();
+
                     int start_row = row, start_col = col;
                     QString expr = nextString(";", true, true);
-                    qDebug() << "rvalue Expr" << expr;
+                    qDebug() << "rvalue Expr" << expr << block << name;
                     bool ok_here;
-                    std::complex<double> ret = evalExpr(expr, name, start_row, start_col, &ok_here);
+                    std::complex<double> ret = evalExpr(expr, block, name + ".", start_row, start_col, &ok_here);
                     qDebug() << "eval result" << ret.real();
                     ok = ok && ok_here;
-                    if (frd_var.isDouble() || (!existed && new_class_name == "number")) {
-                        info.setValue(name + "." + var_name, "Number", ret.real());
+                    if (info.type(block, name + var_name + ".") == "number" || (!existed && new_class_name == "number")) {
+                        info.setValue(block, name + var_name + ".", "number", ret.real());
                         qDebug() << "setValue here";
                         // Theoretically, there should be no error.
                     }
                     else {
                         // it is a complex number
-                        info.setValue(name + "." + var_name + ".Real", "Real", ret.real());
-                        info.setValue(name + "." + var_name + ".Imag", "Imag", ret.imag());
+                        info.setValue(block, name + var_name + "." + "Real.", "Real", ret.real());
+                        info.setValue(block, name + var_name + "." + "Imag.", "Imag", ret.imag());
                         // Theoretically, there should be no error.
                     }
                 }
                 else {
                     // read the rvalue variable
-                    QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-                    // type must match
-                    if (info.type(name + "." + var_name) == info.type(name + "." + var_name_r)) {
-                        auto error_ = info.setValue(name + "." + var_name,
-                                                    info.type(name + "." + var_name),
-                                                    name + "." + var_name_r);
-                        if (error_ != _FRD_NO_ERROR_) {
-                            info.addError(error_,
+                    if (c == '$') {
+                        QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                        // type must match
+                        if (info.type(block, name + var_name) == info.type(block, name + var_name_r)) {
+                            auto error_ = info.setValue(block,
+                                                        name + var_name,
+                                                        info.type(block, name + var_name),
+                                                        info.getValue(block, name + var_name_r));
+                            if (error_ != _FRD_NO_ERROR_) {
+                                info.addError(error_,
+                                              tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
+                                              + pureName(var_name) + tr("is invalid"),
+                                              row, init_col, var_name_r.length());
+                            }
+                        }
+                        else {
+                            info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
                                           tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
                                           + pureName(var_name) + tr("is invalid"),
-                                          row, init_col, var_name_r.length());
+                                          row, init_col, var_name.length());
+                            ok = false;
                         }
                     }
+                    else {
+                        // value by string
 
-                    info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
-                                  tr("Assignment from rvalue ") + pureName(var_name_r) + tr(" to lvalue ")
-                                  + pureName(var_name) + tr("is invalid"),
-                                  row, init_col, var_name.length());
-                    ok = false;
+                        col--;
+                        QString value = nextString(";", true, true);
+                        qDebug() << "value by string" << value;
+                        auto error_ = info.setValue(block, name + var_name, "", value);
+                        qDebug() << info.varsToJson();
+                        if (error_ != _FRD_NO_ERROR_) {
+                            info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
+                                          tr("Assignment from rvalue ") + value + tr(" to lvalue ")
+                                          + var_name + tr("is invalid"),
+                                          row, col, value.length());
+                        }
+                    }
                 }
             }
         }
         else if (c == '{') {
-            ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, var_name);
+            ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, block + QString::number(block_count++) + ".", var_name);
         }
     }
     else {
@@ -179,8 +209,8 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& name, bool 
     }
     return ok;
 }
-*/
-bool Interpreter::readFun(FRD_block_content_ content, const QString& name) {
+
+bool Interpreter::readFun(FRD_block_content_ content, const QString& block, const QString& name) {
     bool ok = true;
     QString fun_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
     if (fun_name == "CONFIGURE") {
@@ -203,7 +233,7 @@ bool Interpreter::readFun(FRD_block_content_ content, const QString& name) {
             }
             if (c == '$') {
                 if (param.isEmpty()) {
-                    param.push_back(c);
+                    param.push_back('.');
                 }
                 else {
                     // lack of a comma
@@ -231,6 +261,11 @@ bool Interpreter::readFun(FRD_block_content_ content, const QString& name) {
             cols.push_back(col - param.length());
             param.clear();
         }
+        qDebug() << "Here comes setting param";
+        for (const auto& param : params) {
+            qDebug() << "useValue" << block << name + param;
+            info.useValue(block, name + param);
+        }
     }
     return ok;
 }
@@ -244,10 +279,10 @@ bool Interpreter::readDef() {
 }
 
 bool Interpreter::readBlock() {
-    return readBlock(_FRD_BLOCK_BLANK_, QString::number(block_count++) + "_");
+    return readBlock(_FRD_BLOCK_BLANK_, QString::number(block_count++) + ".", ".");
 }
 
-bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
+bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, const QString& name) {
     bool ok = true;
     // when it has not reached the end
     QChar curr;
@@ -255,20 +290,23 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
     while (curr = nextChar(), curr != QChar(0)) { // while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
         qDebug() << "Inside readBlock while";
         if (curr == '}') return ok;
+        else if (curr == '{') {
+            ok = ok && readBlock(_FRD_BLOCK_BLANK_, block + QString::number(block_count++) + ".", name);
+        }
         else if (curr == ';') continue;
         else if (curr == '#') {
             // Marco is not supported in this version.
             row++, col = 0;
         }
         else if (curr == '$') {
-            // ok = ok && readVar(content, name, true);
+            ok = ok && readVar(content, block, name);
         }
         else if (curr == '@') {
             // class
             QString class_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
             // This version does not support user-defined class.
             if (nextChar() == '$') {
-                // ok = ok && readVar(content, name, false, class_name);
+                ok = ok && readVar(_FRD_BLOCK_VARIABLE_, block, name, false, class_name);
             }
             else {
                 // unexpected token
@@ -284,15 +322,17 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
         }
         else if (curr == '%') {
             // function
-            ok = ok && readFun(content, name);
+            ok = ok && readFun(content, block, name);
         }
         else {
             int init_col = col;
+            qDebug() << strings[row - 1][col - 1];
             col--; // go back one character
-            QString unexpected_token = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`"); // skip the token
+            QString unexpected_token = nextString(";"); // skip the token
             info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
                           tr("Unexpected token: ") + unexpected_token,
                           row, init_col, unexpected_token.length());
+            qDebug() << "Unexpected Token:" << unexpected_token;
             ok = false;
         }
     }
@@ -300,7 +340,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& name) {
     return ok;
 }
 
-std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& block_name, int start_row, int start_col, bool* ok) {
+std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok) {
     bool ok_ = true;
     std::vector<std::string> expr_vars;
     std::vector<std::complex<double>> vars_value;
@@ -314,42 +354,36 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
             else if (expr[i] == '\n') curr_row++, curr_col = 0;
             continue;
         }
-        std::string str = block_name.toStdString().append(".");
-        while (++i != expr.size() && !expr[i].isSpace() && !QString("+-*/*").contains(expr[i])) {
+        std::string str;
+        while (++i != expr.size() && !expr[i].isSpace() && !QString("+-*/*()[]{}").contains(expr[i])) {
             str.push_back(expr[i].toLatin1());
         }
         expr_vars.push_back(str);
         rows.push_back(curr_row);
         cols.push_back(curr_col);
         i--; // go back one
-        curr_col += str.length() - block_name.length() - 1;
+        curr_col += str.length();
     }
     for (int i = 0; i != rows.size(); i++) { // expr_vars, rows, cols have the same size
         QJsonValue v = 0;
-        if (info.getValue(QString::fromStdString(expr_vars[i]), v)) {
-            if (v.isDouble()) {
-                // a real number
-                vars_value.push_back(v.toDouble());
-            }
-            else if (v.isObject() && v.toObject().contains("Real") && v.toObject().contains("Imag")) {
-                // a complex number
-                double real_ = v["Real"].toDouble();
-                double imag_ = v["Imag"].toDouble();
-                std::complex<double> complex_ { real_, imag_ };
-                vars_value.push_back(complex_);
-            }
-            else {
-                info.addError(_FRD_ERROR_NON_NUMBER_VALUE_,
-                              tr("The variabele ") + pureName(expr[i]) + tr(" can not be used in maths expression."),
-                              rows[i], cols[i], expr_vars[i].length() - block_name.length());
-                vars_value.push_back(0);
-                ok_ = false;
-            }
+        QString v_type = info.type(block, name + QString::fromStdString(expr_vars[i]));
+        v = info.getValue(block, name + QString::fromStdString(expr_vars[i]));
+        if (v_type == "number") {
+            // a real number
+            vars_value.push_back(v.toDouble());
+        }
+        else if (v_type == "complex") {
+            // a complex number
+            double real_ = v["Real"].toDouble();
+            double imag_ = v["Imag"].toDouble();
+            std::complex<double> complex_ { real_, imag_ };
+            vars_value.push_back(complex_);
         }
         else {
-            info.addError(_FRD_ERROR_UNDEFINED_VARIABLE_,
-                          tr("Use of undefined variable ") + pureName(expr[i]),
-                          rows[i], cols[i], expr_vars[i].length() - block_name.length());
+            info.addError(_FRD_ERROR_NON_NUMBER_VALUE_,
+                          tr("The variabele ") + pureName(expr[i]) + tr(" can not be used in maths expression."),
+                          rows[i], cols[i], expr_vars[i].length());\
+            qDebug() << tr("The variabele ") + pureName(expr[i]) + tr(" can not be used in maths expression.");
             vars_value.push_back(0);
             ok_ = false;
         }
@@ -363,6 +397,7 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
             info.addError(_FRD_ERROR_EVAL_,
                           tr("Error in calculation: ") + QString::fromStdString(msg),
                           start_row, start_col, expr.length());
+            qDebug() << tr("Error in calculation: ") + QString::fromStdString(msg);
             ok_ = false;
         }
     }
@@ -391,6 +426,12 @@ QString Interpreter::nextString(QString end_of_string, bool discard_space, bool 
     QString ret;
     do {
         qDebug() << row << col;
+        if (col < 0) col = 0;
+        if (!ret.isEmpty()) {
+            ++row;
+            col = 0;
+            ret.push_back('\n');
+        }
         while (++col <= strings[row - 1].size() &&
                (discard_space ? 1 : !strings[row - 1][col - 1].isSpace()) &&
                !end_of_string.contains(strings[row - 1][col - 1]) &&
@@ -398,7 +439,7 @@ QString Interpreter::nextString(QString end_of_string, bool discard_space, bool 
             ret.push_back(strings[row - 1][col - 1]);
         }
     } // the last one "++row + (col = 0)" aims to prepare for next round
-    while (!discard_space && !discard_linebreak && col == strings[row - 1].size() && row + 1 <= strings.size() && ++row + (col = 0));
+    while (discard_space && discard_linebreak && col > strings[row - 1].size() && row + 1 <= strings.size());
     col--;
     qDebug() << "Exit of nextString";
     return ret;

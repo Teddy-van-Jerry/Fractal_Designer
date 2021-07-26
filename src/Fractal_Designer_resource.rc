@@ -24,7 +24,7 @@ VS_VERSION_INFO VERSIONINFO
 				VALUE "FileDescription", "Fractal Designer\0"
 				VALUE "FileVersion", "6.0.3.7\0"
 				VALUE "LegalCopyright", "Copyright (C) 2021 Teddy van Jerry\0"
-				VALUE "OriginalFilename", "Fractal_Designer.pro.exe\0"
+				VALUE "OriginalFilename", "Fractal_Designer.exe\0"
 				VALUE "ProductName", "Fractal Designer\0"
 				VALUE "ProductVersion", "6.0.3.7\0"
 				VALUE "InternalName", "\0"

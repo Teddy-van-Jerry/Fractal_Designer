@@ -4,9 +4,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 6.0.3.6
+VERSION = 6.0.4.0
 
-TARGET = Fractal_Designer.pro
+TARGET = Fractal_Designer
 
 DESTDIR = ../bin
 

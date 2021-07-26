@@ -1787,8 +1787,16 @@ p, li { white-space: pre-wrap; }
                     <family>Consolas</family>
                    </font>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color:#012456;
+color:#ffffff</string>
+                  </property>
                   <property name="plainText">
-                   <string>FRD 6.0.0 &gt;</string>
+                   <string>FRD 6.0.3 Editor Terminal
+-------------------------
+(C) 2021 Teddy van Jerry
+=========================
+</string>
                   </property>
                  </widget>
                 </item>
@@ -2993,8 +3001,8 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <resources>
-  <include location="Icon_resources.qrc"/>
   <include location="EXE_Icons.qrc"/>
+  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>
