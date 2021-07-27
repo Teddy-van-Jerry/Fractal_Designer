@@ -1,4 +1,4 @@
-﻿#include <QLabel>
+#include <QLabel>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMessageBox>
@@ -80,6 +80,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionStop->setDisabled(true);
 
     route_tool_window = new Route_Tool(this);
+
+    ui->splitter_Editor_Up->setStretchFactor(0, 4);
+    ui->splitter_Editor_Up->setStretchFactor(1, 1);
+    ui->splitter_Editor->setStretchFactor(0, 4);
+    ui->splitter_Editor->setStretchFactor(1, 1);
 
     editor = new FRD_Editor(ui->gridLayout_Editor);
 
@@ -3425,4 +3430,13 @@ void MainWindow::customMouseMoveEvent(QMouseEvent *event){
     }
     else if (y < RESIZE_LIMIT || y > bottom) this->setCursor(Qt::SizeVerCursor);
     else this->unsetCursor();
+
+void MainWindow::on_pushButton_CodeRun_clicked()
+{
+    FRD_Json jsonFile;
+    Interpreter::interpret(editor->text(), jsonFile);
+    qDebug() << jsonFile.toJson();
+    ui->plainTextEdit_terminal->appendPlainText(jsonFile.toJson());
+    qDebug() << jsonFile.varsToJson();
+    ui->plainTextEdit_terminal->appendPlainText(jsonFile.varsToJson());
 }

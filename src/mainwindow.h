@@ -341,6 +341,8 @@ private slots:
 
     void tableRouteDeleteRow();
 
+    void on_pushButton_CodeRun_clicked();
+
 signals:
 
     void Search_clicked(QString);

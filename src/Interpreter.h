@@ -112,7 +112,7 @@ private:
      * \retval true There is no error in reading variable.
      * \retval false There is error in reading variable.
      */
-    bool readVar();
+    bool readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed = true, QString new_class_name = "");
 
     /**
      * \brief read function defination
@@ -121,7 +121,7 @@ private:
      * \retval true There is no error in reading function.
      * \retval false There is error in reading function.
      */
-    bool readFun();
+    bool readFun(FRD_block_content_ content, const QString& block, const QString& name);
 
     bool readClass();
 
@@ -131,9 +131,9 @@ private:
 
     bool readBlock();
 
-    bool readBlock(FRD_block_content_ content, const QString& name);
+    bool readBlock(FRD_block_content_ content, const QString& block, const QString& name);
 
-    double evalExpr(const QString& expr, const QString& block_name, int start_row, int start_col, bool* ok = nullptr);
+    std::complex<double> evalExpr(const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok = nullptr);
 
     QChar nextChar();
 
@@ -144,7 +144,6 @@ private:
 
     QStringList strings; /**< text to be interpreted stored by lines */
     FRD_Json* info_ptr;  /**< the pointer to current info */
-    QChar curr;
     int row = 1;         /**< row count that starts at 1 */
     int col = 0;         /**< column count that starts at 1 */
     bool reach_end = false;

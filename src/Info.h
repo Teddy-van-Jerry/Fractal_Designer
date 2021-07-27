@@ -20,25 +20,6 @@ class config_;
 class output_;
 class range_;
 
-enum FRD_class_ {
-    _FRD_CLASS_LAYER_,
-    _FRD_CLASS_MUSIC_,
-    _FRD_CLASS_TEMPLATE_,
-    _FRD_CLASS_COLOR_,
-    _FRD_CLASS_PATH_,
-    _FRD_CLASS_PATH_POINT_,
-    _FRD_CLASS_POINT_,
-    _FRD_CLASS_CONFIG_,
-    _FRD_CLASS_OUTPUT_,
-    _FRD_CLASS_RANGE_,
-    _FRD_CLASS_INT_,
-    _FRD_CLASS_DOUBLE_,
-    _FRD_CLASS_STRING_,
-    _FRD_CLASS_BOOL_,
-    _FRD_CLASS_FORMULA_,
-    _FRD_CLASS_CUSTOM_ = -1
-};
-
 class FRD_var_ {
 public:
     FRD_class_ varClass;
@@ -152,14 +133,6 @@ class custom_class_ {
 public:
     QString className;
     int row, col;
-};
-
-enum error_type_ {
-    _FRD_ERROR_UNEXPECTED_TOKEN_ = 1000,
-    _FRD_ERROR_COMMENT_UNFINISHED_,
-    _FRD_ERROR_OTHER_,
-    _FRD_WARNING_DECLARATION_ONLY_,
-    _FRD_WARNING_OTHER
 };
 
 class error_ {
