@@ -4,9 +4,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 6.0.2.0
+VERSION = 6.0.5.0
 
-TARGET = Fractal_Designer.pro
+TARGET = Fractal_Designer
 
 DESTDIR = ../bin
 
@@ -16,6 +16,8 @@ DESTDIR = ../bin
 
 SOURCES += \
     FRD_Editor.cpp \
+    FRD_Json.cpp \
+    FRD_TitleBar.cpp \
     Info.cpp \
     Interpreter.cpp \
     String_Evaluate.cpp \
@@ -38,6 +40,8 @@ SOURCES += \
 
 HEADERS += \
     FRD_Editor.h \
+    FRD_Json.h \
+    FRD_TitleBar.h \
     Info.h \
     Interpreter.h \
     String_Evaluate.h \
@@ -47,6 +51,7 @@ HEADERS += \
     info_save.h \
     login.h \
     mainwindow.h \
+    mainwindow_global.h \
     new_features.h \
     new_file.h \
     preview_setting.h \
