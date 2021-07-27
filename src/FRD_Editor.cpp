@@ -181,7 +181,6 @@ FRD_Editor::FRD_Indicator FRD_Editor::indicatorFromSymbol(QChar symbol) const
 
 void FRD_Editor::updateHighlight()
 {
-
     timer->stop(); // Stop the timer since text has been updated
     auto text = editor->text(); // get text in the editor
     setIndicator(0, text.length(), FRD_INDIC_CLEAR); // clear all indicators
@@ -200,5 +199,6 @@ void FRD_Editor::updateHighlight()
 
 void FRD_Editor::waitToUpdateHighlight()
 {
+    emit textChanged();
     timer->start(waiting_time);
 }

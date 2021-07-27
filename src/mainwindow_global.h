@@ -59,6 +59,7 @@
 #include "FRD_Editor.h"
 #include "FRD_TitleBar.h"
 #include "Interpreter.h"
+#include "Info.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1

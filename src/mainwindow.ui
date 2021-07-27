@@ -1002,8 +1002,8 @@ A = 255;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>422</width>
-               <height>439</height>
+               <width>401</width>
+               <height>443</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2341,7 +2341,7 @@ color:#ffffff</string>
   </action>
   <action name="actionSave_As_A">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="Icon_resources.qrc">

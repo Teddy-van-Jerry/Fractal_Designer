@@ -27,8 +27,6 @@ public:
 
     QString Open_Location = "";
 
-    QString Project_Name;
-
     QString Project_Template;
 
     QString User_Name;
@@ -45,11 +43,11 @@ public:
 
     void setOpenLocation(QString);
 
-    bool High_Version_Open(int type = 0);
+    bool OpenFRD(int type = 0);
 
     bool save_or_not = false;
 
-    void show_preview_image(); //
+    void show_preview_image();
 
     void edit(int mode = EDIT_HERE);
 
@@ -343,6 +341,10 @@ private slots:
 
     void on_pushButton_CodeRun_clicked();
 
+    void updateEditorInfo();
+
+    void on_actionSave_As_A_triggered();
+
 signals:
 
     void Search_clicked(QString);
@@ -412,6 +414,8 @@ public:
 
     FRD_Editor* editor;
 
+    Info info;
+
     enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
 
     void setLanguage(App_Language la);
@@ -430,6 +434,7 @@ public:
     QWidget * menuWidget() const;
 
     inline FRD_TitleBar& FRD_TitleBar() const { return *this->m_titleBar; }
+
 protected:
 
     int RESIZE_LIMIT;

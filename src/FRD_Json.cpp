@@ -1,7 +1,7 @@
 #include "FRD_Json.h"
 
 FRD_Json::FRD_Json() {
-    main.insert("Version", "6.0.4");
+    main.insert("Version", "6.0.5");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -43,7 +43,7 @@ QString FRD_Json::type(const QString& block, const QStringList& names) const {
             return "route";
         else if (QVector<QString>({"VideoDir", "ImageDir", "VideoFormat", "VideoName", "ImagePrefix", "Name", "Type"}).contains(member))
             return "string";
-        else if (QVector<QString>({"Fps", "Time"}).contains(member))
+        else if (QVector<QString>({"Fps", "Time", "PreviewRotation", "PreviewTime"}).contains(member))
             return "number";
         else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates", "ImageSize", "PreviewSize", "PreviewImageSize", "PreviewCentre"}).contains(member))
             return "array";
@@ -270,4 +270,75 @@ QString FRD_Json::toJson(QJsonDocument::JsonFormat format) const {
 QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
     QJsonDocument doc(vars);
     return doc.toJson(format);
+}
+
+QString FRD_Json::text() const {
+    return frd_text;
+}
+
+void FRD_Json::updateText(QString text) {
+    frd_text = text;
+}
+
+QString FRD_Json::layerFormula(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["Formula"];
+    if (value.isString()) return value.toString();
+    else return "0";
+}
+
+QString FRD_Json::layerColor(int index, QString tag) const {
+    QStringList tags = tag.split('.', Qt::SkipEmptyParts);
+    if (tags.size() != 2) return "0";
+    QJsonValue value = main["Layers"][index]["Template"][tags[0]][tags[1]];
+    return value.toString("0");
+}
+
+double FRD_Json::PreviewSize(QString tag) const {
+    int index = (tag.toUpper() == "Y") ? 1 : 0;
+    QJsonValue value = main["Config"]["PreviewSize"][index];
+    return value.toDouble(0);
+}
+
+double FRD_Json::PreviewCentre(QString tag) const {
+    int index = (tag.toUpper() == "Y") ? 1 : 0;
+    QJsonValue value = main["Config"]["PreviewCentre"][index];
+    return value.toDouble(0);
+}
+
+int FRD_Json::PreviewImageSize(QString tag) const {
+    int index = (tag.toUpper() == "Y") ? 1 : 0;
+    QJsonValue value = main["Config"]["PreviewImageSize"][index];
+    return value.toInt(0);
+}
+
+double FRD_Json::PreviewRotation() const {
+    QJsonValue value = main["Config"]["PreviewRotation"];
+    return value.toDouble(0);
+}
+
+double FRD_Json::PreviewTime() const {
+    QJsonValue value = main["Config"]["PreviewTime"];
+    if (value.toDouble() < 0) return 0;
+    if (value.toDouble() > 1) return 1;
+    return value.toDouble(0);
+}
+
+bool FRD_Json::inverseYAsis() const {
+    QJsonValue value = main["Config"]["InverseYAxis"];
+    return value.toBool(false);
+}
+
+QString FRD_Json::templateMin(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["Min"];
+    return value.toString("0");
+}
+
+QString FRD_Json::templateMax(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["Max"];
+    return value.toString("10");
+}
+
+QString FRD_Json::iterationLimit(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["IterationLimit"];
+    return value.toString("50");
 }

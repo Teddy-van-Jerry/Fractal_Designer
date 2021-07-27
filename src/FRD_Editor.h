@@ -10,7 +10,7 @@
 #include <QSci/qscilexerfrd.h>
 #include <QSci/qsciapis.h>
 
-class FRD_Editor : QWidget
+class FRD_Editor : public QWidget
 {
     Q_OBJECT
 
@@ -49,6 +49,9 @@ private slots:
     void updateHighlight();
 
     void waitToUpdateHighlight();
+
+signals:
+    QString textChanged();
 
 private:
 

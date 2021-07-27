@@ -65,9 +65,38 @@ public:
 
     QString varsToJson(QJsonDocument::JsonFormat = QJsonDocument::JsonFormat::Indented) const;
 
+    QString text() const;
+
+    QString layerFormula(int index) const;
+
+    QString layerColor(int index, QString tag) const;
+
+    double PreviewSize(QString tag) const;
+
+    double PreviewCentre(QString tag) const;
+
+    int PreviewImageSize(QString tag) const;
+
+    double PreviewRotation() const;
+
+    double PreviewTime() const;
+
+    bool inverseYAsis() const;
+
+    QString templateMin(int index) const;
+
+    QString templateMax(int index) const;
+
+    QString iterationLimit(int index) const;
+
+public slots:
+    void updateText(QString text);
+
 private:
     QJsonObject main;  // main object of doc
     QJsonObject vars;  // key by their names
+
+    QString frd_text;
 };
 
 #endif // FRD_JSON_H

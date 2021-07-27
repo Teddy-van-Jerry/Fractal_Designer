@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->addPermanentWidget(permanent);
     ui->statusbar->showMessage(tr("Welcome to Fractal Designer 6.0!"), 20000);
     show_preview_image();
-    Project_Name = "Unsaved project";
     Project_Template = "Undefined";
-    setWindowTitle("Fractal Designer - " + Project_Name);
+    setWindowTitle((Open_Location.isEmpty() ? tr("Unsaved Project") : QFileInfo(Open_Location).fileName()) +
+                   " - <strong>Fractal Designer</strong>");
 
     Line_Search = new QLineEdit(this);
     // Line_Search->setToolTip("Search");
@@ -83,10 +83,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->splitter_Editor_Up->setStretchFactor(0, 4);
     ui->splitter_Editor_Up->setStretchFactor(1, 1);
+    ui->splitter_Editor_Up->setSizes({10000, 100});
     ui->splitter_Editor->setStretchFactor(0, 4);
     ui->splitter_Editor->setStretchFactor(1, 1);
+    ui->splitter_Editor->setSizes({10000, 10});
 
     editor = new FRD_Editor(ui->gridLayout_Editor);
+    connect(editor, SIGNAL(textChanged()), this, SLOT(updateEditorInfo()));
 
     // Route custom menu
     table_route_menu = new QMenu(ui->tableView_Route);
@@ -107,8 +110,6 @@ MainWindow::MainWindow(QWidget *parent)
     table_route_menu->addSeparator();
     table_route_menu->addActions({table_route_action[4]});
     connect(ui->tableView_Route, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tableRouteCustomMenuRequested(QPoint)));
-
-    show_preview_image();
 
     ReadStyle();
 }
@@ -174,7 +175,7 @@ void MainWindow::setOpenLocation(QString str)
     if(str != "")
     {
         save_or_not = true;
-        High_Version_Open(OPEN_FILE_OUT);
+        OpenFRD(OPEN_FILE_OUT);
     }
     else
     {
@@ -190,151 +191,22 @@ inline void _complex_in(QDataStream& in, std::complex<double>& c)
     c = new_c;
 }
 
-bool MainWindow::High_Version_Open(int type)
+bool MainWindow::OpenFRD(int type)
 {
-
     ui->actionClose->setEnabled(true);
 
     QFile FRD_R(Open_Location);
     FRD_R.open(QIODevice::ReadOnly);
-    FRD_R.skip(16);
-    if(FRD_R.read(8) != "FRD\xEFTvJ*")
-    {
-        QMessageBox::critical(this, tr("Fail to open"), tr("The file may be damaged or should not be opened with Fractal Designer."));
-        if(type) // OPEN_FILE_OUT
-        {
-            exit(1);
-        }
-        else
-        {
-            save_or_not = false;
-            return false;
-        }
-    }
-    save_or_not = true;
-    char name_1 = 0, name_2 = 0;
-    qint32 length_;
-
-    current_info_v = 0;
-    redo_max_depth = 1;
-    QDataStream in(&FRD_R);
-
-    uint8_t version[4];
-    in >> version[0] >> version[1] >> version[2] >> version[3];
-
-    while(!FRD_R.atEnd())
-    {
-        in >> name_1 >> name_2;
-        if NameIs('T', 'E')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.template_;
-            if(curr_info.template_ == 0) redo_max_depth++;
-            qDebug() << "TE succeeds!";
-        }
-        else if NameIs('T', '2')
-        {
-            FRD_R.skip(4);
-            double t1, t2, t3, t4;
-            in >> t1 >> t2 >> t3 >> t4 >> curr_info.Julia_c_rate;
-            std::complex<double> c1 { t1, t2 };
-            std::complex<double> c2 { t3, t4 };
-            curr_info.Julia_c1 = c1;
-            curr_info.Julia_c2 = c2;
-        }
-        else if NameIs('T', '4')
-        {
-            FRD_R.skip(4);
-            _complex_in(in, curr_info.Newton_a_1);
-            _complex_in(in, curr_info.Newton_a_2);
-            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_1[i]);
-            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_2[i]);
-            _complex_in(in, curr_info.Newton_sin_1);
-            _complex_in(in, curr_info.Newton_sin_2);
-            _complex_in(in, curr_info.Newton_cos_1);
-            _complex_in(in, curr_info.Newton_cos_2);
-            _complex_in(in, curr_info.Newton_ex_1);
-            _complex_in(in, curr_info.Newton_ex_2);
-            in >> curr_info.Newton_c_rate;
-        }
-        else if NameIs('C', 'F')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.CustomFormula_;
-        }
-        else if NameIs('I', 'V')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t >> curr_info.y_inverse;
-        }
-        else if NameIs('C', '1')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.Colour1_f;
-            // It is not included in display()
-            ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
-
-        }
-        else if NameIs('C', '2')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.Colour2_f;
-            // It is not included in display()
-            ui->Divergent_Points_Colour_Formula->setPlainText(curr_info.Colour2_f);
-        }
-        else if NameIs('R', 'O')
-        {
-            in >> length_;
-            // qDebug() << length_;
-            for(int i = 0; i != length_ / _ROUTE_SIZE_; i++)
-            {
-                Route_Info temp_info;
-                curr_info.Route_.push_back(temp_info.read(in));
-            }
-            // qDebug() << curr_info.Route_.size();
-        }
-        else if NameIs('I', 'O')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.image_size_x >> curr_info.image_size_y
-               >> curr_info.frame_rate_index >> curr_info.total_time_str
-               >> curr_info.img_path >> curr_info.img_prefix;
-        }
-        else if NameIs('V', 'I')
-        {
-            FRD_R.skip(4);
-            quint16 list_size = 0;
-            in >> curr_info.video_path >> curr_info.video_name >> list_size;
-            curr_info.music_list.resize(list_size);
-            for(int i = 0 ; i != list_size; i++)
-            {
-                in >> curr_info.music_list[i];
-            }
-        }
-        else if NameIs('P', 'R')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.ps.width >> curr_info.ps.height
-               >> curr_info.ps.xWidth >> curr_info.ps.yHeight
-               >> curr_info.ps.angle >> curr_info.ps.centreX
-               >> curr_info.ps.centreY >> curr_info.ps.autoRefresh;
-        }
-        else
-        {
-            in >> length_;
-            FRD_R.skip(length_);
-        }
-    }
-
-    buff_info = curr_info;
-
+    QTextStream in(&FRD_R);
+    QString text = in.readAll();
+    editor->setText(text);
     FRD_R.close();
-    qDebug() << "High Version Open succeed!";
+    qDebug() << "FRD File Open succeed!";
 
     display();
     save_or_not = true;
 
-    setWindowTitle("Fractal Designer - " + Open_Location);
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
     return true;
 }
 
@@ -399,9 +271,16 @@ void MainWindow::on_actionNew_N_triggered()
     {
         on_actionClose_triggered();
     }
-    New_File* new_project = new New_File(this);
-    new_project->show();
     save_or_not = true;
+
+    Open_Location = QFileDialog::getSaveFileName(this,
+                                                 tr("New Project"),
+                                                 QDir::homePath() + "/Untitled",
+                                                 tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
+    if (Open_Location.isEmpty()) return;
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    // print current
+    on_actionSave_S_triggered();
 }
 
 void MainWindow::on_MainWindow_Newfile_clicked()
@@ -413,29 +292,26 @@ void MainWindow::on_actionOpen_O_triggered()
 {
     QString Old_Open_Location = Open_Location;
     QString New_Open_Location = QFileDialog::getOpenFileName(this,
-                                                 tr("Open Project"),
-                                                 QDir::currentPath(),
-                                                 tr("FRD Files(*.frd)"));
+                                                             tr("Open Project"),
+                                                             QDir::currentPath(),
+                                                             tr("FRD File (*.frd)"));
     qDebug() << New_Open_Location;
     QFile check(New_Open_Location);
-    if(check.exists())
+    if (check.exists())
     {
-        qDebug() << "exist";
-        if(ui->actionClose->isEnabled())
+        if (ui->actionClose->isEnabled())
         {
             on_actionClose_triggered();
         }
         Open_Location = New_Open_Location;
-        if(!High_Version_Open(OPEN_FILE_IN))
+        if (!OpenFRD(OPEN_FILE_IN))
         {
             Open_Location = Old_Open_Location;
-            // setWindowTitle("Fractal Designer - " + Open_Location);
         }
     }
-    else if(New_Open_Location != "")
+    else if (!New_Open_Location.isEmpty())
     {
         QMessageBox::warning(this, "Opening Project Error", "The file doesn't exist!");
-        // Open_Location = "";
     }
 }
 
@@ -555,19 +431,14 @@ void MainWindow::on_actionSave_S_triggered()
     save_or_not = true;
     if(Open_Location == "") on_actionNew_N_triggered();
 
-    // Preparation configuration
-    // curr_info.config1 = 0;
-    /*
-    if(ui->actionAuto_Refresh->isChecked())
-    {
-        curr_info.config1 = 1;
-    }
-    */
 
-    // == Print into file ==
-    curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
-    curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
-    curr_info.print(Open_Location, FRD_Version);
+//    // == Print into file ==
+//    curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
+//    curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
+//    curr_info.print(Open_Location, FRD_Version);
+
+    // print to frd file
+    info.print(Open_Location);
 }
 
 void MainWindow::on_Template_Choice_1_toggled(bool checked)
@@ -725,7 +596,7 @@ void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4]
 
 void MainWindow::customTemplatePre(Create_Image_Task* task)
 {
-    QString Formula = ui->lineEdit_Custom_Formula->text();
+    QString Formula = info.curr().layerFormula(0);
     std::string msg;
     std::vector<_var> post;
     if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
@@ -738,11 +609,21 @@ void MainWindow::customTemplatePre(Create_Image_Task* task)
 
 bool MainWindow::createImagePre(Create_Image_Task* task)
 {
-    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
-    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
+//    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
+//    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
     std::string Colour1_[4], Colour2_[4];
 
-    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
+//    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
+    Colour1_[0] = info.curr().layerColor(0, "Con.R").toStdString();
+    Colour1_[1] = info.curr().layerColor(0, "Con.G").toStdString();
+    Colour1_[2] = info.curr().layerColor(0, "Con.B").toStdString();
+    Colour1_[3] = info.curr().layerColor(0, "Con.A").toStdString();
+    Colour2_[0] = info.curr().layerColor(0, "Div.R").toStdString();
+    Colour2_[1] = info.curr().layerColor(0, "Div.G").toStdString();
+    Colour2_[2] = info.curr().layerColor(0, "Div.B").toStdString();
+    Colour2_[3] = info.curr().layerColor(0, "Div.A").toStdString();
+
+    qDebug() << QString::fromLatin1(Colour1_[0]);
 
     std::string msg1[4], msg2[4];
     std::vector<_var> post1[4], post2[4];
@@ -778,6 +659,8 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
 
     QString Pre_Img_Dir;
+
+
     QDir ck(QCoreApplication::applicationDirPath() + "/temp");
     if(!ck.exists())
     {
@@ -785,6 +668,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
 
+    /*
     if(curr_info.template_ == 2)
     {
         double t = ui->doubleSpinBox_t->value();
@@ -812,15 +696,18 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     else if(curr_info.template_ == 5)
     {
-        customTemplatePre(preview);
-    }
 
-    preview->setImage(curr_info.ps.centreX, curr_info.ps.centreY,
-                      curr_info.ps.xWidth, curr_info.ps.yHeight,
-                      curr_info.ps.width, curr_info.ps.height,
-                      curr_info.ps.angle, ui->doubleSpinBox_t->value(),
+    }
+    */
+
+    customTemplatePre(preview);
+
+    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
+                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
+                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
+                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
                       "png", Pre_Img_Dir, "Preview Image", "Preview",
-                      curr_info.y_inverse);
+                      info.curr().inverseYAsis());
 
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
@@ -1192,16 +1079,7 @@ void MainWindow::build_image_one_ok()
 
 void MainWindow::on_toolButton_imagePath_clicked()
 {  
-    QString default_dir = Project_Name;
-    default_dir = Open_Location;
-    if (!Open_Location.isEmpty())
-    {
-        while(default_dir.right(1) != "/" && default_dir.right(1) != "\\")
-        {
-            default_dir.chop(1);
-        }
-        default_dir.chop(1);
-    }
+    QString default_dir = QFileInfo(Open_Location).filePath();
     QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     ui->lineEdit_imagePath->setText(Pro_Path);
@@ -1695,7 +1573,7 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
 void MainWindow::display()
 {
     NO_EDIT = true;
-
+/*
     qDebug() << "   =====Display=====";
     qDebug() << "   Current info_v " << current_info_v;
     qDebug() << "   Currnet redo_max_depth " << redo_max_depth;
@@ -1834,7 +1712,9 @@ void MainWindow::display()
 
     // Preview Info
     preview_setting->updateInfo();
+*/
 
+    editor->setText(info.curr().text());
     NO_EDIT = false;
 }
 
@@ -3434,10 +3314,34 @@ void MainWindow::customMouseMoveEvent(QMouseEvent *event){
 
 void MainWindow::on_pushButton_CodeRun_clicked()
 {
-    FRD_Json jsonFile;
-    Interpreter::interpret(editor->text(), jsonFile);
-    qDebug() << jsonFile.toJson();
-    ui->plainTextEdit_terminal->appendPlainText(jsonFile.toJson());
-    qDebug() << jsonFile.varsToJson();
-    ui->plainTextEdit_terminal->appendPlainText(jsonFile.varsToJson());
+    Interpreter::interpret(editor->text(), info.editor());
+    ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
+    ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
+}
+
+void MainWindow::updateEditorInfo()
+{
+    info.editor().updateText(editor->text());
+}
+
+void MainWindow::on_actionSave_As_A_triggered()
+{
+    if (Open_Location.isEmpty())
+    {
+        on_actionNew_N_triggered();
+        return;
+    }
+    QString new_dir = QFileDialog::getSaveFileName(this,
+                                                   tr("Save As"),
+                                                   Open_Location,
+                                                   tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
+    if (new_dir.isEmpty()) return;
+    if (QFileInfo(new_dir).suffix() == "frd")
+    {
+        save_or_not = true;
+        Open_Location = new_dir;
+        setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+        on_actionSave_S_triggered();
+    }
+    info.print(new_dir);
 }

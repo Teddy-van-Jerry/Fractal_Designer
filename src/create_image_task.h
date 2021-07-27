@@ -12,10 +12,10 @@
 #define Create_Images_Task_Pre(task__)       \
     task__->setData(post1,                   \
                     post2,                   \
-                    curr_info.template_,     \
-                    curr_info.min_class_v,   \
-                    curr_info.max_class_v,   \
-                    curr_info.max_loop_t);
+                    5,     \
+                    info.curr().templateMin(0).toDouble(),   \
+                    info.curr().templateMax(0).toDouble(),   \
+                    info.curr().iterationLimit(0).toInt())
 #endif
 
 class Create_Image_Task : public QObject, public QRunnable
