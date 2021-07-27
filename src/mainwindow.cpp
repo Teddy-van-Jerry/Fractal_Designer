@@ -2881,6 +2881,10 @@ void MainWindow::useDarkIcon()
     ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/dark/Help.svg"));
     // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/dark/Image.svg"));
     // ui->action->setIcon(QIcon(":/icon/Menu Icon/dark/Next.svg"));
+
+    this->m_titleBar->btn_close.setIcon(QIcon(":/EXE Icons/Close_White.svg"));
+    this->m_titleBar->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
+    this->m_titleBar->btn_minimize.setIcon(QIcon(":/EXE Icons/Minimize_white.svg"));
 }
 
 void MainWindow::useWhiteIcon()
@@ -2915,6 +2919,10 @@ void MainWindow::useWhiteIcon()
     ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/Help.svg"));
     // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/Image.svg"));
     // ui->action->setIcon(QIcon(":/icon/Menu Icon/Next.svg"));
+
+    this->m_titleBar->btn_close.setIcon(QIcon(":/EXE Icons/Close.svg"));
+    this->m_titleBar->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+    this->m_titleBar->btn_minimize.setIcon(QIcon(":/EXE Icons/Minimize.svg"));
 }
 
 void MainWindow::on_actionTheme_Light_triggered()

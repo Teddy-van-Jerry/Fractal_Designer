@@ -589,3 +589,12 @@ QMenuBar{
         height: 30px;
         background: rgb(0,0,0);
 }
+QTableView{
+    background-color:black;
+    color:#dcdcdc;
+}
+QGridLayout
+{
+    backgroud-color:black;
+    color:#dcdcdc;
+}

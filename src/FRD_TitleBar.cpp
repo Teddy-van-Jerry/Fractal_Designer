@@ -14,24 +14,29 @@ FRD_TitleBar::FRD_TitleBar(QWidget *parent) :
     timer->setInterval(200);
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(timeUpdate()));
     timer->start();
-
+    this->btn_close.setStyleSheet(QStringLiteral(
+        "QPushButton::hover {\n"
+        "   background: red;\n"
+        "   border : none;\n"
+        "   color: white;\n"
+        "}\n"));
     this->setStyleSheet(QStringLiteral(
         "QPushButton {\n"
-        "   border : 0.5px solid gray;\n"
+        "   border : none;\n"
         "   border-radius: 3px;\n"
-        "   min-height: 20px;\n"
+        "   min-height: 27px;\n"
+        "   min-width:43px;\n"
         "   margin: 1px;\n"
-        "   background: white;\n"
         "   color: gray;\n"
         "}\n"
         "QPushButton::hover {\n"
-        "   background: darkorange;\n"
-        "   border : 0.5px solid darkorange;\n"
+        "   background: darkgrey;\n"
+        "   border : none;\n"
         "   color: white;\n"
         "}\n"
         "QPushButton::pressed, QPushButton::!enabled {\n"
-        "   background: orange;\n"
-        "   border : 0.5px solid orange;\n"
+        "   background: grey;\n"
+        "   border : none;\n"
         "   color: white;\n"
         "}\n"
         "titleBar { background: white; }\n"
@@ -60,7 +65,9 @@ FRD_TitleBar::FRD_TitleBar(QWidget *parent) :
     this->btn_maximize.setMinimumSize(FRAME_BUTTON_SIZE);
     this->btn_minimize.setMaximumSize(FRAME_BUTTON_SIZE);
     this->btn_minimize.setMinimumSize(FRAME_BUTTON_SIZE);
-
+    this->btn_minimize.setFlat(true);
+    this->btn_maximize.setFlat(true);
+    this->btn_close.setFlat(true);
     //addFRDmenu();
 
     this->m_layout.addWidget(&this->FRD_icon);

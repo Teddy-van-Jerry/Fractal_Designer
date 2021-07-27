@@ -66,7 +66,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     static bool isinSide(QRect r,QPoint p);
 
-private:
+public:
     bool canMove;
     bool maximizing;
 
