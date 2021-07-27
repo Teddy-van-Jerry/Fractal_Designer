@@ -3430,6 +3430,7 @@ void MainWindow::customMouseMoveEvent(QMouseEvent *event){
     }
     else if (y < RESIZE_LIMIT || y > bottom) this->setCursor(Qt::SizeVerCursor);
     else this->unsetCursor();
+}
 
 void MainWindow::on_pushButton_CodeRun_clicked()
 {

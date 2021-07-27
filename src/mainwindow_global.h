@@ -58,6 +58,7 @@
 #include "preview_setting.h"
 #include "FRD_Editor.h"
 #include "FRD_TitleBar.h"
+#include "Interpreter.h"
 
 #define OPEN_FILE_IN  0
 #define OPEN_FILE_OUT 1
