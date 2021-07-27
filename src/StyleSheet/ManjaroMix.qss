@@ -529,3 +529,8 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
    background: none;
 }
+
+QMenuBar{
+    height: 30px;
+
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <defs>
+        <style>
+            .icon-canvas-transparent {
+                fill: #f6f6f6;
+                opacity: 0;
+            }
+
+            .icon-vs-bg {
+                fill: #424242;
+            }
+        </style>
+    </defs>
+    <title>Close_noHalo_12x_16x</title>
+    <g id="canvas">
+        <path class="icon-canvas-transparent" d="M16,0V16H0V0Z" />
+    </g>
+    <g id="iconBg">
+        <path class="icon-vs-bg"
+            d="M8.707,8l3.647,3.646-.708.707L8,8.707,4.354,12.353l-.708-.707L7.293,8,3.646,4.354l.708-.708L8,7.293l3.646-3.647.708.708Z" />
+    </g>
+</svg>

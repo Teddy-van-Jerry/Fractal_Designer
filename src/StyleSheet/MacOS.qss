@@ -432,3 +432,8 @@ QScrollBar::left-arrow:horizontal {
 QScrollBar::right-arrow:horizontal {
     image: url(/usr/share/icons/Adwaita/16x16/actions/go-next-symbolic.symbolic.png);
 }
+
+QMenuBar{
+    height: 30px;
+
+}

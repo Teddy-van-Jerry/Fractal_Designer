@@ -14,6 +14,8 @@ Login::Login(QWidget *parent) :
     // set the title
     setWindowTitle("Log in");
 
+    //initui();
+
     QSettings config(QCoreApplication::applicationDirPath() + "/UserConfig.ini", QSettings::IniFormat);
     QString uerName = config.value("USERCONFIG/UserName", "").toString();
     QString passCode = config.value("USERCONFIG/PassCode", "").toString();
@@ -45,6 +47,37 @@ Login::Login(QWidget *parent) :
 Login::~Login()
 {
     delete ui;
+}
+
+void Login::initui()
+{
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
+    this->m_titleBar = new class::FRD_TitleBar(this);
+    connect(this->m_titleBar, &FRD_TitleBar::requestClose,this, &QDialog::close);
+    connect(this->m_titleBar, &FRD_TitleBar::requestMaximize, [this]{if (this->isMaximized()) this->showNormal();else this->showMaximized();});
+    connect(this->m_titleBar, &FRD_TitleBar::requestMinimize,this, &QDialog::showMinimized);
+    connect(this, &QDialog::windowTitleChanged, this->m_titleBar,&QDialog::setWindowTitle);
+
+    this->m_titleBarW = new QWidget();
+    this->m_titleBarW->setMouseTracking(true);
+    this->m_titleBarW->installEventFilter(this);
+
+    QPixmap *pixmap = new QPixmap(":/EXE Icons/FRD.ico");
+    pixmap->scaled(this->FRD_icon.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    this->FRD_icon.setScaledContents(true);
+    this->FRD_icon.setPixmap(*pixmap);
+    this->FRD_icon.setMinimumSize(16,16);
+    this->FRD_icon.setMaximumSize(16,16);
+
+    QHBoxLayout *titleLayout = new QHBoxLayout();
+    titleLayout->setContentsMargins(6, 0, 6, 0);
+    titleLayout->setSpacing(0);
+    titleLayout->addWidget(&FRD_icon);
+    titleLayout->addWidget(this->m_menuBar);
+    titleLayout->addWidget(this->m_titleBar);
+
+    this->m_titleBarW->setLayout(titleLayout);
+
 }
 
 void Login::on_Login_login_clicked()
