@@ -108,7 +108,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
             info.setValue(block, name, var_name, new_class_name, QJsonValue::Null);
             qDebug() << "Create an empty value for it" << info.varsToJson();
         }
-        auto frd_var = info.getValue(block, name, var_name);
+        // auto frd_var = info.getValue(block, name, var_name);
         auto var_type = info.type(block, name + var_name);
         QChar c = nextChar();
         if (c == ';') {
@@ -117,6 +117,50 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                 info.addError(_FRD_WARNING_VARIABLE_DECLARATION_ONLY_,
                               tr("There is only declaration for ") + var_name + tr(" but its value is never used"),
                               row, init_col, (int)var_name.length());
+            }
+        }
+        else if (c == ':') {
+            int init_row = row;
+            int init_col = col;
+            if (nextChar() == '=') {
+                if (nextChar() == '$') {
+                    QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
+                    qDebug() << ":= var_name_r" << var_name_r << "name" << name;
+                    qDebug() << info.type(block, name + var_name) << info.type(block, name + var_name_r);
+                    // type must match
+                    if (info.type(block, name + var_name) == info.type(block, name + var_name_r)) {
+                        auto error_ = info.setValue(block,
+                                                    name,
+                                                    var_name,
+                                                    info.type(block, name + var_name),
+                                                    info.getValue(block, name, var_name_r));
+                        if (error_ != _FRD_NO_ERROR_) {
+                            info.addError(error_,
+                                          tr("Strict assignment from rvalue ") + var_name_r + tr(" to lvalue ")
+                                          + var_name + tr(" is invalid"),
+                                          row, init_col, var_name_r.length());
+                        }
+                    }
+                    if (nextChar() != ';') {
+                        info.addError(_FRD_ERROR_INVALID_STRICT_ASSIGNMENT_,
+                                      "Use of strict assignment := here is invalid, which takes only one variable on the right side",
+                                      init_row, init_col, 2);
+                        col--;
+                        nextString(";", true, true);
+                    }
+                }
+                else {
+                    info.addError(_FRD_ERROR_INVALID_STRICT_ASSIGNMENT_,
+                                  "Use of strict assignment := here is invalid, which takes one variable on the right side, and expects $ after :=",
+                                  init_row, init_col, 2);
+                    nextString(";", true, true);
+                }
+            }
+            else {
+                info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                              "Unecpected toke ':'",
+                              init_row, init_col, 2);
+                nextString(";", true, true);
             }
         }
         else if (c == '=') {

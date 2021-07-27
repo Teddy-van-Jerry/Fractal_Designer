@@ -37,13 +37,15 @@ QString FRD_Json::type(const QString& block, const QStringList& names) const {
             return "template";
         else if (QVector<QString>({"Con", "Div"}).contains(member))
             return "color";
-        else if (QVector<QString>({"Formula", "R", "G", "B", "H", "S", "V", "A", "X", "Y"}).contains(member))
+        else if (QVector<QString>({"Formula", "R", "G", "B", "H", "S", "V", "A", "X", "Y", "CentreX", "CentreY", "Width", "Angle", "Rate", "Distance", "Min", "Max", "IterationLimit"}).contains(member))
             return "formula";
+        else if (QVector<QString>({"Route"}).contains(member))
+            return "route";
         else if (QVector<QString>({"VideoDir", "ImageDir", "VideoFormat", "VideoName", "ImagePrefix", "Name", "Type"}).contains(member))
             return "string";
-        else if (QVector<QString>({"Fps", "Time", "PreviewCentreX", "PreviewCentreY", "PreviewWidth", "PreviewHeight", "PreviewImageWidth", "PreviewImageHeight"}).contains(member))
+        else if (QVector<QString>({"Fps", "Time"}).contains(member))
             return "number";
-        else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates"}).contains(member))
+        else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates", "ImageSize", "PreviewSize", "PreviewImageSize", "PreviewCentre"}).contains(member))
             return "array";
         else if (QVector<QString>({"InverseYAxis"}).contains(member))
             return "bool";
@@ -77,8 +79,8 @@ QJsonValue FRD_Json::getValue(const QString& block, const QStringList& base_name
     qDebug() << "=========>>>>>> getValue " << base_names_ << var_names_;
     QString block_ = block;
     QString base_names_str;
-    for (const auto& name : base_names_) base_names_str += name;
-    while(!base_names.isEmpty() && !vars.contains(block_ + base_names_str + var_names[0])) {
+    for (const auto& name : base_names_) base_names_str += (name + ".");
+    while(!base_names.isEmpty() && !contains(block_, base_names_str + var_names[0])) {
         // if the beginning of names is not the same,
         // they must be in the different block
         if (vars.contains(block_ + var_names[0])) {
@@ -86,7 +88,7 @@ QJsonValue FRD_Json::getValue(const QString& block, const QStringList& base_name
             var_names.pop_back();
             return getValue(block_, var_names, {new_var_name});
         }
-        do { block_.chop(1); } while(!block_.isEmpty() && block_.last(1) != ".");  
+        do { block_.chop(1); } while(!block_.isEmpty() && block_.last(1) != ".");
         if (block_.isEmpty()) return QJsonValue::Null;
     }
     QJsonValue value;
@@ -129,10 +131,6 @@ FRD_error_type FRD_Json::setValue(const QString& block, const QString& base_name
     qDebug() << "setValue reaches here with key" << key;
 
     QVector<QJsonValueRef> refs;
-//    if (vars.contains(key) && names.size() == 1) {
-//        vars[key].toObject()["OBJECT"] = value;
-//        return _FRD_NO_ERROR_;
-//    }
     if (vars.contains(key)) {
         refs.push_back(vars[key].toObject()["OBJECT"]);
     }
@@ -156,6 +154,19 @@ FRD_error_type FRD_Json::setValue(const QString& block, const QString& base_name
         }
     }
     refs.last() = value;
+//    for (int i = names.size() - 1; i > 1; i--) {
+//        if (refs[i].isObject()) {
+//            auto obj = refs[i - 1].toObject();
+//            obj[names[i]] = refs[i];
+//            refs[i - 1] = obj;
+//        }
+//    }
+//    if (names.size() > 1) {
+//        QJsonObject obj = vars[names[0]].toObject();
+//        obj["OBJECT"] = refs[1];
+//        vars[names[0]] = obj;
+//    }
+
     return _FRD_NO_ERROR_;
 }
 
@@ -173,8 +184,8 @@ FRD_error_type FRD_Json::setExistantValue(const QString& block, const QStringLis
 
     QString block_ = block;
     QString base_names_str;
-    for (const auto& name : base_names_) base_names_str += name;
-    while(!base_names.isEmpty() && !vars.contains(block_ + base_names_str + var_names[0])) {
+    for (const auto& name : base_names_) base_names_str += (name + ".");
+    while(!base_names.isEmpty() && !contains(block_, base_names_str + var_names[0])) {
         // if the beginning of names is not the same,
         // they must be in the different block
         if (vars.contains(block_ + var_names[0])) {
@@ -189,7 +200,9 @@ FRD_error_type FRD_Json::setExistantValue(const QString& block, const QStringLis
     QVector<QJsonValueRef> refs;
     QStringList names = base_names + var_names;
     if (names.size() == 1) {
-        vars[block_ + names[0]].toObject()["OBJECT"] = value;
+        auto obj = vars[block_ + names[0]].toObject();
+        obj["OBJECT"] = value;
+        vars[block_ + names[0]] = value;
         return _FRD_NO_ERROR_;
     }
 
