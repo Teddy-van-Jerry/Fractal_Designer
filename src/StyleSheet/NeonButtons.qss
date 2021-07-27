@@ -45,3 +45,7 @@ QPushButton:pressed{
 	color: #d3dae3;
 	padding: 2px;
 }
+QMenuBar{
+    height: 30px;
+
+}

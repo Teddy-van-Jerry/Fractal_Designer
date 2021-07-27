@@ -449,6 +449,7 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
         i--; // go back one
         curr_col += str.length();
     }
+
     for (int i = 0; i != rows.size(); i++) { // expr_vars, rows, cols have the same size
         QJsonValue v = 0;
         QString v_type = info.type(block, name + QString::fromStdString(expr_vars[i]));

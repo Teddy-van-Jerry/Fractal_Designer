@@ -179,3 +179,13 @@ QMenu::item:selected {
 	border-color: rgb(58, 58, 58);
 	border-style: inset;
 }
+
+QMenuBar{
+    height: 30px;
+    background: rgb(0,0,0);
+}
+
+QGridLayout
+{
+    background-color:grey;
+}
