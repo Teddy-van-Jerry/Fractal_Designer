@@ -10,6 +10,7 @@ Interpreter::Interpreter() {
 
 bool Interpreter::interpret(const QString& text, FRD_Json& json) {
     Interpreter interpreter;
+    json.clear();
     interpreter.setStrings(text);
     interpreter.setInfoPtr(json);
     return interpreter.interpret();
@@ -146,21 +147,21 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                                       "Use of strict assignment := here is invalid, which takes only one variable on the right side",
                                       init_row, init_col, 2);
                         col--;
-                        nextString(";", true, true);
+                        nextString(";}", true, true);
                     }
                 }
                 else {
                     info.addError(_FRD_ERROR_INVALID_STRICT_ASSIGNMENT_,
                                   "Use of strict assignment := here is invalid, which takes one variable on the right side, and expects $ after :=",
                                   init_row, init_col, 2);
-                    nextString(";", true, true);
+                    nextString(";}", true, true);
                 }
             }
             else {
                 info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
                               "Unecpected toke ':'",
                               init_row, init_col, 2);
-                nextString(";", true, true);
+                nextString(";}", true, true);
             }
         }
         else if (c == '=') {
@@ -181,7 +182,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     // nextChar();
 
                     int start_row = row, start_col = col;
-                    QString expr = nextString(";", true, true);
+                    QString expr = nextString(";}", true, true);
                     qDebug() << "rvalue Expr" << expr << block << name;
                     bool ok_here;
                     std::complex<double> ret = evalExpr(expr, block, name + ".", start_row, start_col, &ok_here);
@@ -231,7 +232,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     else if (var_type == "array") {
                         col--;
                         int init_row = row, init_col = col;
-                        QString value = nextString(";", true, true);
+                        QString value = nextString(";}", true, true);
                         QStringList nums = value.split(',', Qt::SkipEmptyParts);
                         QJsonArray arr;
                         bool num_ok;
@@ -249,7 +250,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                         col--;
                         int init_row = row, init_col = col;
                         bool result = true;
-                        QString value = nextString(";", true, true);
+                        QString value = nextString(";}", true, true);
                         if (value.simplified() == "false" || value.simplified() == "_FALSE_") {
                             result = false;
                         }
@@ -267,7 +268,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                         // value by string
 
                         col--;
-                        QString value = nextString(";", true, true);
+                        QString value = nextString(";}", true, true);
                         value = value.trimmed(); // remove spaces in the front and the end
                         qDebug() << "value by string" << value;
                         auto error_ = info.setValue(block, name, var_name, "", value);
@@ -398,7 +399,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
                 int init_row = row;
                 int init_col = col;
                 col--; // go back one character for nextString
-                int length = nextString(";", true, true).length();
+                int length = nextString(";}", true, true).length();
                 info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
                               tr("Unexpected token after class name ") + class_name,
                               init_row, init_col, length);
@@ -413,7 +414,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
             int init_col = col;
             qDebug() << strings[row - 1][col - 1];
             col--; // go back one character
-            QString unexpected_token = nextString(";"); // skip the token
+            QString unexpected_token = nextString(";}"); // skip the token
             info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
                           tr("Unexpected token: ") + unexpected_token,
                           row, init_col, unexpected_token.length());

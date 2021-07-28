@@ -19,11 +19,21 @@ enum FRD_error_type {
     _FRD_ERROR_EVAL_,
     _FRD_ERROR_FUNCTION_SYNTAX_,
     _FRD_ERROR_OTHER_,
-    _FRD_WARNING_VARIABLE_DECLARATION_ONLY_,
+    _FRD_WARNING_VARIABLE_DECLARATION_ONLY_ = 8000,
     _FRD_WARNING_VARIABLE_REDEFINITION_,
     _FRD_WARNING_FUNCTION_DECLARATION_ONLY_,
     _FRD_WARNING_FUNCTION_REDEFINITION_,
     _FRD_WARNING_OTHER
+};
+
+struct FRD_Error {
+    FRD_Error();
+    FRD_Error(int type, int row, int length, int col, const QString& msg);
+    FRD_error_type error_type;
+    int row;
+    int col;
+    int length;
+    QString msg;
 };
 
 class FRD_Json {
@@ -65,9 +75,42 @@ public:
 
     QString varsToJson(QJsonDocument::JsonFormat = QJsonDocument::JsonFormat::Indented) const;
 
+    void clear();
+
+    QString text() const;
+
+    QVector<FRD_Error> errors() const;
+
+    QString layerFormula(int index) const;
+
+    QString layerColor(int index, QString tag) const;
+
+    double PreviewSize(QString tag) const;
+
+    double PreviewCentre(QString tag) const;
+
+    int PreviewImageSize(QString tag) const;
+
+    double PreviewRotation() const;
+
+    double PreviewTime() const;
+
+    bool inverseYAsis() const;
+
+    QString templateMin(int index) const;
+
+    QString templateMax(int index) const;
+
+    QString iterationLimit(int index) const;
+
+public slots:
+    void updateText(QString text);
+
 private:
     QJsonObject main;  // main object of doc
     QJsonObject vars;  // key by their names
+
+    QString frd_text;
 };
 
 #endif // FRD_JSON_H

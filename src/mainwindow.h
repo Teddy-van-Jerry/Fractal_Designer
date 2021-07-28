@@ -27,13 +27,13 @@ public:
 
     QString Open_Location = "";
 
-    QString Project_Name;
-
     QString Project_Template;
 
     QString User_Name;
 
     QStandardItemModel* table_route_model = new QStandardItemModel();
+
+    QStandardItemModel* error_list_model = new QStandardItemModel();
 
     Info_Save pre_info[_MAX_SAVE_], buff_info;
 
@@ -45,11 +45,11 @@ public:
 
     void setOpenLocation(QString);
 
-    bool High_Version_Open(int type = 0);
+    bool OpenFRD(int type = 0);
 
     bool save_or_not = false;
 
-    void show_preview_image(); //
+    void show_preview_image();
 
     void edit(int mode = EDIT_HERE);
 
@@ -343,6 +343,16 @@ private slots:
 
     void on_pushButton_CodeRun_clicked();
 
+    void updateEditorInfo();
+
+    void on_actionSave_As_A_triggered();
+
+    void setErrorInfo(const FRD_Json& frd_json);
+
+    void on_pushButton_search_clicked();
+
+    void on_lineEdit_searchName_returnPressed();
+
 signals:
 
     void Search_clicked(QString);
@@ -370,7 +380,9 @@ private:
     QString ReadInit(const QString& key);
     void WriteInit(const QString& key, const QString& value);
     void ReadStyle();
-
+    bool isDarkStyle;
+public slots:
+    void updateMaxButton();
 private:
     Ui::MainWindow *ui;
 
@@ -412,6 +424,8 @@ public:
 
     FRD_Editor* editor;
 
+    Info info;
+
     enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
 
     void setLanguage(App_Language la);
@@ -430,6 +444,7 @@ public:
     QWidget * menuWidget() const;
 
     inline FRD_TitleBar& FRD_TitleBar() const { return *this->m_titleBar; }
+
 protected:
 
     int RESIZE_LIMIT;
@@ -438,10 +453,17 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
-
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
     void customMouseMoveEvent(QMouseEvent* event);
 
+    void mousePressEvent_2(QMouseEvent *e);
+    void mouseMoveEvent_2(QMouseEvent *e);
+    void mouseReleaseEvent_2(QMouseEvent *e);
+
 private:
+    QPoint last;
+    bool isPressWidget;
+
     bool init;
 
     QWidget *m_titleBarW;
