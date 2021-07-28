@@ -14,7 +14,9 @@
 #define INTERPRETER_H
 
 #include <QString>
+#include <QStack>
 #include <Info.h>
+#include "String_Evaluate.h"
 
 /**
  * \brief the FRD script interpreter
@@ -47,7 +49,7 @@ public:
      * This is a static function, you can call it by:
      * \code{.cpp}bool ok = Interpreter::interpret(text, info);\endcode
      */
-    static bool interpret(const QString& text, FRD& info);
+    static bool interpret(const QString& text, FRD_Json& info);
 
     /**
      * \brief interpret strings
@@ -59,6 +61,13 @@ public:
     bool interpret();
 
 private:
+
+    enum FRD_block_content_ {
+        _FRD_BLOCK_BLANK_,
+        _FRD_BLOCK_VARIABLE_,
+        _FRD_BLOCK_FUNCTION_,
+        _FRD_BLOCK_CLASS_
+    };
 
     /**
      * \brief set strings
@@ -72,7 +81,7 @@ private:
      *
      * \param info the current info
      */
-    void setInfoPtr(FRD& info);
+    void setInfoPtr(FRD_Json& info);
 
     /**
      * \brief change comments into whitespace
@@ -94,7 +103,7 @@ private:
      * \remarks
      * This will update the value of row and col.
      */
-    char getNext();
+    // char getNext();
 
     /**
      * \brief read variable defination
@@ -103,7 +112,7 @@ private:
      * \retval true There is no error in reading variable.
      * \retval false There is error in reading variable.
      */
-    bool readVar();
+    bool readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed = true, QString new_class_name = "");
 
     /**
      * \brief read function defination
@@ -112,7 +121,7 @@ private:
      * \retval true There is no error in reading function.
      * \retval false There is error in reading function.
      */
-    bool readFun();
+    bool readFun(FRD_block_content_ content, const QString& block, const QString& name);
 
     bool readClass();
 
@@ -120,12 +129,28 @@ private:
 
     bool readDef();
 
-    QChar nextChar(int* lines = nullptr);
+    bool readBlock();
+
+    bool readBlock(FRD_block_content_ content, const QString& block, const QString& name);
+
+    std::complex<double> evalExpr(const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok = nullptr);
+
+    QChar nextChar();
+
+    QString pureName(const QString& name) const;
+
+    QString nextString(QString end_of_string = _empty_string,
+                       bool discard_space = false, bool discard_linebreak = false);
 
     QStringList strings; /**< text to be interpreted stored by lines */
-    FRD* info_ptr;       /**< the pointer to current info */
+    FRD_Json* info_ptr;  /**< the pointer to current info */
     int row = 1;         /**< row count that starts at 1 */
-    int col = 1;         /**< column count that starts at 1 */
+    int col = 0;         /**< column count that starts at 1 */
+    bool reach_end = false;
+
+    int block_count = 0;
+
+    static const QString _empty_string;
 
 };
 

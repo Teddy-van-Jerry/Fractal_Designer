@@ -89,3 +89,28 @@ QPushButton#Search_Result_Button:pressed,#Help_C_Button:pressed,#Help_E_Button:p
     border-style: inset;
 }
 
+QMenuBar{
+    height: 30px;
+    background: rgb(240,240,240);
+}
+/*
+QPushButton#btn_minimize,#btn_maximize,#btn_close {
+   border : none;
+   border-radius: 3px;
+   min-height: 27px;
+   min-width:43px;
+   margin: 1px;
+   background: rgb(240,240,240);
+   color: gray;
+}
+QPushButton#btn_minimize::hover,#btn_maximize::hover,#btn_close::hover {
+   background: darkorange;
+   border : none;
+   color: white;
+}
+QPushButton::pressed, QPushButton::!enabled {
+   background: orange;
+   border : none;
+   color: white;
+}
+*/

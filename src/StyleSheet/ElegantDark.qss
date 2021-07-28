@@ -194,3 +194,8 @@ QCheckBox::indicator:unchecked {
 QStatusBar {
 	color:rgb(240,240,240);
 }
+
+QMenuBar{
+    height: 30px;
+    background: rgb(82,82,82);
+}

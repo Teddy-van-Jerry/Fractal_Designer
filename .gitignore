@@ -9,6 +9,10 @@
 *.so.*
 *.dll
 *.dylib
+*.exe
+*.pdb
+*.ilk
+*.pdb.*
 
 # Qt-es
 object_script.*.Release
@@ -56,6 +60,5 @@ compile_commands.json
 /Outdated/
 /src/release/
 /src/debug/
-/bin/
 !lib/qscintilla2_qt6.dll
 !lib/qscintilla2_qt6d.dll

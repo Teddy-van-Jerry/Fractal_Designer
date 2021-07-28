@@ -1,4 +1,4 @@
-﻿#include <QLabel>
+#include <QLabel>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMessageBox>
@@ -15,15 +15,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    initTitleBar();
+
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
     permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
     ui->statusbar->addPermanentWidget(permanent);
     ui->statusbar->showMessage(tr("Welcome to Fractal Designer 6.0!"), 20000);
     show_preview_image();
-    Project_Name = "Unsaved project";
     Project_Template = "Undefined";
-    setWindowTitle("Fractal Designer - " + Project_Name);
+    setWindowTitle((Open_Location.isEmpty() ? tr("Unsaved Project") : QFileInfo(Open_Location).fileName()) +
+                   " - <strong>Fractal Designer</strong>");
 
     Line_Search = new QLineEdit(this);
     // Line_Search->setToolTip("Search");
@@ -78,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     route_tool_window = new Route_Tool(this);
 
     editor = new FRD_Editor(ui->gridLayout_Editor);
+    connect(editor, SIGNAL(textChanged()), this, SLOT(updateEditorInfo()));
 
     // Route custom menu
     table_route_menu = new QMenu(ui->tableView_Route);
@@ -99,15 +102,89 @@ MainWindow::MainWindow(QWidget *parent)
     table_route_menu->addActions({table_route_action[4]});
     connect(ui->tableView_Route, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tableRouteCustomMenuRequested(QPoint)));
 
-    show_preview_image();
+    ui->splitter_Editor_Up->setStretchFactor(0, 4);
+    ui->splitter_Editor_Up->setStretchFactor(1, 1);
+    ui->splitter_Editor_Up->setSizes({10000, 100});
+    ui->splitter_Editor->setStretchFactor(0, 4);
+    ui->splitter_Editor->setStretchFactor(1, 1);
+    ui->splitter_Editor->setSizes({10000, 10});
+
+    error_list_model->setColumnCount(6);
+    error_list_model->setHeaderData(0, Qt::Horizontal, "Type");
+    error_list_model->setHeaderData(1, Qt::Horizontal, "Error Code");
+    error_list_model->setHeaderData(2, Qt::Horizontal, "Row");
+    error_list_model->setHeaderData(3, Qt::Horizontal, "Col");
+    error_list_model->setHeaderData(4, Qt::Horizontal, "Length");
+    error_list_model->setHeaderData(5, Qt::Horizontal, "Details");
+    ui->tableView_error->setModel(error_list_model);
+    ui->tableView_error->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView_error->horizontalHeader()->setMinimumSectionSize(30);
+    ui->tableView_error->setSortingEnabled(true);
+    ui->tableView_error->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    error_list_model->setSortRole(Qt::AscendingOrder);
 
     ReadStyle();
+    updateMaxButton();
 }
 
 MainWindow::~MainWindow()
 {
     //delete image;
+    delete this->m_titleBar;
+    delete this->m_leftBorder;
+    delete this->m_rightBorder;
+    delete this->m_bottomBorder;
+
+    if (this->m_menuBar) delete this->m_menuBar;
+    else if (this->m_menuWidget) delete this->m_menuWidget;
     delete ui;
+}
+
+void MainWindow::initTitleBar()
+{
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
+    this->m_titleBar = new class::FRD_TitleBar(this);
+    connect(this->m_titleBar, &FRD_TitleBar::requestClose,this, &MainWindow::close);
+    connect(this->m_titleBar, &FRD_TitleBar::requestMaximize, [this]{if (this->isMaximized()) this->showNormal();else this->showMaximized();});
+    connect(this->m_titleBar, &FRD_TitleBar::requestMinimize,this, &MainWindow::showMinimized);
+    connect(this, &QMainWindow::windowTitleChanged, this->m_titleBar,&QWidget::setWindowTitle);
+    connect(&this->FRD_TitleBar().btn_maximize,SIGNAL(clicked()),this,SLOT(updateMaxButton()));
+    connect(&this->FRD_TitleBar(),SIGNAL(doubleClicked()),this,SLOT(updateMaxButton()));
+
+    this->m_titleBarW = new QWidget();
+    this->m_titleBarW->setMouseTracking(true);
+    this->m_titleBarW->installEventFilter(this);
+
+    this->m_menuBar = ui->menubar;
+    this->setMenuBar(m_menuBar);
+    this->m_menuWidget = nullptr;
+
+    QPixmap *pixmap = new QPixmap(":/EXE Icons/FRD.ico");
+    pixmap->scaled(this->FRD_icon.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    this->FRD_icon.setScaledContents(true);
+    this->FRD_icon.setPixmap(*pixmap);
+    this->FRD_icon.setMinimumSize(16,16);
+    this->FRD_icon.setMaximumSize(16,16);
+
+    QHBoxLayout *titleLayout = new QHBoxLayout();
+    titleLayout->setContentsMargins(6, 0, 6, 0);
+    titleLayout->setSpacing(0);
+    titleLayout->addWidget(&FRD_icon);
+    titleLayout->addWidget(this->m_menuBar);
+    titleLayout->addWidget(this->m_titleBar);
+
+    this->m_titleBarW->setLayout(titleLayout);
+    QMainWindow::setMenuWidget(this->m_titleBarW);
+
+    this->m_leftBorder = generateBorder(Qt::LeftToolBarArea, Qt::Vertical);
+    this->m_rightBorder = generateBorder(Qt::RightToolBarArea, Qt::Vertical);
+    this->m_bottomBorder = generateBorder(Qt::BottomToolBarArea, Qt::Horizontal);
+
+
+    this->showMaximized();
+
+
+
 }
 
 void MainWindow::setOpenLocation(QString str)
@@ -116,7 +193,7 @@ void MainWindow::setOpenLocation(QString str)
     if(str != "")
     {
         save_or_not = true;
-        High_Version_Open(OPEN_FILE_OUT);
+        OpenFRD(OPEN_FILE_OUT);
     }
     else
     {
@@ -132,151 +209,22 @@ inline void _complex_in(QDataStream& in, std::complex<double>& c)
     c = new_c;
 }
 
-bool MainWindow::High_Version_Open(int type)
+bool MainWindow::OpenFRD(int type)
 {
-
     ui->actionClose->setEnabled(true);
 
     QFile FRD_R(Open_Location);
     FRD_R.open(QIODevice::ReadOnly);
-    FRD_R.skip(16);
-    if(FRD_R.read(8) != "FRD\xEFTvJ*")
-    {
-        QMessageBox::critical(this, tr("Fail to open"), tr("The file may be damaged or should not be opened with Fractal Designer."));
-        if(type) // OPEN_FILE_OUT
-        {
-            exit(1);
-        }
-        else
-        {
-            save_or_not = false;
-            return false;
-        }
-    }
-    save_or_not = true;
-    char name_1 = 0, name_2 = 0;
-    qint32 length_;
-
-    current_info_v = 0;
-    redo_max_depth = 1;
-    QDataStream in(&FRD_R);
-
-    uint8_t version[4];
-    in >> version[0] >> version[1] >> version[2] >> version[3];
-
-    while(!FRD_R.atEnd())
-    {
-        in >> name_1 >> name_2;
-        if NameIs('T', 'E')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.template_;
-            if(curr_info.template_ == 0) redo_max_depth++;
-            qDebug() << "TE succeeds!";
-        }
-        else if NameIs('T', '2')
-        {
-            FRD_R.skip(4);
-            double t1, t2, t3, t4;
-            in >> t1 >> t2 >> t3 >> t4 >> curr_info.Julia_c_rate;
-            std::complex<double> c1 { t1, t2 };
-            std::complex<double> c2 { t3, t4 };
-            curr_info.Julia_c1 = c1;
-            curr_info.Julia_c2 = c2;
-        }
-        else if NameIs('T', '4')
-        {
-            FRD_R.skip(4);
-            _complex_in(in, curr_info.Newton_a_1);
-            _complex_in(in, curr_info.Newton_a_2);
-            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_1[i]);
-            for(int i = 0; i != 10; i++) _complex_in(in, curr_info.Newton_xn_2[i]);
-            _complex_in(in, curr_info.Newton_sin_1);
-            _complex_in(in, curr_info.Newton_sin_2);
-            _complex_in(in, curr_info.Newton_cos_1);
-            _complex_in(in, curr_info.Newton_cos_2);
-            _complex_in(in, curr_info.Newton_ex_1);
-            _complex_in(in, curr_info.Newton_ex_2);
-            in >> curr_info.Newton_c_rate;
-        }
-        else if NameIs('C', 'F')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.CustomFormula_;
-        }
-        else if NameIs('I', 'V')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.min_class_v >> curr_info.max_class_v >> curr_info.max_loop_t >> curr_info.y_inverse;
-        }
-        else if NameIs('C', '1')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.Colour1_f;
-            // It is not included in display()
-            ui->Convergent_Points_Colour_Formula->setPlainText(curr_info.Colour1_f);
-
-        }
-        else if NameIs('C', '2')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.Colour2_f;
-            // It is not included in display()
-            ui->Divergent_Points_Colour_Formula->setPlainText(curr_info.Colour2_f);
-        }
-        else if NameIs('R', 'O')
-        {
-            in >> length_;
-            // qDebug() << length_;
-            for(int i = 0; i != length_ / _ROUTE_SIZE_; i++)
-            {
-                Route_Info temp_info;
-                curr_info.Route_.push_back(temp_info.read(in));
-            }
-            // qDebug() << curr_info.Route_.size();
-        }
-        else if NameIs('I', 'O')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.image_size_x >> curr_info.image_size_y
-               >> curr_info.frame_rate_index >> curr_info.total_time_str
-               >> curr_info.img_path >> curr_info.img_prefix;
-        }
-        else if NameIs('V', 'I')
-        {
-            FRD_R.skip(4);
-            quint16 list_size = 0;
-            in >> curr_info.video_path >> curr_info.video_name >> list_size;
-            curr_info.music_list.resize(list_size);
-            for(int i = 0 ; i != list_size; i++)
-            {
-                in >> curr_info.music_list[i];
-            }
-        }
-        else if NameIs('P', 'R')
-        {
-            FRD_R.skip(4);
-            in >> curr_info.ps.width >> curr_info.ps.height
-               >> curr_info.ps.xWidth >> curr_info.ps.yHeight
-               >> curr_info.ps.angle >> curr_info.ps.centreX
-               >> curr_info.ps.centreY >> curr_info.ps.autoRefresh;
-        }
-        else
-        {
-            in >> length_;
-            FRD_R.skip(length_);
-        }
-    }
-
-    buff_info = curr_info;
-
+    QTextStream in(&FRD_R);
+    QString text = in.readAll();
+    editor->setText(text);
     FRD_R.close();
-    qDebug() << "High Version Open succeed!";
+    qDebug() << "FRD File Open succeed!";
 
     display();
     save_or_not = true;
 
-    setWindowTitle("Fractal Designer - " + Open_Location);
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
     return true;
 }
 
@@ -341,9 +289,16 @@ void MainWindow::on_actionNew_N_triggered()
     {
         on_actionClose_triggered();
     }
-    New_File* new_project = new New_File(this);
-    new_project->show();
     save_or_not = true;
+
+    Open_Location = QFileDialog::getSaveFileName(this,
+                                                 tr("New Project"),
+                                                 QDir::homePath() + "/Untitled",
+                                                 tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
+    if (Open_Location.isEmpty()) return;
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    // print current
+    on_actionSave_S_triggered();
 }
 
 void MainWindow::on_MainWindow_Newfile_clicked()
@@ -355,29 +310,26 @@ void MainWindow::on_actionOpen_O_triggered()
 {
     QString Old_Open_Location = Open_Location;
     QString New_Open_Location = QFileDialog::getOpenFileName(this,
-                                                 tr("Open Project"),
-                                                 QDir::currentPath(),
-                                                 tr("FRD Files(*.frd)"));
+                                                             tr("Open Project"),
+                                                             QDir::currentPath(),
+                                                             tr("FRD File (*.frd)"));
     qDebug() << New_Open_Location;
     QFile check(New_Open_Location);
-    if(check.exists())
+    if (check.exists())
     {
-        qDebug() << "exist";
-        if(ui->actionClose->isEnabled())
+        if (ui->actionClose->isEnabled())
         {
             on_actionClose_triggered();
         }
         Open_Location = New_Open_Location;
-        if(!High_Version_Open(OPEN_FILE_IN))
+        if (!OpenFRD(OPEN_FILE_IN))
         {
             Open_Location = Old_Open_Location;
-            // setWindowTitle("Fractal Designer - " + Open_Location);
         }
     }
-    else if(New_Open_Location != "")
+    else if (!New_Open_Location.isEmpty())
     {
         QMessageBox::warning(this, "Opening Project Error", "The file doesn't exist!");
-        // Open_Location = "";
     }
 }
 
@@ -497,19 +449,14 @@ void MainWindow::on_actionSave_S_triggered()
     save_or_not = true;
     if(Open_Location == "") on_actionNew_N_triggered();
 
-    // Preparation configuration
-    // curr_info.config1 = 0;
-    /*
-    if(ui->actionAuto_Refresh->isChecked())
-    {
-        curr_info.config1 = 1;
-    }
-    */
 
-    // == Print into file ==
-    curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
-    curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
-    curr_info.print(Open_Location, FRD_Version);
+//    // == Print into file ==
+//    curr_info.setColourInfo(ui->Convergent_Points_Colour_Formula->toPlainText(), true);
+//    curr_info.setColourInfo(ui->Divergent_Points_Colour_Formula->toPlainText(), false);
+//    curr_info.print(Open_Location, FRD_Version);
+
+    // print to frd file
+    info.print(Open_Location);
 }
 
 void MainWindow::on_Template_Choice_1_toggled(bool checked)
@@ -667,7 +614,7 @@ void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4]
 
 void MainWindow::customTemplatePre(Create_Image_Task* task)
 {
-    QString Formula = ui->lineEdit_Custom_Formula->text();
+    QString Formula = info.curr().layerFormula(0);
     std::string msg;
     std::vector<_var> post;
     if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
@@ -680,11 +627,21 @@ void MainWindow::customTemplatePre(Create_Image_Task* task)
 
 bool MainWindow::createImagePre(Create_Image_Task* task)
 {
-    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
-    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
+//    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
+//    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
     std::string Colour1_[4], Colour2_[4];
 
-    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
+//    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
+    Colour1_[0] = info.curr().layerColor(0, "Con.R").toStdString();
+    Colour1_[1] = info.curr().layerColor(0, "Con.G").toStdString();
+    Colour1_[2] = info.curr().layerColor(0, "Con.B").toStdString();
+    Colour1_[3] = info.curr().layerColor(0, "Con.A").toStdString();
+    Colour2_[0] = info.curr().layerColor(0, "Div.R").toStdString();
+    Colour2_[1] = info.curr().layerColor(0, "Div.G").toStdString();
+    Colour2_[2] = info.curr().layerColor(0, "Div.B").toStdString();
+    Colour2_[3] = info.curr().layerColor(0, "Div.A").toStdString();
+
+    qDebug() << QString::fromLatin1(Colour1_[0]);
 
     std::string msg1[4], msg2[4];
     std::vector<_var> post1[4], post2[4];
@@ -720,6 +677,8 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
 
     QString Pre_Img_Dir;
+
+
     QDir ck(QCoreApplication::applicationDirPath() + "/temp");
     if(!ck.exists())
     {
@@ -727,6 +686,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
 
+    /*
     if(curr_info.template_ == 2)
     {
         double t = ui->doubleSpinBox_t->value();
@@ -754,15 +714,18 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     else if(curr_info.template_ == 5)
     {
-        customTemplatePre(preview);
-    }
 
-    preview->setImage(curr_info.ps.centreX, curr_info.ps.centreY,
-                      curr_info.ps.xWidth, curr_info.ps.yHeight,
-                      curr_info.ps.width, curr_info.ps.height,
-                      curr_info.ps.angle, ui->doubleSpinBox_t->value(),
+    }
+    */
+
+    customTemplatePre(preview);
+
+    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
+                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
+                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
+                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
                       "png", Pre_Img_Dir, "Preview Image", "Preview",
-                      curr_info.y_inverse);
+                      info.curr().inverseYAsis());
 
     QThreadPool::globalInstance()->start(preview);
     qDebug() << "Refreshed";
@@ -1134,16 +1097,7 @@ void MainWindow::build_image_one_ok()
 
 void MainWindow::on_toolButton_imagePath_clicked()
 {  
-    QString default_dir = Project_Name;
-    default_dir = Open_Location;
-    if (!Open_Location.isEmpty())
-    {
-        while(default_dir.right(1) != "/" && default_dir.right(1) != "\\")
-        {
-            default_dir.chop(1);
-        }
-        default_dir.chop(1);
-    }
+    QString default_dir = QFileInfo(Open_Location).filePath();
     QString Pro_Path = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(this, tr("Choose Path"), QDir::fromNativeSeparators(default_dir)));
     ui->toolButton_imagePath->setDisabled(false);
     ui->lineEdit_imagePath->setText(Pro_Path);
@@ -1637,7 +1591,7 @@ void MainWindow::edit(int mode) // default as EDIT_HERE
 void MainWindow::display()
 {
     NO_EDIT = true;
-
+/*
     qDebug() << "   =====Display=====";
     qDebug() << "   Current info_v " << current_info_v;
     qDebug() << "   Currnet redo_max_depth " << redo_max_depth;
@@ -1776,7 +1730,9 @@ void MainWindow::display()
 
     // Preview Info
     preview_setting->updateInfo();
+*/
 
+    editor->setText(info.curr().text());
     NO_EDIT = false;
 }
 
@@ -2798,6 +2754,7 @@ void MainWindow::on_pushButton_Template_Help_clicked()
 
 void MainWindow::useDarkIcon()
 {
+    isDarkStyle=true;
     ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Check Images.svg"));
     ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/dark/Close.svg"));
     ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Create Image.svg"));
@@ -2828,10 +2785,15 @@ void MainWindow::useDarkIcon()
     ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/dark/Help.svg"));
     // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/dark/Image.svg"));
     // ui->action->setIcon(QIcon(":/icon/Menu Icon/dark/Next.svg"));
+
+    this->m_titleBar->btn_close.setIcon(QIcon(":/EXE Icons/Close_White.svg"));
+    this->m_titleBar->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
+    this->m_titleBar->btn_minimize.setIcon(QIcon(":/EXE Icons/Minimize_white.svg"));
 }
 
 void MainWindow::useWhiteIcon()
 {
+    isDarkStyle=false;
     ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/Check Images.svg"));
     ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/Close.svg"));
     ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/Create Image.svg"));
@@ -2862,6 +2824,10 @@ void MainWindow::useWhiteIcon()
     ui->actionEnglish->setIcon(QIcon(":/icon/Menu Icon/Help.svg"));
     // ui->menuPicture_P->setIcon(QIcon(":/icon/Menu Icon/Image.svg"));
     // ui->action->setIcon(QIcon(":/icon/Menu Icon/Next.svg"));
+
+    this->m_titleBar->btn_close.setIcon(QIcon(":/EXE Icons/Close.svg"));
+    this->m_titleBar->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+    this->m_titleBar->btn_minimize.setIcon(QIcon(":/EXE Icons/Minimize.svg"));
 }
 
 void MainWindow::on_actionTheme_Light_triggered()
@@ -2882,6 +2848,7 @@ void MainWindow::on_actionTheme_Light_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Light");
+    updateMaxButton();
 }
 
 void MainWindow::on_actionTheme_Amoled_triggered()
@@ -2901,6 +2868,7 @@ void MainWindow::on_actionTheme_Amoled_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Amoled");
+    updateMaxButton();
 }
 
 
@@ -2921,6 +2889,7 @@ void MainWindow::on_actionTheme_Aqua_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Aqua");
+    updateMaxButton();
 }
 
 
@@ -2941,6 +2910,7 @@ void MainWindow::on_actionTheme_Console_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Console");
+    updateMaxButton();
 }
 
 
@@ -2961,6 +2931,7 @@ void MainWindow::on_actionTheme_Elegant_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Elegant");
+    updateMaxButton();
 }
 
 
@@ -2981,6 +2952,7 @@ void MainWindow::on_actionTheme_Macos_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Macos");
+    updateMaxButton();
 }
 
 
@@ -3001,6 +2973,7 @@ void MainWindow::on_actionTheme_ManjaroMix_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_ManjaroMix");
+    updateMaxButton();
 }
 
 
@@ -3021,6 +2994,7 @@ void MainWindow::on_actionTheme_MaterialDark_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_MaterialDark");
+    updateMaxButton();
 }
 
 
@@ -3041,6 +3015,7 @@ void MainWindow::on_actionTheme_Ubuntu_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Ubuntu");
+    updateMaxButton();
 }
 
 QString MainWindow::ReadInit(const QString& key)
@@ -3110,6 +3085,34 @@ void MainWindow::ReadStyle()
     }
 }
 
+void MainWindow::updateMaxButton()
+{
+    if(!isDarkStyle)
+    {
+        if(this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
+
+        }
+        else if(!this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+        }
+    }
+    else
+    {
+        if(this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore_white.svg"));
+
+        }
+        else if(!this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
+        }
+    }
+}
+
 void MainWindow::tableRouteCustomMenuRequested(QPoint pos)
 {
     table_route_line = ui->tableView_Route->indexAt(pos).row();
@@ -3167,4 +3170,309 @@ void MainWindow::tableRouteInsertAfter()
 void MainWindow::tableRouteDeleteRow()
 {
     table_route_model->removeRow(table_route_line);
+}
+
+QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area,
+                                        Qt::Orientation orientation){
+    QToolBar *border = new QToolBar("___border___");
+    border->setStyleSheet(
+        "\nQToolBar {\n"
+        "   margin : 1px;\n"
+        "   border : 0px;\n"
+        "   background : transparent;\n"
+        "}"
+    );
+
+    if (orientation & Qt::Horizontal){
+        border->setMinimumHeight(6);
+        border->setMaximumHeight(6);
+    }
+    else {
+        border->setMinimumWidth(6);
+        border->setMaximumWidth(6);
+    }
+    border->setMovable(false);
+    border->setFloatable(false);
+    border->setAllowedAreas(area);
+    border->setMouseTracking(true);
+    border->installEventFilter(this);
+
+    this->addToolBar(area, border);
+    return border;
+}
+
+QMenu * MainWindow::createPopupMenu(){
+    QMenu *menu = QMainWindow::createPopupMenu();
+    QList<QAction *> removal;
+    foreach (QAction *a, menu->actions())
+        if (a->text() == "___border___") removal.append(a);
+    foreach (QAction *a, removal) menu->removeAction(a);
+    return menu;
+}
+
+void MainWindow::setMenuBar(QMenuBar *menuBar){
+    if (this->m_menuBar == menuBar) return;
+
+    if (this->m_menuBar) {
+        if (this->m_menuBar != this->m_menuWidget && this->m_menuWidget){
+            this->m_menuWidget->setParent(nullptr);
+            this->m_menuWidget->deleteLater();
+        }
+
+
+
+        this->m_menuBar->hide();
+        this->m_menuBar->setParent(nullptr);
+        this->m_menuBar->deleteLater();
+    }
+
+    this->m_menuBar = menuBar;
+    this->m_menuWidget = qobject_cast<QWidget *>(menuBar);
+
+    if (menuBar){
+        menuBar->setParent(this);
+        this->m_titleBarW->layout()->addWidget(menuBar);
+    }
+}
+
+QMenuBar* MainWindow::menuBar() const{
+    return this->m_menuBar;
+}
+
+void MainWindow::setMenuWidget(QWidget *widget){
+    if (this->m_menuWidget == widget) return;
+
+    widget->setParent(this);
+
+    if (this->m_menuWidget){
+        this->m_menuWidget->hide();
+        this->m_menuWidget->setParent(nullptr);
+        this->m_menuWidget->deleteLater();
+    }
+
+    this->m_menuBar = nullptr;
+    this->m_menuWidget = widget;
+
+    if (this->m_menuWidget){
+        this->m_menuWidget->setParent(this);
+        this->m_titleBarW->layout()->addWidget(widget);
+    }
+}
+
+QWidget * MainWindow::menuWidget() const{
+    return this->m_menuWidget;
+}
+
+bool MainWindow::eventFilter(QObject*, QEvent *event){
+    if (event->type() == QEvent::MouseMove)
+        customMouseMoveEvent(static_cast<QMouseEvent*>(event));
+    else if (event->type() == QEvent::MouseButtonPress)
+        mousePressEvent(static_cast<QMouseEvent*>(event));
+    return false;
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (this->FRD_TitleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_TitleBar().btn_maximize.isEnabled()
+            && event->buttons() & Qt::LeftButton) {
+//        this->FRD_TitleBar().mamaximizing = true;
+//        emit requestMaximize();
+        updateMaxButton();
+    }
+    QWidget::mouseDoubleClickEvent(event);
+}
+
+bool MainWindow::event(QEvent *event){
+    if (event->type() == QEvent::ChildRemoved){
+        QChildEvent *evt = static_cast<QChildEvent*>(event);
+        if (evt->child()->isWidgetType()) evt->child()->removeEventFilter(this);
+    }
+    else if (event->type() == QEvent::ChildAdded){
+        QChildEvent *evt = static_cast<QChildEvent*>(event);
+        if (evt->child()->isWidgetType()){
+            QWidget *child = qobject_cast<QWidget*>(evt->child());
+
+            child->setMouseTracking(true);
+            child->installEventFilter(this);
+
+            if (child->metaObject()->indexOfClassInfo("custom_obj_type") == -1){
+                child->setStyleSheet(child->styleSheet() +
+                                     "\nQToolBar {\n"
+                                     "    margin : 1px;\n"
+                                     "    padding: 0px 6px 0px 6px;\n"
+                                     "    border: 1px transparent solid;"
+                                     "}\n"
+                                     "QToolBar:top:first, QToolBar:bottom:first, QToolBar:left:first {\n"
+                                     "    margin : 0px 0px 0px 6px;\n"
+                                     "}\n"
+                                     "QToolBar:top:only-one, QToolBar:bottom:only-one {\n"
+                                     "    margin : 0px 6px 0px 6px;\n"
+                                     "}\n"
+                                     "QToolBar:top:last, QToolBar:bottom:last, QToolBar:right:last {\n"
+                                     "    margin : 0px 6px 0px 0px;\n"
+                                     "}\n");
+            }
+        }
+    }
+    return QMainWindow::event(event);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    if (event->button() & Qt::LeftButton){
+        int x = event->x(), y = event->y();
+        int bottom = this->height() - RESIZE_LIMIT, right = this->width() - RESIZE_LIMIT;
+
+        QPoint posCursor = event->globalPos();
+        Qt::Edges nFlags = {};
+        if (x < RESIZE_LIMIT) {
+            nFlags |= Qt::LeftEdge;
+            posCursor.rx() -= this->x();
+        }
+        if (y < RESIZE_LIMIT) {
+            nFlags |= Qt::TopEdge;
+            posCursor.ry() -= this->y();
+        }
+        if (x > right) {
+            nFlags |= Qt::RightEdge;
+            posCursor.rx() -= (this->x() + this->width());
+        }
+        if (y > bottom) {
+            nFlags |= Qt::BottomEdge;
+            posCursor.ry() -= (this->y() + this->height());
+        }
+        this->m_lock = nFlags;
+        this->m_posCursor = posCursor;
+    }
+    QMainWindow::mousePressEvent(event);
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+    this->m_lock = {};
+    this->unsetCursor();
+    QMainWindow::mouseMoveEvent(event);
+}
+
+void MainWindow::customMouseMoveEvent(QMouseEvent *event){
+    if (this->m_lock){
+        QPoint tL = this->geometry().topLeft(), bR = this->geometry().bottomRight();
+        if (this->m_lock & Qt::TopEdge) tL.ry() = event->globalY() - this->m_posCursor.y();
+        if (this->m_lock & Qt::BottomEdge) bR.ry() = event->globalY() - this->m_posCursor.y();
+        if (this->m_lock & Qt::LeftEdge) tL.rx() = event->globalX() - this->m_posCursor.x();
+        if (this->m_lock & Qt::RightEdge) bR.rx() = event->globalX() - this->m_posCursor.x();
+        this->setGeometry(QRect(tL, bR));
+        return;
+    }
+
+    int x = event->globalX() - this->x(), y = event->globalY() - this->y();
+    int bottom = this->height() - RESIZE_LIMIT, right = this->width() - RESIZE_LIMIT;
+
+    if (x < RESIZE_LIMIT){
+        if (y < RESIZE_LIMIT) this->setCursor(QCursor(Qt::SizeFDiagCursor));
+        else if (y > bottom) this->setCursor(QCursor(Qt::SizeBDiagCursor));
+        else this->setCursor(QCursor(Qt::SizeHorCursor));
+    }
+    else if (x > right){
+        if (y < RESIZE_LIMIT) this->setCursor(QCursor(Qt::SizeBDiagCursor));
+        else if (y > bottom) this->setCursor(QCursor(Qt::SizeFDiagCursor));
+        else this->setCursor(QCursor(Qt::SizeHorCursor));
+    }
+    else if (y < RESIZE_LIMIT || y > bottom) this->setCursor(Qt::SizeVerCursor);
+    else this->unsetCursor();
+}
+
+void MainWindow::mousePressEvent_2(QMouseEvent *e)
+{
+    isPressWidget = true;
+    last = e->globalPos();
+}
+
+void MainWindow::mouseMoveEvent_2(QMouseEvent *e)
+{
+    if (isPressWidget)
+    {
+         int dx = e->globalX() - last.x();
+         int dy = e->globalY() - last.y();
+         last = e->globalPos();
+         move(x()+dx, y()+dy);
+    }
+}
+
+void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
+{
+    int dx = e->globalX() - last.x();
+    int dy = e->globalY() - last.y();
+    move(x()+dx, y()+dy);
+    isPressWidget=false;
+}
+
+void MainWindow::on_pushButton_CodeRun_clicked()
+{
+    Interpreter::interpret(editor->text(), info.editor());
+    editor->clearSearchIndic(0, editor->text().size());
+    ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
+    ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
+    setErrorInfo(info.editor());
+}
+
+void MainWindow::updateEditorInfo()
+{
+    info.editor().updateText(editor->text());
+}
+
+void MainWindow::on_actionSave_As_A_triggered()
+{
+    if (Open_Location.isEmpty())
+    {
+        on_actionNew_N_triggered();
+        return;
+    }
+    QString new_dir = QFileDialog::getSaveFileName(this,
+                                                   tr("Save As"),
+                                                   Open_Location,
+                                                   tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
+    if (new_dir.isEmpty()) return;
+    if (QFileInfo(new_dir).suffix() == "frd")
+    {
+        save_or_not = true;
+        Open_Location = new_dir;
+        setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+        on_actionSave_S_triggered();
+    }
+    info.print(new_dir);
+}
+
+void MainWindow::setErrorInfo(const FRD_Json& frd_json)
+{
+    QVector<FRD_Error> err_list = frd_json.errors();
+    qDebug() << "Error " << frd_json.errors().size();
+    error_list_model->setRowCount(err_list.size());
+    for (int i = 0; i != err_list.size(); i++)
+    {
+        error_list_model->setItem(i, 0, new QStandardItem(err_list[i].error_type < 8000 ? "Error" : "Warning"));
+        error_list_model->setItem(i, 1, new QStandardItem(QString::number(err_list[i].error_type)));
+        error_list_model->setItem(i, 2, new QStandardItem(QString::number(err_list[i].row)));
+        error_list_model->setItem(i, 3, new QStandardItem(QString::number(err_list[i].col)));
+        error_list_model->setItem(i, 4, new QStandardItem(QString::number(err_list[i].length)));
+        error_list_model->setItem(i, 5, new QStandardItem(err_list[i].msg));
+    }
+}
+
+void MainWindow::on_pushButton_search_clicked()
+{
+    QString text = info.editor().text();
+    editor->clearSearchIndic(0, text.size());
+    QString str = ui->lineEdit_searchName->text();
+    if (str.isEmpty()) return;
+    int index = 0;
+    auto cs = ui->checkBox_searchCaseSensitive->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    while((index = text.indexOf(str, index, cs)) != -1)
+    {
+        editor->setSearchIndic(index, str.length());
+        index += str.length();
+    }
+}
+
+void MainWindow::on_lineEdit_searchName_returnPressed()
+{
+    on_pushButton_search_clicked();
 }

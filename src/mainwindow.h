@@ -1,109 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QProgressBar>
-#include <QLineEdit>
-#include <QThread>
-#include <QStandardItem>
-#include <QStandardItemModel>
-#include <QDir>
-#include <QFileDialog>
-#include <QScrollArea>
-#include <QProcess>
-#include <QIODeviceBase>
-#include <QByteArray>
-#include <QItemEditorFactory>
-#include <QDoubleSpinBox>
-#include <QStyledItemDelegate>
-#include <QButtonGroup>
-#include <QThreadPool>
-#include <QtConcurrent/QtConcurrent>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QDialog>
-#include <complex> // std::complex
-#include "login.h"
-#include "new_file.h"
-#include "route_tool.h"
-#include "create_image_info.h"
-#include "search_result.h"
-#include "info_save.h"
-#include "route_info.h"
-#include "version.h"
-#include "new_features.h"
-#include "create_images_range.h"
-#include "create_image_task.h"
-#include "template_2_settings.h"
-#include "template_4_settings.h"
-#include "preview_setting.h"
-#include "FRD_Editor.h"
-
-#define OPEN_FILE_IN  0
-#define OPEN_FILE_OUT 1
-#define _MAX_SAVE_    50
-#define curr_info     pre_info[current_info_v]
-#define EDIT_HERE     0
-#define EDIT_ALREADY  1
-
-#define Tb(i, j)       table_route_model->item(i, j)->data(Qt::EditRole).value<double>()
-#define SetTb(i, j, v) table_route_model->item(i, j)->setData(QVariant(v), Qt::EditRole)
-
-#define NameIs(C1_, C2_) (name_1 == C1_ && name_2 == C2_)
-
-#ifndef For_All_Colour
-#define For_All_Colour(it__, jt__) \
-    for(int it__ = 0; it__ != 4; it__++) { \
-        for(int jt__ = 0; jt__ != 29; jt__++) {
-#endif
-
-#ifndef End_All_Colour
-#define End_All_Colour }}
-#endif
-
-#ifndef UNSUPPORTED_PLATFORM
-#define UNSUPPORTED_PLATFORM \
-    QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
-#endif
-
-const QString Chinese_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh";
-const QString English_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help";
-const QString Bug_Report       = "https://github.com/Teddy-van-Jerry/Fractal_Designer/issues/11";
-
-class PeciseDoubleFactory : public QItemEditorFactory
-{
-public:
-    PeciseDoubleFactory() = default;
-    virtual ~PeciseDoubleFactory() = default;
-    virtual QWidget* createEditor(int userType, QWidget *parent) const override
-    {
-        if(userType == QVariant::Double)
-        {
-#ifndef DBL_MAX
-#define DBL_MAX 1E10
-#endif
-            QDoubleSpinBox *sb = new QDoubleSpinBox(parent);
-            sb->setFrame(false);
-            sb->setMinimum(-DBL_MAX);
-            sb->setMaximum(DBL_MAX);
-            sb->setDecimals(11); // This is the maximum number of decimals you want
-            sb->setSingleStep(0.1);
-            // sb->interpretText();
-            return sb;
-#undef DBL_MAX
-        }
-        return QItemEditorFactory::createEditor(userType, parent);
-    }
-};
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+#include "mainwindow_global.h"
 
 struct Route_info;
 struct info;
@@ -129,13 +27,13 @@ public:
 
     QString Open_Location = "";
 
-    QString Project_Name;
-
     QString Project_Template;
 
     QString User_Name;
 
     QStandardItemModel* table_route_model = new QStandardItemModel();
+
+    QStandardItemModel* error_list_model = new QStandardItemModel();
 
     Info_Save pre_info[_MAX_SAVE_], buff_info;
 
@@ -147,11 +45,11 @@ public:
 
     void setOpenLocation(QString);
 
-    bool High_Version_Open(int type = 0);
+    bool OpenFRD(int type = 0);
 
     bool save_or_not = false;
 
-    void show_preview_image(); //
+    void show_preview_image();
 
     void edit(int mode = EDIT_HERE);
 
@@ -443,6 +341,18 @@ private slots:
 
     void tableRouteDeleteRow();
 
+    void on_pushButton_CodeRun_clicked();
+
+    void updateEditorInfo();
+
+    void on_actionSave_As_A_triggered();
+
+    void setErrorInfo(const FRD_Json& frd_json);
+
+    void on_pushButton_search_clicked();
+
+    void on_lineEdit_searchName_returnPressed();
+
 signals:
 
     void Search_clicked(QString);
@@ -470,7 +380,9 @@ private:
     QString ReadInit(const QString& key);
     void WriteInit(const QString& key, const QString& value);
     void ReadStyle();
-
+    bool isDarkStyle;
+public slots:
+    void updateMaxButton();
 private:
     Ui::MainWindow *ui;
 
@@ -512,12 +424,62 @@ public:
 
     FRD_Editor* editor;
 
+    Info info;
+
     enum App_Language { LANGUAGE_ENGLISH, LANGUAGE_CHINESE } app_language = LANGUAGE_ENGLISH;
 
     void setLanguage(App_Language la);
 
     bool language_setting_no_change_now = false;
+//connect to titleBar
+public:
+    void initTitleBar();
 
+    QMenu * createPopupMenu() override;
+
+    void setMenuBar(QMenuBar *menuBar);
+    QMenuBar * menuBar() const;
+
+    void setMenuWidget(QWidget *widget);
+    QWidget * menuWidget() const;
+
+    inline FRD_TitleBar& FRD_TitleBar() const { return *this->m_titleBar; }
+
+protected:
+
+    int RESIZE_LIMIT;
+
+    bool event(QEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void customMouseMoveEvent(QMouseEvent* event);
+
+    void mousePressEvent_2(QMouseEvent *e);
+    void mouseMoveEvent_2(QMouseEvent *e);
+    void mouseReleaseEvent_2(QMouseEvent *e);
+
+private:
+    QPoint last;
+    bool isPressWidget;
+
+    bool init;
+
+    QWidget *m_titleBarW;
+    QWidget *m_menuWidget;
+    QMenuBar *m_menuBar;
+    class::FRD_TitleBar *m_titleBar;
+
+    QToolBar *m_leftBorder;
+    QToolBar *m_rightBorder;
+    QToolBar *m_bottomBorder;
+
+    QLabel FRD_icon;
+    Qt::Edges m_lock;
+    QPoint m_posCursor;
+
+    QToolBar * generateBorder(Qt::ToolBarArea area, Qt::Orientation orientation);
 };
 
 #endif // MAINWINDOW_H
