@@ -372,7 +372,9 @@ private:
     QString ReadInit(const QString& key);
     void WriteInit(const QString& key, const QString& value);
     void ReadStyle();
-
+    bool isDarkStyle;
+public slots:
+    void updateMaxButton();
 private:
     Ui::MainWindow *ui;
 
@@ -443,10 +445,17 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
-
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
     void customMouseMoveEvent(QMouseEvent* event);
 
+    void mousePressEvent_2(QMouseEvent *e);
+    void mouseMoveEvent_2(QMouseEvent *e);
+    void mouseReleaseEvent_2(QMouseEvent *e);
+
 private:
+    QPoint last;
+    bool isPressWidget;
+
     bool init;
 
     QWidget *m_titleBarW;

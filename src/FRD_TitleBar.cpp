@@ -7,6 +7,7 @@ FRD_TitleBar::FRD_TitleBar(QWidget *parent) :
     this->maximizing = false;
     this->m_frameButtons = QCustomAttrs::All;
 
+
    // menubar = new QMenuBar(this);
 
     //创建定时器用于每帧更新
@@ -14,6 +15,7 @@ FRD_TitleBar::FRD_TitleBar(QWidget *parent) :
     timer->setInterval(200);
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(timeUpdate()));
     timer->start();
+
     this->btn_close.setStyleSheet(QStringLiteral(
         "QPushButton::hover {\n"
         "   background: red;\n"
@@ -84,7 +86,7 @@ FRD_TitleBar::FRD_TitleBar(QWidget *parent) :
     connect(&this->btn_close, &QPushButton::clicked, [this]{ emit this->requestClose(); });
     connect(&this->btn_minimize, &QPushButton::clicked, [this]{ emit this->requestMinimize(); });
     connect(&this->btn_maximize, &QPushButton::clicked, [this]{ emit this->requestMaximize(); });
-    connect(&this->btn_maximize, SIGNAL(clicked()), this, SLOT(updateMaxbutton()));
+   // connect(&this->btn_maximize, SIGNAL(clicked()), this, SLOT(updateMaxbutton()));
     connect(this, &QWidget::windowTitleChanged, &this->lbl_windowTitle, &QLabel::setText);
 
     this->setMaximumHeight(35);
@@ -204,41 +206,41 @@ void FRD_TitleBar::timeUpdate()
             if(cursor() != Qt::SizeFDiagCursor)
                 this->setCursor(Qt::SizeFDiagCursor);
         }
-        else if (isinSide(rightTopHit, CurrentPos)|| bResizeByRtHit)
-        {
-            if(cursor() != Qt::SizeBDiagCursor)
-                this->setCursor(Qt::SizeBDiagCursor);
-        }
-        else if (isinSide(leftBottomHit, CurrentPos)|| bResizeByLbHit)
-        {
-            if(cursor() != Qt::SizeBDiagCursor)
-                this->setCursor(Qt::SizeBDiagCursor);
-        }
-        else if (isinSide(leftTopHit, CurrentPos)|| bResizeByLtHit)
-        {
-            if(cursor() != Qt::SizeFDiagCursor)
-                this->setCursor(Qt::SizeFDiagCursor);
-        }
-        else if (isinSide(topHit, CurrentPos)|| bResizeByTopHit)
-        {
-            if(cursor() != Qt::SizeVerCursor)
-                this->setCursor(Qt::SizeVerCursor);
-        }
-        else if (isinSide(bottomHit, CurrentPos) || bResizeByBottomHit)
-        {
-            if(cursor() != Qt::SizeVerCursor)
-                this->setCursor(Qt::SizeVerCursor);
-        }
-        else if (isinSide(leftHit, CurrentPos) || bResizeByLeftHit)
-        {
-            if(cursor() != Qt::SizeHorCursor)
-                this->setCursor(Qt::SizeHorCursor);
-        }
-        else if (isinSide(rightHit, CurrentPos)|| bResizeByRightHit)
-        {
-            if(cursor() != Qt::SizeHorCursor)
-                this->setCursor(Qt::SizeHorCursor);
-        }
+//        else if (isinSide(rightTopHit, CurrentPos)|| bResizeByRtHit)
+//        {
+//            if(cursor() != Qt::SizeBDiagCursor)
+//                this->setCursor(Qt::SizeBDiagCursor);
+//        }
+//        else if (isinSide(leftBottomHit, CurrentPos)|| bResizeByLbHit)
+//        {
+//            if(cursor() != Qt::SizeBDiagCursor)
+//                this->setCursor(Qt::SizeBDiagCursor);
+//        }
+//        else if (isinSide(leftTopHit, CurrentPos)|| bResizeByLtHit)
+//        {
+//            if(cursor() != Qt::SizeFDiagCursor)
+//                this->setCursor(Qt::SizeFDiagCursor);
+//        }
+//        else if (isinSide(topHit, CurrentPos)|| bResizeByTopHit)
+//        {
+//            if(cursor() != Qt::SizeVerCursor)
+//                this->setCursor(Qt::SizeVerCursor);
+//        }
+//        else if (isinSide(bottomHit, CurrentPos) || bResizeByBottomHit)
+//        {
+//            if(cursor() != Qt::SizeVerCursor)
+//                this->setCursor(Qt::SizeVerCursor);
+//        }
+//        else if (isinSide(leftHit, CurrentPos) || bResizeByLeftHit)
+//        {
+//            if(cursor() != Qt::SizeHorCursor)
+//                this->setCursor(Qt::SizeHorCursor);
+//        }
+//        else if (isinSide(rightHit, CurrentPos)|| bResizeByRightHit)
+//        {
+//            if(cursor() != Qt::SizeHorCursor)
+//                this->setCursor(Qt::SizeHorCursor);
+//        }
         else
         {
             if(cursor() != Qt::ArrowCursor)
@@ -246,33 +248,20 @@ void FRD_TitleBar::timeUpdate()
     }
 }
 
-void FRD_TitleBar::updateMaxbutton()
-{
-    if(this->maximizing)
-    {
-        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
-        qDebug() << "Restore icon";
-    }
-    else if(!this->maximizing)
-    {
-        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
-        qDebug() << "Maximize icon";
-    }
-}
+//void FRD_TitleBar::updateMaxbutton()
+//{
+//    if(this->m_parentWindow->isMaximized())
+//    {
+//        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
+//        qDebug() << "Restore icon";
+//    }
+//    else if(!this->m_parentWindow->isMaximized())
+//    {
+//        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+//        qDebug() << "Maximize icon";
+//    }
+//}
 
-void FRD_TitleBar::resizeEvent(QResizeEvent *evt)
-{
-    if(windowState().testFlag(Qt::WindowMaximized))
-    {
-        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
-        qDebug() << "Maximized";
-    }
-    else
-    {
-        this->btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
-        qDebug() << "Size otherwize";
-    }
-}
 
 void FRD_TitleBar::updateTitleBar()
 {
@@ -318,6 +307,7 @@ void FRD_TitleBar::mouseDoubleClickEvent(QMouseEvent *event){
             && event->buttons() & Qt::LeftButton) {
         this->maximizing = true;
         emit requestMaximize();
+
     }
     QWidget::mouseDoubleClickEvent(event);
     updateTitleBar();
