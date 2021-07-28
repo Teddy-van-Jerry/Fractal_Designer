@@ -15,6 +15,17 @@ class FRD_Editor : public QWidget
     Q_OBJECT
 
 public:
+
+    enum FRD_Indicator {
+        FRD_INDIC_CLEAR = -1,
+        FRD_INDIC_VARIABLE = 15,
+        FRD_INDIC_FUNCTION,
+        FRD_INDIC_CLASS,
+        FRD_INDIC_ERROR,
+        FRD_INDIC_WARNING,
+        FRD_INDIC_SEARCH
+    };
+
     FRD_Editor(QLayout* layout, int waiting_msec = 0);
 
     ~FRD_Editor();
@@ -25,16 +36,11 @@ public:
 
     void setHighlightWaiting(int msec);
 
+    void setSearchIndic(int start, int length);
+
+    void clearSearchIndic(int start, int length);
+
 private:
-    enum FRD_Indicator {
-        FRD_INDIC_CLEAR = -1,
-        FRD_INDIC_VARIABLE = 15,
-        FRD_INDIC_FUNCTION,
-        FRD_INDIC_CLASS,
-        FRD_INDIC_ERROR,
-        FRD_INDIC_WARNING,
-        FRD_INDIC_SEARCH
-    };
 
     bool isEndString(QChar c) const;
 

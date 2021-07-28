@@ -1742,7 +1742,7 @@ p, li { white-space: pre-wrap; }
               </widget>
               <widget class="QTabWidget" name="Tool_widget">
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="Run_tab">
                 <attribute name="title">

@@ -81,12 +81,13 @@ FRD_Editor::FRD_Editor(QLayout* layout_, int waiting)
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_CLASS   , QsciScintillaBase::INDIC_TEXTFORE);
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_ERROR   , QsciScintillaBase::INDIC_SQUIGGLE);
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_WARNING , QsciScintillaBase::INDIC_SQUIGGLE);
-    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_WARNING , QsciScintillaBase::INDIC_ROUNDBOX);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_SEARCH  , QsciScintillaBase::INDIC_ROUNDBOX);
     editor->setIndicatorForegroundColor(0xff0000, FRD_INDIC_VARIABLE);
     editor->setIndicatorForegroundColor(0x17ccc6, FRD_INDIC_FUNCTION);
     editor->setIndicatorForegroundColor(0x0000ff, FRD_INDIC_CLASS);
     editor->setIndicatorForegroundColor(0xff0000, FRD_INDIC_ERROR);
     editor->setIndicatorForegroundColor(0x007f00, FRD_INDIC_WARNING);
+    editor->setIndicatorOutlineColor   (0xffff00, FRD_INDIC_SEARCH);
 
     layout->addWidget(editor);
 
@@ -109,6 +110,16 @@ QString FRD_Editor::text() const
 void FRD_Editor::setText(const QString &text)
 {
     editor->setText(text);
+}
+
+void FRD_Editor::setSearchIndic(int start, int length)
+{
+    setIndicator(start, length, FRD_INDIC_SEARCH);
+}
+
+void FRD_Editor::clearSearchIndic(int start, int length)
+{
+    setIndicator(start, -length, FRD_INDIC_SEARCH);
 }
 
 bool FRD_Editor::isEndString(QChar c) const

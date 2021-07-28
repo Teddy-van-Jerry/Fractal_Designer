@@ -349,6 +349,10 @@ private slots:
 
     void setErrorInfo(const FRD_Json& frd_json);
 
+    void on_pushButton_search_clicked();
+
+    void on_lineEdit_searchName_returnPressed();
+
 signals:
 
     void Search_clicked(QString);

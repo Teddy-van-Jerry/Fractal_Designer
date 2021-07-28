@@ -3408,6 +3408,7 @@ void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
 void MainWindow::on_pushButton_CodeRun_clicked()
 {
     Interpreter::interpret(editor->text(), info.editor());
+    editor->clearSearchIndic(0, editor->text().size());
     ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
     ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
     setErrorInfo(info.editor());
@@ -3454,4 +3455,24 @@ void MainWindow::setErrorInfo(const FRD_Json& frd_json)
         error_list_model->setItem(i, 4, new QStandardItem(QString::number(err_list[i].length)));
         error_list_model->setItem(i, 5, new QStandardItem(err_list[i].msg));
     }
+}
+
+void MainWindow::on_pushButton_search_clicked()
+{
+    QString text = info.editor().text();
+    editor->clearSearchIndic(0, text.size());
+    QString str = ui->lineEdit_searchName->text();
+    if (str.isEmpty()) return;
+    int index = 0;
+    auto cs = ui->checkBox_searchCaseSensitive->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    while((index = text.indexOf(str, index, cs)) != -1)
+    {
+        editor->setSearchIndic(index, str.length());
+        index += str.length();
+    }
+}
+
+void MainWindow::on_lineEdit_searchName_returnPressed()
+{
+    on_pushButton_search_clicked();
 }
