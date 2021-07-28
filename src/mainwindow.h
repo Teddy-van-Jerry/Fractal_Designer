@@ -33,6 +33,8 @@ public:
 
     QStandardItemModel* table_route_model = new QStandardItemModel();
 
+    QStandardItemModel* error_list_model = new QStandardItemModel();
+
     Info_Save pre_info[_MAX_SAVE_], buff_info;
 
     int current_info_v = 0;
@@ -344,6 +346,8 @@ private slots:
     void updateEditorInfo();
 
     void on_actionSave_As_A_triggered();
+
+    void setErrorInfo(const FRD_Json& frd_json);
 
 signals:
 

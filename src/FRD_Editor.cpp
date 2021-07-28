@@ -81,6 +81,7 @@ FRD_Editor::FRD_Editor(QLayout* layout_, int waiting)
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_CLASS   , QsciScintillaBase::INDIC_TEXTFORE);
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_ERROR   , QsciScintillaBase::INDIC_SQUIGGLE);
     editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_WARNING , QsciScintillaBase::INDIC_SQUIGGLE);
+    editor->SendScintilla(QsciScintillaBase::SCI_INDICSETSTYLE, FRD_INDIC_WARNING , QsciScintillaBase::INDIC_ROUNDBOX);
     editor->setIndicatorForegroundColor(0xff0000, FRD_INDIC_VARIABLE);
     editor->setIndicatorForegroundColor(0x17ccc6, FRD_INDIC_FUNCTION);
     editor->setIndicatorForegroundColor(0x0000ff, FRD_INDIC_CLASS);

@@ -32,7 +32,8 @@ private:
         FRD_INDIC_FUNCTION,
         FRD_INDIC_CLASS,
         FRD_INDIC_ERROR,
-        FRD_INDIC_WARNING
+        FRD_INDIC_WARNING,
+        FRD_INDIC_SEARCH
     };
 
     bool isEndString(QChar c) const;

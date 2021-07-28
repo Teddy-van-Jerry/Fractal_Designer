@@ -81,13 +81,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     route_tool_window = new Route_Tool(this);
 
-    ui->splitter_Editor_Up->setStretchFactor(0, 4);
-    ui->splitter_Editor_Up->setStretchFactor(1, 1);
-    ui->splitter_Editor_Up->setSizes({10000, 100});
-    ui->splitter_Editor->setStretchFactor(0, 4);
-    ui->splitter_Editor->setStretchFactor(1, 1);
-    ui->splitter_Editor->setSizes({10000, 10});
-
     editor = new FRD_Editor(ui->gridLayout_Editor);
     connect(editor, SIGNAL(textChanged()), this, SLOT(updateEditorInfo()));
 
@@ -110,6 +103,27 @@ MainWindow::MainWindow(QWidget *parent)
     table_route_menu->addSeparator();
     table_route_menu->addActions({table_route_action[4]});
     connect(ui->tableView_Route, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tableRouteCustomMenuRequested(QPoint)));
+
+    ui->splitter_Editor_Up->setStretchFactor(0, 4);
+    ui->splitter_Editor_Up->setStretchFactor(1, 1);
+    ui->splitter_Editor_Up->setSizes({10000, 100});
+    ui->splitter_Editor->setStretchFactor(0, 4);
+    ui->splitter_Editor->setStretchFactor(1, 1);
+    ui->splitter_Editor->setSizes({10000, 10});
+
+    error_list_model->setColumnCount(6);
+    error_list_model->setHeaderData(0, Qt::Horizontal, "Type");
+    error_list_model->setHeaderData(1, Qt::Horizontal, "Error Code");
+    error_list_model->setHeaderData(2, Qt::Horizontal, "Row");
+    error_list_model->setHeaderData(3, Qt::Horizontal, "Col");
+    error_list_model->setHeaderData(4, Qt::Horizontal, "Length");
+    error_list_model->setHeaderData(5, Qt::Horizontal, "Details");
+    ui->tableView_error->setModel(error_list_model);
+    ui->tableView_error->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView_error->horizontalHeader()->setMinimumSectionSize(30);
+    ui->tableView_error->setSortingEnabled(true);
+    ui->tableView_error->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    error_list_model->setSortRole(Qt::AscendingOrder);
 
     ReadStyle();
 }
@@ -3317,6 +3331,7 @@ void MainWindow::on_pushButton_CodeRun_clicked()
     Interpreter::interpret(editor->text(), info.editor());
     ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
     ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
+    setErrorInfo(info.editor());
 }
 
 void MainWindow::updateEditorInfo()
@@ -3344,4 +3359,20 @@ void MainWindow::on_actionSave_As_A_triggered()
         on_actionSave_S_triggered();
     }
     info.print(new_dir);
+}
+
+void MainWindow::setErrorInfo(const FRD_Json& frd_json)
+{
+    QVector<FRD_Error> err_list = frd_json.errors();
+    qDebug() << "Error " << frd_json.errors().size();
+    error_list_model->setRowCount(err_list.size());
+    for (int i = 0; i != err_list.size(); i++)
+    {
+        error_list_model->setItem(i, 0, new QStandardItem(err_list[i].error_type < 8000 ? "Error" : "Warning"));
+        error_list_model->setItem(i, 1, new QStandardItem(QString::number(err_list[i].error_type)));
+        error_list_model->setItem(i, 2, new QStandardItem(QString::number(err_list[i].row)));
+        error_list_model->setItem(i, 3, new QStandardItem(QString::number(err_list[i].col)));
+        error_list_model->setItem(i, 4, new QStandardItem(QString::number(err_list[i].length)));
+        error_list_model->setItem(i, 5, new QStandardItem(err_list[i].msg));
+    }
 }

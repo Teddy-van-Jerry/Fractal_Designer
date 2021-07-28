@@ -1,7 +1,17 @@
 #include "FRD_Json.h"
 
+FRD_Error::FRD_Error() : FRD_Error(_FRD_ERROR_OTHER_, 0, 0, 0, "") {}
+
+
+FRD_Error::FRD_Error(int type, int row_, int col_, int length_, const QString& msg_)
+    : error_type(FRD_error_type(type)),
+      row(row_),
+      col(col_),
+      length(length_),
+      msg(msg_) { }
+
 FRD_Json::FRD_Json() {
-    main.insert("Version", "6.0.5");
+    main.insert("Version", "6.0.6");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -272,8 +282,32 @@ QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
     return doc.toJson(format);
 }
 
+void FRD_Json::clear() {
+    main = QJsonObject();
+    main.insert("Version", "6.0.6");
+    main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
+    main.insert("Layers", QJsonValue::Array);
+    main.insert("Config", QJsonValue::Object);
+    main.insert("Output", QJsonValue::Object);
+    main.insert("Errors", QJsonValue::Array);
+    vars = QJsonObject();
+}
+
 QString FRD_Json::text() const {
     return frd_text;
+}
+
+QVector<FRD_Error> FRD_Json::errors() const {
+    QJsonArray arr = main["Errors"].toArray();
+    QVector<FRD_Error> err_list;
+    for (const auto& err : arr) {
+        err_list.push_back(FRD_Error(err.toObject()["Type"].toInt(),
+                                     err.toObject()["Row"].toInt(),
+                                     err.toObject()["Col"].toInt(),
+                                     err.toObject()["Length"].toInt(),
+                                     err.toObject()["Message"].toString()));
+    }
+    return err_list;
 }
 
 void FRD_Json::updateText(QString text) {
