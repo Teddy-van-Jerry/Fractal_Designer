@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     initTitleBar();
 
-    this->showMaximized();
-
     qDebug() << QThread::currentThreadId();
     QLabel *permanent = new QLabel(this);
     permanent->setText("ALL RIGHTS RESERVED (C) 2021 <strong>TVJ Group</strong> | <strong>Teddy van Jerry</strong>");
@@ -126,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent)
     error_list_model->setSortRole(Qt::AscendingOrder);
 
     ReadStyle();
+    updateMaxButton();
 }
 
 MainWindow::~MainWindow()
@@ -149,6 +148,8 @@ void MainWindow::initTitleBar()
     connect(this->m_titleBar, &FRD_TitleBar::requestMaximize, [this]{if (this->isMaximized()) this->showNormal();else this->showMaximized();});
     connect(this->m_titleBar, &FRD_TitleBar::requestMinimize,this, &MainWindow::showMinimized);
     connect(this, &QMainWindow::windowTitleChanged, this->m_titleBar,&QWidget::setWindowTitle);
+    connect(&this->FRD_TitleBar().btn_maximize,SIGNAL(clicked()),this,SLOT(updateMaxButton()));
+    connect(&this->FRD_TitleBar(),SIGNAL(doubleClicked()),this,SLOT(updateMaxButton()));
 
     this->m_titleBarW = new QWidget();
     this->m_titleBarW->setMouseTracking(true);
@@ -178,6 +179,9 @@ void MainWindow::initTitleBar()
     this->m_leftBorder = generateBorder(Qt::LeftToolBarArea, Qt::Vertical);
     this->m_rightBorder = generateBorder(Qt::RightToolBarArea, Qt::Vertical);
     this->m_bottomBorder = generateBorder(Qt::BottomToolBarArea, Qt::Horizontal);
+
+
+    this->showMaximized();
 
 
 
@@ -2750,6 +2754,7 @@ void MainWindow::on_pushButton_Template_Help_clicked()
 
 void MainWindow::useDarkIcon()
 {
+    isDarkStyle=true;
     ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Check Images.svg"));
     ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/dark/Close.svg"));
     ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/dark/Create Image.svg"));
@@ -2788,6 +2793,7 @@ void MainWindow::useDarkIcon()
 
 void MainWindow::useWhiteIcon()
 {
+    isDarkStyle=false;
     ui->actionCheck_Images->setIcon(QIcon(":/icon/Menu Icon/Check Images.svg"));
     ui->actionClose->setIcon(QIcon(":/icon/Menu Icon/Close.svg"));
     ui->actionCreate_Images->setIcon(QIcon(":/icon/Menu Icon/Create Image.svg"));
@@ -2842,6 +2848,7 @@ void MainWindow::on_actionTheme_Light_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Light");
+    updateMaxButton();
 }
 
 void MainWindow::on_actionTheme_Amoled_triggered()
@@ -2861,6 +2868,7 @@ void MainWindow::on_actionTheme_Amoled_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Amoled");
+    updateMaxButton();
 }
 
 
@@ -2881,6 +2889,7 @@ void MainWindow::on_actionTheme_Aqua_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Aqua");
+    updateMaxButton();
 }
 
 
@@ -2901,6 +2910,7 @@ void MainWindow::on_actionTheme_Console_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Console");
+    updateMaxButton();
 }
 
 
@@ -2921,6 +2931,7 @@ void MainWindow::on_actionTheme_Elegant_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Elegant");
+    updateMaxButton();
 }
 
 
@@ -2941,6 +2952,7 @@ void MainWindow::on_actionTheme_Macos_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Macos");
+    updateMaxButton();
 }
 
 
@@ -2961,6 +2973,7 @@ void MainWindow::on_actionTheme_ManjaroMix_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_ManjaroMix");
+    updateMaxButton();
 }
 
 
@@ -2981,6 +2994,7 @@ void MainWindow::on_actionTheme_MaterialDark_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_MaterialDark");
+    updateMaxButton();
 }
 
 
@@ -3001,6 +3015,7 @@ void MainWindow::on_actionTheme_Ubuntu_triggered()
     QString style( styleFile.readAll() );
     setStyleSheet( style );
     WriteInit("StyleSheet", "actionTheme_Ubuntu");
+    updateMaxButton();
 }
 
 QString MainWindow::ReadInit(const QString& key)
@@ -3067,6 +3082,34 @@ void MainWindow::ReadStyle()
     {
         // Default
         on_actionTheme_Light_triggered();
+    }
+}
+
+void MainWindow::updateMaxButton()
+{
+    if(!isDarkStyle)
+    {
+        if(this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
+
+        }
+        else if(!this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+        }
+    }
+    else
+    {
+        if(this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore_white.svg"));
+
+        }
+        else if(!this->isMaximized())
+        {
+            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
+        }
     }
 }
 
@@ -3228,6 +3271,17 @@ bool MainWindow::eventFilter(QObject*, QEvent *event){
     return false;
 }
 
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (this->FRD_TitleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_TitleBar().btn_maximize.isEnabled()
+            && event->buttons() & Qt::LeftButton) {
+//        this->FRD_TitleBar().mamaximizing = true;
+//        emit requestMaximize();
+        updateMaxButton();
+    }
+    QWidget::mouseDoubleClickEvent(event);
+}
+
 bool MainWindow::event(QEvent *event){
     if (event->type() == QEvent::ChildRemoved){
         QChildEvent *evt = static_cast<QChildEvent*>(event);
@@ -3324,6 +3378,31 @@ void MainWindow::customMouseMoveEvent(QMouseEvent *event){
     }
     else if (y < RESIZE_LIMIT || y > bottom) this->setCursor(Qt::SizeVerCursor);
     else this->unsetCursor();
+}
+
+void MainWindow::mousePressEvent_2(QMouseEvent *e)
+{
+    isPressWidget = true;
+    last = e->globalPos();
+}
+
+void MainWindow::mouseMoveEvent_2(QMouseEvent *e)
+{
+    if (isPressWidget)
+    {
+         int dx = e->globalX() - last.x();
+         int dy = e->globalY() - last.y();
+         last = e->globalPos();
+         move(x()+dx, y()+dy);
+    }
+}
+
+void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
+{
+    int dx = e->globalX() - last.x();
+    int dy = e->globalY() - last.y();
+    move(x()+dx, y()+dy);
+    isPressWidget=false;
 }
 
 void MainWindow::on_pushButton_CodeRun_clicked()

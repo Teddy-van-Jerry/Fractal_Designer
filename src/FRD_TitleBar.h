@@ -116,11 +116,11 @@ signals:
     void requestMaximize();
     void requestMinimize();
 
-private slots:
+public slots:
     void timeUpdate();
-    void updateMaxbutton();
+    //void updateMaxbutton();
 
-    void resizeEvent(QResizeEvent* e);
+
 
     // void windowStateChenged(QWindowStateChangeEvent* e);
 };
