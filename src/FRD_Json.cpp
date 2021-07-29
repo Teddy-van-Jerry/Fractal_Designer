@@ -362,6 +362,11 @@ bool FRD_Json::inverseYAsis() const {
     return value.toBool(false);
 }
 
+QString FRD_Json::distance(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["Distance"];
+    return value.toString("abs($z)");
+}
+
 QString FRD_Json::templateMin(int index) const {
     QJsonValue value = main["Layers"][index]["Template"]["Min"];
     return value.toString("0");

@@ -44,79 +44,46 @@ void Create_Image_Task::run()
             std::complex<double> z0(this_point), last_point(-this_point);
             bool convergent = true;
             int k = 0;
-            for (k = 0; k < max_loop_t; k++)
+            std::complex<double> iterLimit = 1;
+            std::complex<double> Min = 1000000000, Max = 1000000000;
+            std::vector<std::complex<double>> num_list
             {
-                if (abs(this_point) > max_class_v)
+                this_point, this_point.real(), this_point.imag(),
+                last_point, last_point.real(), last_point.imag(),
+                z0, z0.real(), z0.imag(), t, double(k)
+            };
+
+            for (k = 0; k < iterLimit.real() && k < 1000000000; k++)
+            {
+                num_list =
+                {
+                    this_point, this_point.real(), this_point.imag(),
+                    last_point, last_point.real(), last_point.imag(),
+                    z0, z0.real(), z0.imag(), t, double(k)
+                };
+                bool ok;
+                iterLimit = evalExpr(max_loop_t, num_list, EVAL_ITER, &ok); if (!ok) break;
+                Min       = evalExpr(min_class_v, num_list, EVAL_MIN, &ok); if (!ok) break;
+                Max       = evalExpr(max_class_v, num_list, EVAL_MAX, &ok); if (!ok) break;
+                // qDebug() << iterLimit.real() << Min.real() << Max.real();
+                if (abs(this_point) < Min.real())
+                {
+                    break;
+                }
+                else if (abs(this_point) > Max.real())
                 {
                     convergent = false;
                     break;
                 }
-                else if (template_ != 4 && abs(this_point) < min_class_v)
-                {
-                    // convergent = true;
-                    break;
-                }
-                else if (template_ == 4 && abs(this_point - last_point) / (abs(this_point)) < min_class_v)
-                {
-                    // convergent = true;
-                    break;
-                }
                 else
                 {
-                    if (template_ == 4) last_point = this_point;
-                    switch(template_)
-                    {
-                    case 1: this_point = this_point * this_point + z0; break;
-                    case 2: this_point = this_point * this_point + c0; break;
-                    case 3:
-                    {
-                        std::complex<double> c { fabs(this_point.real()), fabs(this_point.imag())};
-                        this_point = c * c + z0; break;
-                    }
-                    case 4:
-                    {
-                        std::complex<double> p = 0, p_ = 0;
-                        for(int i = 0; i != 10; i++)
-                        {
-                            p += Newton_xn[i] * pow(this_point, i);
-                            p_ += Newton_xn[i] * pow(this_point, i - 1) * std::complex<double>(i);
-                        }
-                        p += Newton_ex * exp(this_point);
-                        p += Newton_sin * sin(this_point);
-                        p += Newton_cos * cos(this_point);
-                        p_ += Newton_ex * exp(this_point);
-                        p_ += Newton_sin * cos(this_point);
-                        p_ -= Newton_cos * sin(this_point);
-                        this_point = this_point - Newton_a * p / p_;
-                    }
-                    case 5:
-                    {
-                        std::vector<std::complex<double>> num_list
-                        {
-                            this_point, this_point.real(), this_point.imag(), z0, z0.real(), z0.imag(), t, double(k)
-                        };
-                        std::string msg;
-                        this_point = eval_postorder(Formula, num_list, &msg);
-                        if (!msg.empty())
-                        {
-                            // 0 indicates formula error
-                            emit error_calc(0);
-                        }
-                        break;
-                    }
-                    default: break;
-                    }
+                    this_point = evalExpr(Formula, num_list, EVAL_FORMULA, &ok);
+                    if (!ok) break;
                 }
             }
 
             double RGBA[4];
-            if (!setRGBA(RGBA, convergent, this_point, z0, t, k))
-            {
-                // 1 indicates colour error in convergent point
-                // 2 indicates colour error in divergent point
-                emit error_calc(convergent ? 1 : 2);
-            }
-            else
+            if (setRGBA(RGBA, convergent, num_list))
             {
                 image_build.setPixel(i, j, qRgba(RGBA[0], RGBA[1], RGBA[2], RGBA[3]));
             }
@@ -151,16 +118,19 @@ void Create_Image_Task::setImage(double x_, double y_, double x_width_, double y
     y_inverse    = y_inverse_;
 }
 
-void Create_Image_Task::setData(std::vector<_var> C1[4], std::vector<_var> C2[4], int temp, double min, double max, int lpt)
+void Create_Image_Task::setData(const std::vector<_var>& formula, const std::vector<_var> C1[4], const std::vector<_var> C2[4],
+                                const std::vector<_var>& distance, const std::vector<_var>& min, const std::vector<_var>& max,
+                                const std::vector<_var>& lpt)
 {
     for (int i = 0; i != 4; i++)
     {
         Colour1_f[i] = C1[i];
         Colour2_f[i] = C2[i];
     }
-    template_   = temp;
-    min_class_v = min < 1E-10 ? 1E-10 : min;
-    max_class_v = max < 1E-10 ? 1E-10 : max;
+    Formula     = formula;
+    distance_   = distance;
+    min_class_v = min;
+    max_class_v = max;
     max_loop_t  = lpt;
 }
 
@@ -177,7 +147,7 @@ void Create_Image_Task::setTemplate2(std::complex<double> c)
 void Create_Image_Task::setTemplate4(const std::complex<double>& c1, std::complex<double> c2[10], const std::complex<double>& c3, const std::complex<double>& c4, const std::complex<double>& c5)
 {
     Newton_a = c1;
-    for(int i = 0; i != 10; i++) Newton_xn[i] = c2[i];
+    for (int i = 0; i != 10; i++) Newton_xn[i] = c2[i];
     Newton_sin = c3;
     Newton_cos = c4;
     Newton_ex = c5;
@@ -195,31 +165,52 @@ int Create_Image_Task::range_complex_to_255(const std::complex<double>& c)
     return c.real() + 0.5;
 }
 
-bool Create_Image_Task::setRGBA(double rgba[4], bool convergent, const std::complex<double>& z, const std::complex<double>& z0, double t, int k)
+bool Create_Image_Task::setRGBA(double rgba[4], bool convergent, std::vector<std::complex<double>> num_list)
 {
-    std::string msg;
-    std::vector<std::complex<double>> num_list { z, z.real(), z.imag(), z0, z0.real(), z0.imag(), t, double(k) };
+    bool ok;
     if (convergent)
     {
         for (int i = 0; i != 4; i++)
         {
-            rgba[i] = range_complex_to_255(eval_postorder(Colour1_f[i], num_list, &msg));
-            if (!msg.empty())
-            {
-                return false;
-            }
+            std::complex<double> temp;
+            temp = evalExpr(Colour1_f[i], num_list, EVAL_CON, &ok);
+            if (!ok) return false;
+            else rgba[i] = range_complex_to_255(temp);
         }
     }
     else
     {
         for (int i = 0; i != 4; i++)
         {
-            rgba[i] = range_complex_to_255(eval_postorder(Colour2_f[i], num_list, &msg));
-            if (!msg.empty())
-            {
-                return false;
-            }
+            std::complex<double> temp;
+            temp = evalExpr(Colour2_f[i], num_list, EVAL_DIV, &ok);
+            if (!ok) return false;
+            else rgba[i] = range_complex_to_255(temp);
         }
     }
     return true;
 }
+
+std::complex<double> Create_Image_Task::evalExpr(const std::vector<_var>& expr,
+                                                 const std::vector<std::complex<double>>& num_list, Eval_Type type, bool* ok)
+{
+    std::string msg;
+    auto val = eval_postorder(expr, num_list, &msg);
+    if (!msg.empty())
+    {
+        emit error_calc(type);
+        if (ok) *ok = false;
+    }
+    if (ok) *ok = true;
+    return val;
+}
+
+//template<typename T>
+//bool Create_Image_Task::evalExpr(T& val, std::vector<_var> expr,
+//                                 std::vector<std::complex<double>> num_list, Eval_Type type)
+//{
+//    std::complex<double> temp = val;
+//    bool ok = evalExpr(temp, expr, num_list, type);
+//    val = temp.real();
+//    return ok;
+//}

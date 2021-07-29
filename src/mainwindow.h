@@ -353,6 +353,8 @@ private slots:
 
     void on_lineEdit_searchName_returnPressed();
 
+    void on_actionRun_Code_triggered();
+
 signals:
 
     void Search_clicked(QString);

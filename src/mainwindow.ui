@@ -1742,7 +1742,7 @@ p, li { white-space: pre-wrap; }
               </widget>
               <widget class="QTabWidget" name="Tool_widget">
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="Run_tab">
                 <attribute name="title">
@@ -1755,6 +1755,19 @@ p, li { white-space: pre-wrap; }
                     <string>Run</string>
                    </property>
                   </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <spacer name="verticalSpacer_28">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -2188,12 +2201,19 @@ color:#ffffff</string>
     <addaction name="menuLanguage"/>
     <addaction name="menuTheme"/>
    </widget>
+   <widget class="QMenu" name="menuEditor">
+    <property name="title">
+     <string>Editor(&amp;D)</string>
+    </property>
+    <addaction name="actionRun_Code"/>
+   </widget>
    <addaction name="menuFile_F"/>
    <addaction name="menuEdit_E"/>
    <addaction name="menuView_V"/>
    <addaction name="menuTemplate"/>
    <addaction name="menuPicture_P"/>
    <addaction name="menuVideo_D"/>
+   <addaction name="menuEditor"/>
    <addaction name="menuHelp_H"/>
    <addaction name="menuOptions_O"/>
   </widget>
@@ -2219,6 +2239,7 @@ color:#ffffff</string>
    <addaction name="actionDelete_All_Parameters"/>
    <addaction name="separator"/>
    <addaction name="actionRoute_Tool"/>
+   <addaction name="actionRun_Code"/>
    <addaction name="actionCreate_Images"/>
    <addaction name="actionCreate_Video"/>
    <addaction name="actionStop"/>
@@ -2435,7 +2456,7 @@ color:#ffffff</string>
     <string>Preview Refresh</string>
    </property>
    <property name="shortcut">
-    <string notr="true">Ctrl+F5</string>
+    <string>F12</string>
    </property>
   </action>
   <action name="actionpng">
@@ -3037,6 +3058,18 @@ color:#ffffff</string>
    </property>
    <property name="text">
     <string>Ubuntu</string>
+   </property>
+  </action>
+  <action name="actionRun_Code">
+   <property name="icon">
+    <iconset resource="Icon_resources.qrc">
+     <normaloff>:/icon/Menu Icon/RunCode.svg</normaloff>:/icon/Menu Icon/RunCode.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Run Code</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

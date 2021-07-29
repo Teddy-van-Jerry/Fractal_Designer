@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     show_preview_image();
     Project_Template = "Undefined";
     setWindowTitle((Open_Location.isEmpty() ? tr("Unsaved Project") : QFileInfo(Open_Location).fileName()) +
-                   " - <strong>Fractal Designer</strong>");
+                   " - Fractal Designer");
 
     Line_Search = new QLineEdit(this);
     // Line_Search->setToolTip("Search");
@@ -224,7 +224,7 @@ bool MainWindow::OpenFRD(int type)
     display();
     save_or_not = true;
 
-    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
     return true;
 }
 
@@ -296,7 +296,7 @@ void MainWindow::on_actionNew_N_triggered()
                                                  QDir::homePath() + "/Untitled",
                                                  tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
     if (Open_Location.isEmpty()) return;
-    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
     // print current
     on_actionSave_S_triggered();
 }
@@ -614,39 +614,81 @@ void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4]
 
 void MainWindow::customTemplatePre(Create_Image_Task* task)
 {
-    QString Formula = info.curr().layerFormula(0);
-    std::string msg;
-    std::vector<_var> post;
-    if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
-        QMessageBox::critical(this, "Error", "Syntax error in Customized Template Formula!");
-        qDebug() << QString::fromStdString(msg);
-        return;
-    }
-    task->setFormula(post);
+//    QString Formula = info.curr().layerFormula(0);
+//    std::string msg;
+//    std::vector<_var> post;
+//    if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
+//        QMessageBox::critical(this, "Error", "Syntax error in Customized Template Formula!");
+//        qDebug() << QString::fromStdString(msg);
+//        return;
+//    }
+//    task->setFormula(post);
 }
 
 bool MainWindow::createImagePre(Create_Image_Task* task)
 {
 //    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
 //    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
+
+    auto currInfo = info.curr();
+
+    std::vector<std::string> var_list { "z", "x", "y", "z_", "x_", "y_", "z0", "x0", "y0", "t", "k" };
+
     std::string Colour1_[4], Colour2_[4];
+    std::string Formula   = currInfo.layerFormula(0).toStdString();
+    std::string Distance  = currInfo.distance(0).toStdString();
+    std::string Min       = currInfo.templateMin(0).toStdString();
+    std::string Max       = currInfo.templateMax(0).toStdString();
+    std::string IterLimit = currInfo.iterationLimit(0).toStdString();
+
+    std::cout << Formula << " " << Distance << " " << Min << " " << Max << " " << IterLimit << std::endl;
 
 //    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
-    Colour1_[0] = info.curr().layerColor(0, "Con.R").toStdString();
-    Colour1_[1] = info.curr().layerColor(0, "Con.G").toStdString();
-    Colour1_[2] = info.curr().layerColor(0, "Con.B").toStdString();
-    Colour1_[3] = info.curr().layerColor(0, "Con.A").toStdString();
-    Colour2_[0] = info.curr().layerColor(0, "Div.R").toStdString();
-    Colour2_[1] = info.curr().layerColor(0, "Div.G").toStdString();
-    Colour2_[2] = info.curr().layerColor(0, "Div.B").toStdString();
-    Colour2_[3] = info.curr().layerColor(0, "Div.A").toStdString();
+    Colour1_[0] = currInfo.layerColor(0, "Con.R").toStdString();
+    Colour1_[1] = currInfo.layerColor(0, "Con.G").toStdString();
+    Colour1_[2] = currInfo.layerColor(0, "Con.B").toStdString();
+    Colour1_[3] = currInfo.layerColor(0, "Con.A").toStdString();
+    Colour2_[0] = currInfo.layerColor(0, "Div.R").toStdString();
+    Colour2_[1] = currInfo.layerColor(0, "Div.G").toStdString();
+    Colour2_[2] = currInfo.layerColor(0, "Div.B").toStdString();
+    Colour2_[3] = currInfo.layerColor(0, "Div.A").toStdString();
 
     qDebug() << QString::fromLatin1(Colour1_[0]);
 
-    std::string msg1[4], msg2[4];
-    std::vector<_var> post1[4], post2[4];
+    std::string msg1[4], msg2[4], msgFormula, msgDistance, msgMin, msgMax, msgIterLimit;
+    std::vector<_var> post1[4], post2[4], postFormula, postDistance, postMin, postMax, postIterLimit;
+    if (!to_postorder(Formula, &msgFormula, postFormula, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Distance Value!");
+        qDebug() << QString::fromStdString(msgFormula);
+        return false;
+    }
+    if (!to_postorder(Distance, &msgDistance, postDistance, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Distance Value!");
+        qDebug() << QString::fromStdString(msgMin);
+        return false;
+    }
+    if (!to_postorder(Min, &msgMin, postMin, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Min Value!");
+        qDebug() << QString::fromStdString(msgMin);
+        return false;
+    }
+    if (!to_postorder(Max, &msgMax, postMax, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Max Value!");
+        qDebug() << QString::fromStdString(msgMax);
+        return false;
+    }
+    if (!to_postorder(IterLimit, &msgIterLimit, postIterLimit, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Max Value!");
+        qDebug() << QString::fromStdString(msgIterLimit);
+        return false;
+    }
     for (int i = 0; i != 4; i++) {
-        if (!to_postorder(Colour1_[i], msg1 + i, post1[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        if (!to_postorder(Colour1_[i], msg1 + i, post1[i], var_list))
         {
             QMessageBox::critical(this, "Error", "Syntax error in Convergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg1[i]);
@@ -654,7 +696,7 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
         }
     }
     for (int i = 0; i != 4; i++) {
-        if (!to_postorder(Colour2_[i], msg2 + i, post2[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        if (!to_postorder(Colour2_[i], msg2 + i, post2[i], var_list))
         {
             QMessageBox::critical(this, "Error", "Syntax error in Divergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg2[i]);
@@ -679,12 +721,12 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     QString Pre_Img_Dir;
 
 
-    QDir ck(QCoreApplication::applicationDirPath() + "/temp");
+    QDir ck(QCoreApplication::applicationDirPath() + "/../tmp");
     if(!ck.exists())
     {
         ck.mkdir(ck.absolutePath());
     }
-    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
+    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/../tmp";
 
     /*
     if(curr_info.template_ == 2)
@@ -718,7 +760,7 @@ void MainWindow::on_actionPreview_Refresh_triggered()
     }
     */
 
-    customTemplatePre(preview);
+    // customTemplatePre(preview);
 
     preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
                       info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
@@ -3435,7 +3477,7 @@ void MainWindow::on_actionSave_As_A_triggered()
     {
         save_or_not = true;
         Open_Location = new_dir;
-        setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+        setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
         on_actionSave_S_triggered();
     }
     info.print(new_dir);
@@ -3475,4 +3517,9 @@ void MainWindow::on_pushButton_search_clicked()
 void MainWindow::on_lineEdit_searchName_returnPressed()
 {
     on_pushButton_search_clicked();
+}
+
+void MainWindow::on_actionRun_Code_triggered()
+{
+    on_pushButton_CodeRun_clicked();
 }

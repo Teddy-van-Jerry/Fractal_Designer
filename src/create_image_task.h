@@ -9,13 +9,15 @@
 #include "String_Evaluate.h"
 
 #ifndef Create_Images_Task_Pre
-#define Create_Images_Task_Pre(task__)       \
-    task__->setData(post1,                   \
-                    post2,                   \
-                    5,     \
-                    info.curr().templateMin(0).toDouble(),   \
-                    info.curr().templateMax(0).toDouble(),   \
-                    info.curr().iterationLimit(0).toInt())
+#define Create_Images_Task_Pre(task__) \
+    task__->setData(postFormula,       \
+                    post1,             \
+                    post2,             \
+                    postDistance,      \
+                    postMin,           \
+                    postMax,           \
+                    postIterLimit)
+
 #endif
 
 class Create_Image_Task : public QObject, public QRunnable
@@ -23,6 +25,17 @@ class Create_Image_Task : public QObject, public QRunnable
     Q_OBJECT
 
 public:
+
+    enum Eval_Type {
+        EVAL_FORMULA,
+        EVAL_CON,
+        EVAL_DIV,
+        EVAL_DISTANCE,
+        EVAL_MIN,
+        EVAL_MAX,
+        EVAL_ITER,
+    };
+
     Create_Image_Task(QWidget*);
 
     void run();
@@ -33,7 +46,7 @@ private:
 
     bool Version_Higher_Than_4 = false;
 
-    int template_, max_loop_t;
+    std::vector<_var> distance_, max_loop_t;
 
     // Template 2
     std::complex<double> c0;
@@ -49,7 +62,7 @@ private:
 
     enum Colour_Type { RGBA } c_type;
 
-    double min_class_v, max_class_v;
+    std::vector<_var> min_class_v, max_class_v;
 
     double x, y, x_width, y_height, rotate_angle, t;
     int X, Y;
@@ -61,7 +74,14 @@ private:
 
     int range_complex_to_255(const std::complex<double>& c);
 
-    bool setRGBA(double[4], bool, const std::complex<double>&, const std::complex<double>&, double, int);
+    bool setRGBA(double[4], bool, std::vector<std::complex<double>> num_list);
+
+    std::complex<double> evalExpr(const std::vector<_var>& expr,
+                                  const std::vector<std::complex<double>>& num_list, Eval_Type type, bool* ok = nullptr);
+
+//    template <typename T>
+//    bool evalExpr(T& val, std::vector<_var> expr,
+//                  std::vector<std::complex<double>> num_list, Eval_Type type);
 
 signals:
     void updateImage_preview(QImage);
@@ -83,7 +103,9 @@ signals:
 public: // function
     void setImage(double, double, double, double, int, int, double, double, QString, QString, QString, QString, bool);
 
-    void setData(std::vector<_var>[4], std::vector<_var>[4], int, double, double, int);
+    void setData(const std::vector<_var>& formula, const std::vector<_var> C1[4], const std::vector<_var> C2[4],
+                 const std::vector<_var>& distance, const std::vector<_var>& min, const std::vector<_var>& max,
+                 const std::vector<_var>& lpt);
 
     void setTemplate2(std::complex<double> c);
 

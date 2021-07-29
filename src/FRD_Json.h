@@ -97,6 +97,8 @@ public:
 
     bool inverseYAsis() const;
 
+    QString distance(int index) const;
+
     QString templateMin(int index) const;
 
     QString templateMax(int index) const;
