@@ -87,6 +87,8 @@ public slots:
 
     void build_image_one_ok();
 
+    void runCode();
+
 private slots:
 
     void getUserName(QString);
@@ -355,6 +357,18 @@ private slots:
 
     void on_actionRun_Code_triggered();
 
+    void updateTerminalProgressBar(int p);
+
+    void initTerminalProgressBar();
+
+    void normalTerminalMessage(const QString& str);
+
+    void errorTerminalMessage(const QString& str);
+
+    void terminalCommand();
+
+    void clearTerminal();
+
 signals:
 
     void Search_clicked(QString);
@@ -480,6 +494,12 @@ private:
     QLabel FRD_icon;
     Qt::Edges m_lock;
     QPoint m_posCursor;
+
+    QStringList terminalCommands;
+
+    int currentTerminalProgress = 0;
+
+    QString currentTerminalWorkName;
 
     QToolBar * generateBorder(Qt::ToolBarArea area, Qt::Orientation orientation);
 };

@@ -310,6 +310,11 @@ QVector<FRD_Error> FRD_Json::errors() const {
     return err_list;
 }
 
+QString FRD_Json::layerName(int index) const {
+    QJsonValue value = main["Layers"][index]["name"];
+    return value.toString("");
+}
+
 void FRD_Json::updateText(QString text) {
     frd_text = text;
 }
@@ -380,4 +385,55 @@ QString FRD_Json::templateMax(int index) const {
 QString FRD_Json::iterationLimit(int index) const {
     QJsonValue value = main["Layers"][index]["Template"]["IterationLimit"];
     return value.toString("50");
+}
+
+double FRD_Json::fps() const {
+    QJsonValue value = main["Output"]["Fps"];
+    return value.toDouble(24);
+}
+
+QString FRD_Json::imageDir() const {
+    QJsonValue value = main["Output"]["ImageDir"];
+    return value.toString("");
+}
+
+QString FRD_Json::imagePrefix() const {
+    QJsonValue value = main["Output"]["ImagePrefix"];
+    return value.toString("");
+}
+
+int FRD_Json::ImageSize(QString tag) const {
+    int index = (tag.toUpper() == "Y") ? 1 : 0;
+    QJsonValue value = main["Output"]["ImageSize"][index];
+    return value.toInt(index ? 1080 : 1920);
+}
+
+int FRD_Json::outputTime() const {
+    QJsonValue value = main["Output"]["Time"];
+    return value.toInt(30000);
+}
+
+QString FRD_Json::videoDir() const {
+    QJsonValue value = main["Output"]["VideoDir"];
+    return value.toString("");
+}
+
+QString FRD_Json::videoFormat() const {
+    QJsonValue value = main["Output"]["VideoFormat"];
+    return value.toString("mp4");
+}
+
+QString FRD_Json::videoName() const {
+    QJsonValue value = main["Output"]["VideoName"];
+    return value.toString(QDateTime::currentDateTime().toString("Fractal Designer - yyyy_MM_dd_hh_mm_ss"));
+}
+
+QDateTime FRD_Json::runTime() const {
+    QJsonValue value = main["Time"];
+    return QDateTime::fromString(value.toString(""), "yyyy/MM/dd hh:mm UTC");
+}
+
+QString FRD_Json::runVersion() const {
+    QJsonValue value = main["Version"];
+    return value.toString();
 }

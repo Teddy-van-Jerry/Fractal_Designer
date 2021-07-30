@@ -41,6 +41,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDialog>
+#include <QTextDocument>
+#include <QTextBlock>
 #include <complex> // std::complex
 #include "login.h"
 #include "route_tool.h"

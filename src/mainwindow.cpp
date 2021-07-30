@@ -123,6 +123,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView_error->setEditTriggers(QAbstractItemView::NoEditTriggers);
     error_list_model->setSortRole(Qt::AscendingOrder);
 
+    /* Settings of the terminal behaviour */
+    ui->textEdit_terminal->installEventFilter(this);                              // use eventFilter
+    ui->textEdit_terminal->setContextMenuPolicy(Qt::NoContextMenu);               // no content menu when right button clicked
+    ui->textEdit_terminal->setUndoRedoEnabled(false);                             // no undo and redo
+    ui->textEdit_terminal->setAcceptDrops(false);                                 // no drag or drop
+    ui->textEdit_terminal->setText("Fractal Designer 6.0.6 Terminal\n"
+                                   "-------------------------------\n"
+                                   "   (C) 2021 Teddy van Jerry    \n"
+                                   "===============================\n"
+                                   ">> ");                                        // start of the terminal
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor); // move the cursor
+
     ReadStyle();
     updateMaxButton();
 }
@@ -180,11 +192,7 @@ void MainWindow::initTitleBar()
     this->m_rightBorder = generateBorder(Qt::RightToolBarArea, Qt::Vertical);
     this->m_bottomBorder = generateBorder(Qt::BottomToolBarArea, Qt::Horizontal);
 
-
     this->showMaximized();
-
-
-
 }
 
 void MainWindow::setOpenLocation(QString str)
@@ -295,7 +303,11 @@ void MainWindow::on_actionNew_N_triggered()
                                                  tr("New Project"),
                                                  QDir::homePath() + "/Untitled",
                                                  tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
-    if (Open_Location.isEmpty()) return;
+    if (Open_Location.isEmpty())
+    {
+        save_or_not = false; // cancelled
+        return;
+    }
     setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
     // print current
     on_actionSave_S_triggered();
@@ -817,6 +829,7 @@ void MainWindow::dealClose(QObject* sd)
 void MainWindow::updateProgressBar(double p)
 {
     ui->progressBar_Preview->setValue(p);
+    updateTerminalProgressBar(p);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -963,6 +976,8 @@ void MainWindow::on_actionCreate_Images_triggered()
         return;
     }
 
+    // get data from json
+
     if(!isRouteValid)
     {
         QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
@@ -970,8 +985,8 @@ void MainWindow::on_actionCreate_Images_triggered()
     }
 
     QString image_format = "png";
-    QString path = ui->lineEdit_imagePath->text();
-    QString name = ui->lineEdit_imagePrefix->text();
+    QString path = info.curr().imageDir();
+    QString name = info.curr().imagePrefix();
     if(path.isEmpty() || !QDir(path).exists())
     {
         QMessageBox::warning(this, "Can not create images", "The path does not exist.");
@@ -983,7 +998,6 @@ void MainWindow::on_actionCreate_Images_triggered()
     ui->actionCreate_Images_in_Range->setDisabled(true);
     ui->actionCheck_Images->setDisabled(true);
 
-    qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
     int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
     int current_index = 0;
     int X = ui->Image_size_X->value();
@@ -3214,8 +3228,8 @@ void MainWindow::tableRouteDeleteRow()
     table_route_model->removeRow(table_route_line);
 }
 
-QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area,
-                                        Qt::Orientation orientation){
+QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area, Qt::Orientation orientation)
+{
     QToolBar *border = new QToolBar("___border___");
     border->setStyleSheet(
         "\nQToolBar {\n"
@@ -3243,7 +3257,8 @@ QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area,
     return border;
 }
 
-QMenu * MainWindow::createPopupMenu(){
+QMenu * MainWindow::createPopupMenu()
+{
     QMenu *menu = QMainWindow::createPopupMenu();
     QList<QAction *> removal;
     foreach (QAction *a, menu->actions())
@@ -3252,7 +3267,8 @@ QMenu * MainWindow::createPopupMenu(){
     return menu;
 }
 
-void MainWindow::setMenuBar(QMenuBar *menuBar){
+void MainWindow::setMenuBar(QMenuBar *menuBar)
+{
     if (this->m_menuBar == menuBar) return;
 
     if (this->m_menuBar) {
@@ -3277,11 +3293,13 @@ void MainWindow::setMenuBar(QMenuBar *menuBar){
     }
 }
 
-QMenuBar* MainWindow::menuBar() const{
+QMenuBar* MainWindow::menuBar() const
+{
     return this->m_menuBar;
 }
 
-void MainWindow::setMenuWidget(QWidget *widget){
+void MainWindow::setMenuWidget(QWidget *widget)
+{
     if (this->m_menuWidget == widget) return;
 
     widget->setParent(this);
@@ -3301,24 +3319,67 @@ void MainWindow::setMenuWidget(QWidget *widget){
     }
 }
 
-QWidget * MainWindow::menuWidget() const{
+QWidget * MainWindow::menuWidget() const
+{
     return this->m_menuWidget;
 }
 
-bool MainWindow::eventFilter(QObject*, QEvent *event){
-    if (event->type() == QEvent::MouseMove)
+bool MainWindow::eventFilter(QObject* object, QEvent *event)
+{
+    if (object == ui->textEdit_terminal && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Return)
+        {
+            // this triggered the command in Terminal
+            terminalCommand();
+            event->ignore();
+            return true;
+        }
+        /**
+         * \todo This is only ok for Windows
+         */
+        else if (keyEvent->keyCombination() != QKeyCombination(Qt::CTRL, Qt::Key_C))
+        {
+            QTextCursor cursor = ui->textEdit_terminal->textCursor();
+            // auto emm = ui->textEdit_terminal->;
+            auto posStart = cursor.selectionStart();
+            auto posEnd = cursor.selectionEnd();
+            cursor.setPosition(posStart);
+            // If it is the backspace, then the cursor position must be one further.
+            int col_limit = keyEvent->key() == Qt::Key_Backspace ? 4 : 3;
+            if (cursor.blockNumber() < ui->textEdit_terminal->document()->lineCount() - 1 || cursor.columnNumber() < col_limit)
+            {
+                // not the last row or be the first three column
+                // this can not be the command part
+                event->ignore();
+                return true;
+            }
+            cursor.setPosition(posEnd);
+            if (cursor.blockNumber() < ui->textEdit_terminal->document()->lineCount() - 1 || cursor.columnNumber() < col_limit)
+            {
+                // not the last row or be the first three column
+                // this can not be the command part
+                event->ignore();
+                return true;
+            }
+        }
+    }
+    else if (event->type() == QEvent::MouseMove)
         customMouseMoveEvent(static_cast<QMouseEvent*>(event));
     else if (event->type() == QEvent::MouseButtonPress)
-        mousePressEvent(static_cast<QMouseEvent*>(event));
+    {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        mousePressEvent(mouseEvent);
+    }
     return false;
 }
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (this->FRD_TitleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_TitleBar().btn_maximize.isEnabled()
-            && event->buttons() & Qt::LeftButton) {
-//        this->FRD_TitleBar().mamaximizing = true;
-//        emit requestMaximize();
+            && event->buttons() & Qt::LeftButton)
+    {
         updateMaxButton();
     }
     QWidget::mouseDoubleClickEvent(event);
@@ -3361,7 +3422,7 @@ bool MainWindow::event(QEvent *event){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() & Qt::LeftButton){
-        int x = event->x(), y = event->y();
+        int x = event->position().x(), y = event->position().y();
         int bottom = this->height() - RESIZE_LIMIT, right = this->width() - RESIZE_LIMIT;
 
         QPoint posCursor = event->globalPos();
@@ -3444,16 +3505,14 @@ void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
     int dx = e->globalX() - last.x();
     int dy = e->globalY() - last.y();
     move(x()+dx, y()+dy);
-    isPressWidget=false;
+    isPressWidget = false;
 }
 
 void MainWindow::on_pushButton_CodeRun_clicked()
 {
-    Interpreter::interpret(editor->text(), info.editor());
-    editor->clearSearchIndic(0, editor->text().size());
-    ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
-    ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
-    setErrorInfo(info.editor());
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    ui->textEdit_terminal->insertHtml("run");
+    runCode();
 }
 
 void MainWindow::updateEditorInfo()
@@ -3522,4 +3581,232 @@ void MainWindow::on_lineEdit_searchName_returnPressed()
 void MainWindow::on_actionRun_Code_triggered()
 {
     on_pushButton_CodeRun_clicked();
+}
+
+void MainWindow::updateTerminalProgressBar(int p)
+{
+    if (currentTerminalProgress == p) return;
+    currentTerminalProgress = p;
+    // move to the end of the terminal
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    for (int i = 0; i != 55; i++)
+    {
+        ui->textEdit_terminal->textCursor().deletePreviousChar();
+    }
+    for (int i = 0; i < p / 2; i++)
+    {
+        ui->textEdit_terminal->insertPlainText("█");
+    }
+    for (int i = p / 2; i < 50; i++)
+    {
+        ui->textEdit_terminal->insertPlainText("-");
+    }
+    ui->textEdit_terminal->insertPlainText("|");
+    QString space(3 - QString::number(p).size(), ' ');
+    ui->textEdit_terminal->insertPlainText(space);
+    ui->textEdit_terminal->insertPlainText(QString::number(p) + "%");
+
+    if (p == 100)
+    {
+        ui->textEdit_terminal->setReadOnly(false);
+        if (currentTerminalWorkName == "Preview")
+        {
+            normalTerminalMessage("Preview image creating finished.");
+        }
+        else if (currentTerminalWorkName == "Create Images")
+        {
+            normalTerminalMessage("Creating images finished.");
+        }
+        ui->textEdit_terminal->append("\n>> ");
+        currentTerminalWorkName.clear();
+    }
+}
+
+void MainWindow::initTerminalProgressBar()
+{
+    ui->textEdit_terminal->append("Progress: |--------------------------------------------------|  0%");
+}
+
+void MainWindow::runCode()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    QString fileName = Open_Location.isEmpty() ? "Unsaved Project" : Open_Location;
+    normalTerminalMessage("Starting " + fileName + "...");
+    Interpreter::interpret(editor->text(), info.editor());
+    editor->clearSearchIndic(0, editor->text().size());
+    ui->textEdit_terminal->append(info.editor().toJson());
+    ui->textEdit_terminal->append(info.editor().varsToJson());
+    if (!info.editor().errors().isEmpty())
+    {
+        setErrorInfo(info.editor());
+        errorTerminalMessage(fileName + " finished with errors.");
+        ui->textEdit_terminal->append("\n>> ");
+    }
+    else
+    {
+        normalTerminalMessage(fileName + " finished.");
+        ui->textEdit_terminal->append("\n>> ");
+    }
+    ui->textEdit_terminal->setReadOnly(false);
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+}
+
+void MainWindow::normalTerminalMessage(const QString& str)
+{
+    QString time = QTime::currentTime().toString("hh:mm:ss");
+    // yellow, bold
+    ui->textEdit_terminal->append("<p style=\"color:#ffff00\"><strong>" + time + ": " + str + "</strong></p>");
+}
+
+void MainWindow::errorTerminalMessage(const QString& str)
+{
+    QString time = QTime::currentTime().toString("hh:mm:ss");
+    // red, bold
+    ui->textEdit_terminal->append("<p style=\"color:#ff0000\"><strong>" + time + ": " + str + "</strong></p>");
+}
+
+void MainWindow::terminalCommand()
+{
+    QTextDocument* doc = ui->textEdit_terminal->document();
+    QTextBlock tb = doc->findBlockByLineNumber(doc->lineCount() - 1); // The second line.
+    QString cmdline = tb.text();
+    qDebug() << "Get terminal command" << cmdline;
+    if (cmdline.length() > 2 && cmdline.left(2) == ">>")
+    {
+        QString cmd = cmdline.right(cmdline.length() - 2).simplified().toLower();
+        QStringList cmds = cmd.split(" ", Qt::SkipEmptyParts);
+        if (cmd.isEmpty())
+        {
+            ui->textEdit_terminal->append(">> ");
+            return;
+        }
+        else if (cmds[0] == "!!")
+        {
+            if (terminalCommands.isEmpty())
+            {
+                errorTerminalMessage("No previous commands.");
+                ui->textEdit_terminal->append("\n>> ");
+                return;
+            }
+            else
+            {
+                ui->textEdit_terminal->append(terminalCommands.last());
+                cmd = terminalCommands.last();
+            }
+        }
+        // no else here
+        // if the command is "!!", it will go through all these
+        if (cmds[0] == "help")
+        {
+            ui->textEdit_terminal->append("Fractal Designer 6.0.7 Terminal\n"
+                                          "Lists of all commands:\n"
+                                          "  clear                  Clear the terminal screen.\n"
+                                          "  createimages           Create fractal images.\n"
+                                          "  createvideo            Create fractal video.\n"
+                                          "  exit                   Exit Fractal Designer.\n"
+                                          "    -f                     Force exit no matter whether script is saved.\n"
+                                          "    -s                     Save script before exir.\n"
+                                          "  help                   View help information.\n"
+                                          "  history                View command histories.\n"
+                                          "  info                   View current parameter information.\n"
+                                          "    -config                View information after configuration only.\n"
+                                          "                           These parameters are set using function \"%CONFIGURE\".\n"
+                                          "    -var                   View all variables information.\n"
+                                          "    -all                   View both configuration and variable information.\n"
+                                          "  run                    Run the frd script and display information in the form of Json.\n"
+                                          "  preview                View the preview image.\n"
+                                          "                         Need to run the script first to get information updated.\n"
+                                          "  save                   Save the frd script.\n");
+            ui->textEdit_terminal->append(">> ");
+        }
+        else if (cmds[0] == "save")
+        {
+            on_actionSave_S_triggered();
+            if (save_or_not) normalTerminalMessage("Project " + Open_Location + " saved.");
+            else errorTerminalMessage("Project " + Open_Location + " is not saved.");
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "clear")
+        {
+            clearTerminal();
+        }
+        else if (cmds[0] == "run")
+        {
+            runCode();
+        }
+        else if (cmds[0] == "info")
+        {
+            if (cmds.size() >= 2 && cmds[1] == "-config")
+            {
+                ui->textEdit_terminal->append(info.editor().toJson());
+            }
+            else if (cmds.size() >= 2 && cmds[1] == "-var")
+            {
+                ui->textEdit_terminal->append(info.editor().varsToJson());
+            }
+            else // which is "-all"
+            {
+                ui->textEdit_terminal->append(info.editor().toJson());
+                ui->textEdit_terminal->append(info.editor().varsToJson());
+            }
+            ui->textEdit_terminal->append(">> ");
+        }
+        else if (cmds[0] == "preview")
+        {
+            normalTerminalMessage("Start creating preview image ...");
+            currentTerminalWorkName = "Preview";
+            initTerminalProgressBar();
+            on_actionPreview_Refresh_triggered();
+            ui->textEdit_terminal->setReadOnly(true);
+        }
+        else if (cmds[0] == "createimages")
+        {
+            currentTerminalWorkName = "Creating Images";
+        }
+        else if (cmds[0] == "createvideo")
+        {
+
+        }
+        else if (cmds[0] == "history")
+        {
+            int entry_number = terminalCommands.size();
+            int entry_number_length = QString::number(entry_number).length();
+            for (int i = 0; i != terminalCommands.size(); i++)
+            {
+                QString space(entry_number_length + 1 - QString::number(i + 1).length(), ' ');
+                ui->textEdit_terminal->append(space + QString::number(i + 1) + ": " + terminalCommands[i]);
+            }
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "exit")
+        {
+            if (cmds.size() >= 2)
+            {
+                if (cmds[1] == "-f")
+                {
+                    // forse exit
+                    save_or_not = true;
+                }
+                else if (cmds[1] == "-s")
+                {
+                    // save before exit
+                    on_actionSave_S_triggered();
+                }
+            }
+            close();
+        }
+        else
+        {
+            errorTerminalMessage(QString("'%1' is not recognized as a command.").arg(cmd));
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        terminalCommands.push_back(cmd);
+    }
+}
+
+void MainWindow::clearTerminal()
+{
+    ui->textEdit_terminal->clear();
+    ui->textEdit_terminal->append(">> ");
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }
