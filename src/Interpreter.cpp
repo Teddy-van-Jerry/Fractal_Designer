@@ -20,9 +20,6 @@ bool Interpreter::interpret() {
     bool error = false;
     error |= !removeComments();
     error |= !readBlock();
-//    info.setValue("1.2.3.", "num.X.", "Number", 123);
-//    info.setExistantValue("1.2.3.", "num.X.", "", -1234);
-//    qDebug() << info.type("1.2.3.", "num.X.") << info.type("1.2.3.", "num.");
     return !error;
 }
 
@@ -93,12 +90,9 @@ bool Interpreter::removeComments() {
 }
 
 bool Interpreter::readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed, QString new_class_name) {
-    qDebug() << "readVar" << name << new_class_name;
-
     bool ok = true;
     int init_col = col;
     QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-    qDebug() << "readVar" << var_name << block << name;
     if (!existed || info.contains(block, name + var_name) || info.contains(block, name)) {
         if (!existed && info.contains(block, name + var_name)) {
             info.addError(_FRD_WARNING_VARIABLE_REDEFINITION_,
@@ -107,7 +101,6 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
         }
         else if (!existed) {
             info.setValue(block, name, var_name, new_class_name, QJsonValue::Null);
-            qDebug() << "Create an empty value for it" << info.varsToJson();
         }
         // auto frd_var = info.getValue(block, name, var_name);
         auto var_type = info.type(block, name + var_name);
@@ -126,8 +119,6 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
             if (nextChar() == '=') {
                 if (nextChar() == '$') {
                     QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-                    qDebug() << ":= var_name_r" << var_name_r << "name" << name;
-                    qDebug() << info.type(block, name + var_name) << info.type(block, name + var_name_r);
                     // type must match
                     if (info.type(block, name + var_name) == info.type(block, name + var_name_r)) {
                         auto error_ = info.setValue(block,
@@ -183,14 +174,11 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
 
                     int start_row = row, start_col = col;
                     QString expr = nextString(";}", true, true);
-                    qDebug() << "rvalue Expr" << expr << block << name;
                     bool ok_here;
                     std::complex<double> ret = evalExpr(expr, block, name + ".", start_row, start_col, &ok_here);
-                    qDebug() << "eval result" << ret.real();
                     ok = ok && ok_here;
                     if (info.type(block, name + var_name + ".") == "number" || (!existed && new_class_name == "number")) {
                         info.setValue(block, name, var_name, "number", ret.real());
-                        qDebug() << "setValue here";
                         // Theoretically, there should be no error.
                     }
                     else {
@@ -205,8 +193,6 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     if (c == '$' && var_type != "formula") {
                         nextChar();
                         QString var_name_r = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
-                        qDebug() << "var_name_r" << var_name_r << "name" << name;
-                        qDebug() << info.type(block, name + var_name) << info.type(block, name + var_name_r);
                         // type must match
                         if (info.type(block, name + var_name) == info.type(block, name + var_name_r)) {
                             auto error_ = info.setValue(block,
@@ -246,6 +232,17 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                         }
                         info.setValue(block, name, var_name, "array", arr);
                     }
+                    else if (var_type == "list") {
+                        col--;
+                        // int init_row = row, init_col = col;
+                        QString value = nextString(";}", true, true);
+                        QStringList str_list = value.split(',', Qt::SkipEmptyParts);
+                        QJsonArray arr;
+                        for (const auto& str : str_list) {
+                            arr.append(str.simplified());
+                        }
+                        info.setValue(block, name, var_name, "list", arr);
+                    }
                     else if (var_type == "bool") {
                         col--;
                         int init_row = row, init_col = col;
@@ -270,9 +267,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                         col--;
                         QString value = nextString(";}", true, true);
                         value = value.trimmed(); // remove spaces in the front and the end
-                        qDebug() << "value by string" << value;
                         auto error_ = info.setValue(block, name, var_name, "", value);
-                        qDebug() << info.varsToJson();
                         if (error_ != _FRD_NO_ERROR_) {
                             info.addError(_FRD_ERROR_ASSIGNMENT_NO_MATCH_,
                                           tr("Assignment from rvalue ") + value + tr(" to lvalue ")
@@ -347,9 +342,7 @@ bool Interpreter::readFun(FRD_block_content_ content, const QString& block, cons
             cols.push_back(col - param.length());
             param.clear();
         }
-        qDebug() << "Here comes setting param";
         for (const auto& param : params) {
-            qDebug() << "useValue" << block << name + param;
             info.useValue(block, name + param);
         }
     }
@@ -372,9 +365,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
     bool ok = true;
     // when it has not reached the end
     QChar curr;
-    qDebug() << "Entrance of readBlock";
     while (curr = nextChar(), curr != QChar(0)) { // while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
-        qDebug() << "Inside readBlock while";
         if (curr == '}') return ok;
         else if (curr == '{') {
             ok = ok && readBlock(_FRD_BLOCK_BLANK_, block + QString::number(block_count++) + ".", name);
@@ -412,17 +403,14 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
         }
         else {
             int init_col = col;
-            qDebug() << strings[row - 1][col - 1];
             col--; // go back one character
             QString unexpected_token = nextString(";}"); // skip the token
             info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
                           tr("Unexpected token: ") + unexpected_token,
                           row, init_col, unexpected_token.length());
-            qDebug() << "Unexpected Token:" << unexpected_token;
             ok = false;
         }
     }
-    qDebug() << "Exit of readBlock";
     return ok;
 }
 
@@ -493,12 +481,10 @@ std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& b
 }
 
 QChar Interpreter::nextChar() {
-    qDebug() << "Entrance of nextChar" << row << col << strings.size();
     while (row <= strings.size()) {
         if (++col - 1 >= strings[row - 1].size()) row++, col = 0; // go to next line
         else if (!strings[row - 1][col - 1].isSpace()) return strings[row - 1][col - 1];
     }
-    qDebug() << "Exit of nextChar";
     return QChar(0);
 }
 
@@ -512,7 +498,6 @@ QString Interpreter::pureName(const QString& name) const {
 QString Interpreter::nextString(QString end_of_string, bool discard_space, bool discard_linebreak) {
     QString ret;
     do {
-        qDebug() << row << col;
         if (col < 0) col = 0;
         if (!ret.isEmpty()) {
             ++row;
@@ -528,7 +513,6 @@ QString Interpreter::nextString(QString end_of_string, bool discard_space, bool 
     } // the last one "++row + (col = 0)" aims to prepare for next round
     while (discard_space && discard_linebreak && col > strings[row - 1].size() && row + 1 <= strings.size());
     col--;
-    qDebug() << "Exit of nextString";
     return ret;
 }
 

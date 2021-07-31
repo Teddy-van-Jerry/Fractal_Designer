@@ -1,34 +1,42 @@
-# Fractal_Designer
-This is an application to make fractal videos based on Qt(6.1.1), C++ and FFmpeg.
+# Fractal Designer
+This is an application to make fractal videos based on Qt(6.2.0), C++ and FFmpeg.
 
 ## Version Information
-This is version 5.6.3 updated in 2021/07/15.
-Beta version is now only available for Windows.
+This is version 6.0.9 updated in 2021/08/01.
+Current version is now only available for Windows.
 Release for Linux will be published in the near future.
 
-## Main Features
-- You can create fractal images and videos at your command, with the freedom of designing colours and routes.
-- Equipped with the Route Tool, it is easy to find an appropriate route.
-- More functions are there to be discovered by you! For more information, you can find them in help.
+Visit our [Fractal Designer Website](https://frd.teddy-van-jerry.org) for more information.
 
-## Tips
-- In this version, Fractal Designer is no longer compatible with previous versions.
-- You can report bugs if any.
-- Fractal Designer 5.6 is the LTS version.
-- **Help Documentation**
-  - [Help (English Version)](https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help)
-  - [Help (Chinese Version)](https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh)
-  - [Mandelbrot Sample](https://frd.teddy-van-jerry.org/sample/fractal-designer-5-6-lts-sample-1)
-  - [Fractal Designer Website](https://frd.teddy-van-jerry.org)
+## Build the Project
+Besides the build version for Windows (using Qt 6.2.0), you can compile it yourself by following steps:
 
-## Username and Passcode
-You can use any of them to log in the application:
+- Build project `include/qscintilla.pro` with both Debug and Release mode.
+Remember to uncheck *shadow build*.
 
-|Username|Passcode|
-|-|-|
-|CSDN|Southeast61|
-|GitHub|Southeast61|
-|SEU|SEU615205|
+- Open project `src/Fractal_Designer.pro` and *release translations* (lrelease).
+In Qt Creator, it is in `Tools->External->Qt Languist`.
+
+- Build `src/Fractal_Designer.pro` with the same kit as that of building QScintilla.
+Also remember to uncheck *shadow build*.
+
+- To distribute the project, you need to
+  - Build in release mode.
+  - Deploy with `windeployqt`, `macdeployqt`, `linuxdeployqt` or other methods to get the dependency files.
+  - Copy the release dynamic library file of QScintilla (`qscintilla2_qt6.dll` in Windows) to directory `bin` and delete directory `lib`, `scintilla`, `include`, `tmp`.
+  - Download [ffmpeg](http://www.ffmpeg.org/download.html) and put it in the right directory. (For Windows, it is `bin/win/ffmpeg.exe`.)
+
+## Use Fractal Designer
+
+Type `help` in the terminal to get the list of all commands supported by Fractal Designer 6.0.9.
+Use the sample file to have a quick look at how the `frd` language is like.
+Details about `frd` language will be updated in the near future.
+
+## TODOs in Version 6.0
+- Validity Check in `frd` script.
+- Improve error indication of interpreter.
+- Add termination control in preview, creating images and creating video.
+- Add more terminal commands.
 
 ## Sample Videos
 

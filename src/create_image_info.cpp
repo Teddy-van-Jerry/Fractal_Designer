@@ -52,11 +52,11 @@ void Create_Image_Info::updateTime()
     // qDebug() << "updateTime";
     time_now = time_now.addMSecs(50);
     time_ten = time_ten.addMSecs(50);
-    if(time_left.hour() + time_left.minute() + time_left.second() > 0)
+    if (time_left.hour() + time_left.minute() + time_left.second() > 0)
     {
         time_left = time_left.addMSecs(-50);
     }
-    if(usingQList)
+    if (usingQList)
     {
         ui->label_now->setText(tr("Now: ") + name + QString::number(list_[index]) + "." + format);
     }
@@ -90,10 +90,10 @@ void Create_Image_Info::updateInfo()
             size_of_image = already_created_image.size();
         }
     }
-    if((index - start) % 10 == 0)
+    if ((index - start) % 10 == 0)
     {
         double time_for_one = (3600 * time_ten.hour() + 60 * time_ten.minute() + time_ten.second() + time_ten.msec() / 1000.0) / 10;
-        double speed = (time_for_one < 0.05)
+        speed = (time_for_one < 0.05)
                 ? (11 * size_of_image / 1024.0)
                 : (size_of_image / 1024.0 / time_for_one);
         double estimated_left_time = time_for_one * (total + start - index);
@@ -105,8 +105,9 @@ void Create_Image_Info::updateInfo()
         ui->label_leftTime->setText(tr("Estimated left time: ") + time_left.toString("hh:mm:ss"));
         time_ten.setHMS(0, 0, 0, 0);
     }
+    emit releaseInfo(index - start, speed);
     //time_left.setHMS((int)estimated_left_time / 3600, (int)estimated_left_time / 60 % 60, (int) estimated_left_time % 60);
-    if(usingQList)
+    if (usingQList)
     {
         ui->label_now->setText(tr("Now: ") + name + QString::number(list_[index]) + "." + format);
     }
@@ -134,7 +135,7 @@ void Create_Image_Info::close_create_image_info()
 
 }
 
-void Create_Image_Info::closeEvent(QCloseEvent* event)
+void Create_Image_Info::closeEvent(QCloseEvent*)
 {
     timer->stop();
 }

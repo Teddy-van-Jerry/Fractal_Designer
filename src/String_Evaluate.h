@@ -175,7 +175,7 @@ bool to_postorder(
  */
 std::complex<double> eval_postorder(
     std::vector<_var> post_order,
-    std::vector<std::complex<double>> num_list,
+    const std::vector<std::complex<double>>& num_list,
     std::string* msg);
 
 /**

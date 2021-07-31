@@ -462,9 +462,13 @@ bool to_postorder(
 
 std::complex<double> eval_postorder(
     std::vector<_var> post_order,
-    std::vector<std::complex<double>> num_list,
+    const std::vector<std::complex<double>>& num_list,
     std::string* msg) {
     std::stack<_var> s;
+    if (post_order.empty()) {
+        _error_msg(msg, "Empty postorder expression");
+        return ERROR_COMPLEX;
+    }
     auto iter = post_order.begin();
     do {
         if (iter->str.empty()) {

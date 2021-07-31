@@ -25,10 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     show_preview_image();
     Project_Template = "Undefined";
     setWindowTitle((Open_Location.isEmpty() ? tr("Unsaved Project") : QFileInfo(Open_Location).fileName()) +
-                   " - <strong>Fractal Designer</strong>");
+                   " - Fractal Designer");
 
     Line_Search = new QLineEdit(this);
-    // Line_Search->setToolTip("Search");
     Line_Search->setFixedSize(180, 20);
     Line_Search->setStyleSheet("border-radius: 10px; border: 1px solid green;");
     Line_Search->setPlaceholderText("Search");
@@ -123,6 +122,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView_error->setEditTriggers(QAbstractItemView::NoEditTriggers);
     error_list_model->setSortRole(Qt::AscendingOrder);
 
+    /* Settings of the terminal behaviour */
+    ui->textEdit_terminal->installEventFilter(this);                              // use eventFilter
+    ui->textEdit_terminal->setContextMenuPolicy(Qt::NoContextMenu);               // no content menu when right button clicked
+    ui->textEdit_terminal->setUndoRedoEnabled(false);                             // no undo and redo
+    ui->textEdit_terminal->setAcceptDrops(false);                                 // no drag or drop
+    ui->textEdit_terminal->setText("Fractal Designer 6.0.8 Terminal\n"
+                                   "-------------------------------\n"
+                                   "   (C) 2021 Teddy van Jerry    \n"
+                                   "===============================\n"
+                                   ">> ");                                        // start of the terminal
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor); // move the cursor
+
     ReadStyle();
     updateMaxButton();
 }
@@ -180,11 +191,7 @@ void MainWindow::initTitleBar()
     this->m_rightBorder = generateBorder(Qt::RightToolBarArea, Qt::Vertical);
     this->m_bottomBorder = generateBorder(Qt::BottomToolBarArea, Qt::Horizontal);
 
-
     this->showMaximized();
-
-
-
 }
 
 void MainWindow::setOpenLocation(QString str)
@@ -224,7 +231,7 @@ bool MainWindow::OpenFRD(int type)
     display();
     save_or_not = true;
 
-    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
     return true;
 }
 
@@ -293,10 +300,14 @@ void MainWindow::on_actionNew_N_triggered()
 
     Open_Location = QFileDialog::getSaveFileName(this,
                                                  tr("New Project"),
-                                                 QDir::homePath() + "/Untitled",
+                                                 QDir::currentPath() + "/../usr/frd/Untitled",
                                                  tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
-    if (Open_Location.isEmpty()) return;
-    setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+    if (Open_Location.isEmpty())
+    {
+        save_or_not = false; // cancelled
+        return;
+    }
+    setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
     // print current
     on_actionSave_S_triggered();
 }
@@ -311,7 +322,7 @@ void MainWindow::on_actionOpen_O_triggered()
     QString Old_Open_Location = Open_Location;
     QString New_Open_Location = QFileDialog::getOpenFileName(this,
                                                              tr("Open Project"),
-                                                             QDir::currentPath(),
+                                                             QDir::currentPath() + "/../usr/frd",
                                                              tr("FRD File (*.frd)"));
     qDebug() << New_Open_Location;
     QFile check(New_Open_Location);
@@ -614,39 +625,81 @@ void Read_RGBA(const QString& str1, const QString& str2, std::string Colour1_[4]
 
 void MainWindow::customTemplatePre(Create_Image_Task* task)
 {
-    QString Formula = info.curr().layerFormula(0);
-    std::string msg;
-    std::vector<_var> post;
-    if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
-        QMessageBox::critical(this, "Error", "Syntax error in Customized Template Formula!");
-        qDebug() << QString::fromStdString(msg);
-        return;
-    }
-    task->setFormula(post);
+//    QString Formula = info.curr().layerFormula(0);
+//    std::string msg;
+//    std::vector<_var> post;
+//    if (!to_postorder(Formula.toStdString(), &msg, post, { "z", "x", "y", "z0", "x0", "y0", "t", "k" })) {
+//        QMessageBox::critical(this, "Error", "Syntax error in Customized Template Formula!");
+//        qDebug() << QString::fromStdString(msg);
+//        return;
+//    }
+//    task->setFormula(post);
 }
 
 bool MainWindow::createImagePre(Create_Image_Task* task)
 {
 //    QString Colour1 = ui->Convergent_Points_Colour_Formula->toPlainText();
 //    QString Colour2 = ui->Divergent_Points_Colour_Formula->toPlainText();
+
+    auto currInfo = info.curr();
+
+    std::vector<std::string> var_list { "z", "x", "y", "z_", "x_", "y_", "z0", "x0", "y0", "t", "k" };
+
     std::string Colour1_[4], Colour2_[4];
+    std::string Formula   = currInfo.layerFormula(0).toStdString();
+    std::string Distance  = currInfo.distance(0).toStdString();
+    std::string Min       = currInfo.templateMin(0).toStdString();
+    std::string Max       = currInfo.templateMax(0).toStdString();
+    std::string IterLimit = currInfo.iterationLimit(0).toStdString();
+
+//    std::cout << Formula << " " << Distance << " " << Min << " " << Max << " " << IterLimit << std::endl;
 
 //    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
-    Colour1_[0] = info.curr().layerColor(0, "Con.R").toStdString();
-    Colour1_[1] = info.curr().layerColor(0, "Con.G").toStdString();
-    Colour1_[2] = info.curr().layerColor(0, "Con.B").toStdString();
-    Colour1_[3] = info.curr().layerColor(0, "Con.A").toStdString();
-    Colour2_[0] = info.curr().layerColor(0, "Div.R").toStdString();
-    Colour2_[1] = info.curr().layerColor(0, "Div.G").toStdString();
-    Colour2_[2] = info.curr().layerColor(0, "Div.B").toStdString();
-    Colour2_[3] = info.curr().layerColor(0, "Div.A").toStdString();
+    Colour1_[0] = currInfo.layerColor(0, "Con.R").toStdString();
+    Colour1_[1] = currInfo.layerColor(0, "Con.G").toStdString();
+    Colour1_[2] = currInfo.layerColor(0, "Con.B").toStdString();
+    Colour1_[3] = currInfo.layerColor(0, "Con.A").toStdString();
+    Colour2_[0] = currInfo.layerColor(0, "Div.R").toStdString();
+    Colour2_[1] = currInfo.layerColor(0, "Div.G").toStdString();
+    Colour2_[2] = currInfo.layerColor(0, "Div.B").toStdString();
+    Colour2_[3] = currInfo.layerColor(0, "Div.A").toStdString();
 
-    qDebug() << QString::fromLatin1(Colour1_[0]);
+//    qDebug() << QString::fromLatin1(Colour1_[0]);
 
-    std::string msg1[4], msg2[4];
-    std::vector<_var> post1[4], post2[4];
+    std::string msg1[4], msg2[4], msgFormula, msgDistance, msgMin, msgMax, msgIterLimit;
+    std::vector<_var> post1[4], post2[4], postFormula, postDistance, postMin, postMax, postIterLimit;
+    if (!to_postorder(Formula, &msgFormula, postFormula, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Distance Value!");
+        qDebug() << QString::fromStdString(msgFormula);
+        return false;
+    }
+    if (!to_postorder(Distance, &msgDistance, postDistance, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Distance Value!");
+        qDebug() << QString::fromStdString(msgMin);
+        return false;
+    }
+    if (!to_postorder(Min, &msgMin, postMin, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Min Value!");
+        qDebug() << QString::fromStdString(msgMin);
+        return false;
+    }
+    if (!to_postorder(Max, &msgMax, postMax, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Max Value!");
+        qDebug() << QString::fromStdString(msgMax);
+        return false;
+    }
+    if (!to_postorder(IterLimit, &msgIterLimit, postIterLimit, var_list))
+    {
+        QMessageBox::critical(this, "Error", "Syntax error in Max Value!");
+        qDebug() << QString::fromStdString(msgIterLimit);
+        return false;
+    }
     for (int i = 0; i != 4; i++) {
-        if (!to_postorder(Colour1_[i], msg1 + i, post1[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        if (!to_postorder(Colour1_[i], msg1 + i, post1[i], var_list))
         {
             QMessageBox::critical(this, "Error", "Syntax error in Convergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg1[i]);
@@ -654,7 +707,7 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
         }
     }
     for (int i = 0; i != 4; i++) {
-        if (!to_postorder(Colour2_[i], msg2 + i, post2[i], { "z", "x", "y", "z0", "x0", "y0", "t", "k" }))
+        if (!to_postorder(Colour2_[i], msg2 + i, post2[i], var_list))
         {
             QMessageBox::critical(this, "Error", "Syntax error in Divergent Point Colour Setting!");
             qDebug() << QString::fromStdString(msg2[i]);
@@ -668,67 +721,8 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
 
 void MainWindow::on_actionPreview_Refresh_triggered()
 {
-    Create_Image_Task* preview = new Create_Image_Task(this);
-
-    if (!createImagePre(preview))
-    {
-        delete preview;
-        return;
-    }
-
-    QString Pre_Img_Dir;
-
-
-    QDir ck(QCoreApplication::applicationDirPath() + "/temp");
-    if(!ck.exists())
-    {
-        ck.mkdir(ck.absolutePath());
-    }
-    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/temp";
-
-    /*
-    if(curr_info.template_ == 2)
-    {
-        double t = ui->doubleSpinBox_t->value();
-        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-        double& k = curr_info.Julia_c_rate;
-        preview->setTemplate2(_curr_complex(c1, c2, t, k));
-    }
-    else if(curr_info.template_ == 4)
-    {
-        double t = ui->doubleSpinBox_t->value();
-
-        double& k = curr_info.Newton_c_rate;
-
-        std::complex<double> arr[10];
-        for(int i = 0; i != 10; i++)
-        {
-            arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
-        }
-
-        preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
-                              arr,
-                              _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
-                              _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
-                              _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
-    }
-    else if(curr_info.template_ == 5)
-    {
-
-    }
-    */
-
-    customTemplatePre(preview);
-
-    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
-                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
-                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
-                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
-                      "png", Pre_Img_Dir, "Preview Image", "Preview",
-                      info.curr().inverseYAsis());
-
-    QThreadPool::globalInstance()->start(preview);
-    qDebug() << "Refreshed";
+    outsideCommand("preview");
+    preview();
 }
 
 void MainWindow::getImage(QImage img)
@@ -762,6 +756,11 @@ void MainWindow::getImage(QImage img)
     {
         ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
     }
+
+    finishTerminalProgressBar();
+
+    if (ui->Tab->currentIndex() != 2) showPreviewInWindow(image_preview);
+    ui->textEdit_terminal->setReadOnly(false);
 }
 
 void MainWindow::dealClose(QObject* sd)
@@ -775,6 +774,7 @@ void MainWindow::dealClose(QObject* sd)
 void MainWindow::updateProgressBar(double p)
 {
     ui->progressBar_Preview->setValue(p);
+    updateTerminalProgressBar(p);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -801,6 +801,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
         }
     }
     emit destroyed();
+    exit(0);
 }
 
 void MainWindow::iniTemplate(int n)
@@ -913,141 +914,8 @@ void MainWindow::on_pushButton_routeClear_clicked()
 
 void MainWindow::on_actionCreate_Images_triggered()
 {
-    if(!ui->actionCreate_Images->isEnabled()) return;
-
-    if(!save_or_not)
-    {
-        QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
-        return;
-    }
-
-    if(!isRouteValid)
-    {
-        QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
-        return;
-    }
-
-    QString image_format = "png";
-    QString path = ui->lineEdit_imagePath->text();
-    QString name = ui->lineEdit_imagePrefix->text();
-    if(path.isEmpty() || !QDir(path).exists())
-    {
-        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
-        return;
-    }
-
-    ui->actionStop->setDisabled(false);
-    ui->actionCreate_Images->setDisabled(true);
-    ui->actionCreate_Images_in_Range->setDisabled(true);
-    ui->actionCheck_Images->setDisabled(true);
-
-    qDebug() << ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute();
-    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
-    int current_index = 0;
-    int X = ui->Image_size_X->value();
-    int Y = ui->Image_size_Y->value();
-
-    create_image_info = new Create_Image_Info;
-    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
-    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
-    create_image_info->show();
-    emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);
-
-    for(int i = 0; i < total_image - 1; i++)
-    {
-        double T = static_cast<double>(i) / total_image;
-        while(current_index + 2 < table_route_model->rowCount() && T > Tb(current_index + 1, 0))
-        {
-            current_index++;
-        }
-        double w1 = Tb(current_index, 4);
-        double w2 = Tb(current_index + 1, 4);
-        double t1 = Tb(current_index, 0);
-        double t2 = Tb(current_index + 1, 0);
-        double x1 = Tb(current_index, 1);
-        double x2 = Tb(current_index + 1, 1);
-        double y1 = Tb(current_index, 2);
-        double y2 = Tb(current_index + 1, 2);
-        double k  = Tb(current_index, 5);
-        double t  = (T - t1) / (t2 - t1);
-        double x, y;
-
-        double angle = Tb(current_index, 3)
-                + (Tb(current_index + 1, 3) - Tb(current_index, 3))
-                * ((1 - k) * t + k * pow(t, 2));
-        double width = 1 / (t * (1 / w2) + (1 - t) * (1 / w1));
-
-        if(fabs(1 - w1 / w2) < 1E-5)
-        {
-            x = x1 + t * x2 + (1 - t) * x1;
-            y = y1 + t * y2 + (1 - t) * y1;
-        }
-        else
-        {
-            x = x1 + (x2 - x1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
-            y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
-        }
-
-        // qDebug() << t << current_index << x << y << width << angle;
-        Create_Image_Task* create_images = new Create_Image_Task(this);
-        if (!createImagePre(create_images))
-        {
-            delete create_images;
-            return;
-        }
-        if(curr_info.template_ == 2)
-        {
-            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-            double k = curr_info.Julia_c_rate;
-            create_images->setTemplate2(c1 + (c2 - c1) * ((1 - k) * T + k * T * T));
-        }
-        if(curr_info.template_ == 4)
-        {
-            double& k = curr_info.Newton_c_rate;
-
-            std::complex<double> arr[10];
-            for(int i = 0; i != 10; i++)
-            {
-                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
-            }
-
-            create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
-                                        arr,
-                                        _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
-                                        _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
-                                        _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
-
-        }
-        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
-        QThreadPool::globalInstance()->start(create_images);
-    }
-
-    Create_Image_Task* create_images = new Create_Image_Task(this);
-    // create_images->setAutoDelete(false);
-
-    createImagePre(create_images);
-    if(curr_info.template_ == 2)
-    {
-        create_images->setTemplate2(curr_info.Julia_c2);
-    }
-    if(curr_info.template_ == 4)
-    {
-        create_images->setTemplate4(curr_info.Newton_a_2,
-                                    curr_info.Newton_xn_2,
-                                    curr_info.Newton_sin_2,
-                                    curr_info.Newton_cos_2,
-                                    curr_info.Newton_ex_2);
-    }
-    create_images->setImage(Tb(table_route_model->rowCount() - 1, 1),
-                            Tb(table_route_model->rowCount() - 1, 2),
-                            Tb(table_route_model->rowCount() - 1, 4),
-                            Tb(table_route_model->rowCount() - 1, 4) * Y / X,
-                            X, Y,
-                            Tb(table_route_model->rowCount() - 1, 3),
-                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
-                            curr_info.y_inverse);
-    QThreadPool::globalInstance()->start(create_images);
-    qDebug() << "Here Here !!!!";
+    outsideCommand("createimages");
+    createImages();
 }
 
 void MainWindow::on_commandLinkButton_Image_clicked()
@@ -1105,240 +973,8 @@ void MainWindow::on_toolButton_imagePath_clicked()
 
 void MainWindow::on_actionCreate_Video_triggered()
 {
-
-#if !(defined (WIN32) || defined (_WIN64) || defined (__linux__))
-    UNSUPPORTED_PLATFORM;
-    return;
-#endif
-
-    if(!save_or_not)
-    {
-        QMessageBox::information(this, "Information", "You have not saved the project.");
-        return;
-    }
-
-    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
-
-    int crf_value = 18;
-    QString video_file_name = ui->lineEdit_videoName->text();
-    QString video_file_path = ui->lineEdit_videoPath->text(); // only used in high version
-    QString video_format = "mp4";
-#if defined (WIN32) || defined (WIN64)
-    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -r ";
-#elif defined (__linux__)
-    QString PowerShell_arg1 = "ffmpeg -r ";
-#endif
-    ffmpeg_arg1.append(ui->comboBox_fps->currentText());
-    ffmpeg_arg1.append(" -f image2 -i ");
-    ffmpeg_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
-    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
-    ffmpeg_arg1.append(QString::number(crf_value));
-    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
-    ffmpeg_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
-                               video_file_name + "." + video_format
-                             : video_file_name + "_temp." + video_format);
-
-    ui->statusbar->showMessage(tr("Creating Video..."), 300000);
-
-    bool Alive[3] {false, false, false};
-    QFile video(video_file_path + "/" + video_file_name + "." + video_format);
-    if(video.exists())
-    {
-        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
-                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
-        {
-            video.remove();
-        }
-        else
-        {
-            ui->statusbar->showMessage("", 30000);
-            return;
-        }
-    }
-
-    qDebug() << "Creating Video...";
-
-    QProcess* create_video = new QProcess(this);
-    create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || defined (_WIN64)
-    qDebug() << ffmpeg_arg1;
-    create_video->start(ffmpeg_arg1);
-    QString file_suffix = "cmd";
-#elif defined(__linux__)
-    create_video->start(ffmpeg_arg1);
-    QString file_suffix = "sh";
-#endif
-    Alive[0] = create_video->waitForFinished(300000);
-    qDebug() << create_video->readAllStandardOutput();
-
-    if(!Alive[0])
-    {
-        QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
-        create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out1(&create_video_ps);
-        out1 << ffmpeg_arg1;
-        create_video_ps.close();
-
-        // Retry running shell file
-        QProcess* run_sh = new QProcess(this);
-        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || (_WIN64)
-        run_sh->start("Create_Video.cmd");
-#elif defined (__linux__)
-        run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
-#endif
-        Alive[0] = run_sh->waitForFinished(300000);
-        if(Alive[0])
-        {
-            QFile ck(video_file_path + "/" +
-                        (ui->textBrowser_music->toPlainText().isEmpty() ?
-                         video_file_name + "." + video_format
-                       : video_file_name + "_temp." + video_format));
-            if(ck.exists())
-            {
-                QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-            }
-            else
-            {
-                Alive[0] = false;
-            }
-        }
-    }
-
-    if(ui->textBrowser_music->toPlainText().isEmpty())
-    {
-        if(Alive[0])
-        {
-            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                           + "\nVideo Creating Finished!");
-            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-            return;
-        }
-        else
-        {
-            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video." + file_suffix + " code instead.");
-        }
-        return;
-    }
-
-    ui->statusbar->showMessage(tr("Processing Music..."), 300000);
-
-    QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
-    Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&Music_Added_NoEnd_);
-    if(!curr_info.music_list.empty())
-    {
-        for(int i = 1; i <= curr_info.music_list.size(); i++)
-        {
-            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-            if(QFile::copy(curr_info.music_list[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
-            {
-                out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
-            }
-        }
-        Music_Added_NoEnd_.close();
-    }
-#if defined (WIN32) || (WIN64)
-    QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#elif defined (__linux__)
-    QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#endif
-    qDebug() << ffmpeg_arg2;
-    create_video->start(ffmpeg_arg2);
-    Alive[1] = create_video->waitForFinished(300000);
-
-    ui->statusbar->showMessage(tr("Adding Music..."), 300000);
-
-#if defined (WIN32) || (WIN64)
-    QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
-#elif defined (__linux__)
-    QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-#endif
-    ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
-    ffmpeg_arg3.append(" -shortest -f mp4 ");
-    ffmpeg_arg3.append(video_file_name + "." + video_format);
-    if(Alive[0] && Alive[1])
-    {
-        qDebug() << ffmpeg_arg3;
-        create_video->start(ffmpeg_arg3);
-        Alive[2] = create_video->waitForFinished(60000);
-        QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
-        if(ck_result.exists())
-        {
-            QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-            QFile::remove(video_file_path + "/BGM.mp3");
-            QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-            for(int i = 1; i <= curr_info.music_list.size(); i++)
-            {
-                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-            }
-        }
-        else
-        {
-            Alive[2] = false;
-        }
-    }
-
-    if(!Alive[2])
-    {
-        QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
-        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out2(&add_music_ps);
-        out2 << ffmpeg_arg2 << Qt::endl;
-        out2 << ffmpeg_arg3;
-        add_music_ps.close();
-        // Retry running shell file
-        QProcess* run_sh = new QProcess(this);
-        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-
-        if(Alive[0])
-        {
-#if defined (WIN32) || (_WIN64)
-            run_sh->start("Add_Music.cmd");
-#elif defined (__linux__)
-            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
-#endif
-            Alive[2] = run_sh->waitForFinished(300000);
-            if(Alive[2])
-            {
-                QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
-                if(ck.exists())
-                {
-                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-                    QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-                    QFile::remove(video_file_path + "/BGM.mp3");
-                    QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-                    for(int i = 1; i <= curr_info.music_list.size(); i++)
-                    {
-                        QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-                    }
-                }
-                else
-                {
-                    Alive[2] = false;
-                }
-            }
-            if(!Alive[2])
-            {
-                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music." + file_suffix + " code instead.");
-            }
-        }
-        else
-        {
-            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video." + file_suffix
-                                       + ",\nsecond run Add_Music." + file_suffix + ".");
-        }
-    }
-
-    if(Alive[2])
-    {
-        ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-        QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                       + "\nVideo Creating Finished!");
-    }
+    outsideCommand("createvideo");
+    createVideo();
 }
 
 void MainWindow::on_toolButton_videoPath_clicked()
@@ -3172,8 +2808,8 @@ void MainWindow::tableRouteDeleteRow()
     table_route_model->removeRow(table_route_line);
 }
 
-QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area,
-                                        Qt::Orientation orientation){
+QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area, Qt::Orientation orientation)
+{
     QToolBar *border = new QToolBar("___border___");
     border->setStyleSheet(
         "\nQToolBar {\n"
@@ -3201,7 +2837,8 @@ QToolBar *MainWindow::generateBorder(Qt::ToolBarArea area,
     return border;
 }
 
-QMenu * MainWindow::createPopupMenu(){
+QMenu * MainWindow::createPopupMenu()
+{
     QMenu *menu = QMainWindow::createPopupMenu();
     QList<QAction *> removal;
     foreach (QAction *a, menu->actions())
@@ -3210,7 +2847,8 @@ QMenu * MainWindow::createPopupMenu(){
     return menu;
 }
 
-void MainWindow::setMenuBar(QMenuBar *menuBar){
+void MainWindow::setMenuBar(QMenuBar *menuBar)
+{
     if (this->m_menuBar == menuBar) return;
 
     if (this->m_menuBar) {
@@ -3235,11 +2873,13 @@ void MainWindow::setMenuBar(QMenuBar *menuBar){
     }
 }
 
-QMenuBar* MainWindow::menuBar() const{
+QMenuBar* MainWindow::menuBar() const
+{
     return this->m_menuBar;
 }
 
-void MainWindow::setMenuWidget(QWidget *widget){
+void MainWindow::setMenuWidget(QWidget *widget)
+{
     if (this->m_menuWidget == widget) return;
 
     widget->setParent(this);
@@ -3259,24 +2899,67 @@ void MainWindow::setMenuWidget(QWidget *widget){
     }
 }
 
-QWidget * MainWindow::menuWidget() const{
+QWidget * MainWindow::menuWidget() const
+{
     return this->m_menuWidget;
 }
 
-bool MainWindow::eventFilter(QObject*, QEvent *event){
-    if (event->type() == QEvent::MouseMove)
+bool MainWindow::eventFilter(QObject* object, QEvent *event)
+{
+    if (object == ui->textEdit_terminal && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Return)
+        {
+            // this triggered the command in Terminal
+            terminalCommand();
+            event->ignore();
+            return true;
+        }
+        /**
+         * \todo This is only ok for Windows
+         */
+        else if (keyEvent->keyCombination() != QKeyCombination(Qt::CTRL, Qt::Key_C))
+        {
+            QTextCursor cursor = ui->textEdit_terminal->textCursor();
+            // auto emm = ui->textEdit_terminal->;
+            auto posStart = cursor.selectionStart();
+            auto posEnd = cursor.selectionEnd();
+            cursor.setPosition(posStart);
+            // If it is the backspace, then the cursor position must be one further.
+            int col_limit = keyEvent->key() == Qt::Key_Backspace ? 4 : 3;
+            if (cursor.blockNumber() < ui->textEdit_terminal->document()->lineCount() - 1 || cursor.columnNumber() < col_limit)
+            {
+                // not the last row or be the first three column
+                // this can not be the command part
+                event->ignore();
+                return true;
+            }
+            cursor.setPosition(posEnd);
+            if (cursor.blockNumber() < ui->textEdit_terminal->document()->lineCount() - 1 || cursor.columnNumber() < col_limit)
+            {
+                // not the last row or be the first three column
+                // this can not be the command part
+                event->ignore();
+                return true;
+            }
+        }
+    }
+    else if (event->type() == QEvent::MouseMove)
         customMouseMoveEvent(static_cast<QMouseEvent*>(event));
     else if (event->type() == QEvent::MouseButtonPress)
-        mousePressEvent(static_cast<QMouseEvent*>(event));
+    {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        mousePressEvent(mouseEvent);
+    }
     return false;
 }
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (this->FRD_TitleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_TitleBar().btn_maximize.isEnabled()
-            && event->buttons() & Qt::LeftButton) {
-//        this->FRD_TitleBar().mamaximizing = true;
-//        emit requestMaximize();
+            && event->buttons() & Qt::LeftButton)
+    {
         updateMaxButton();
     }
     QWidget::mouseDoubleClickEvent(event);
@@ -3319,7 +3002,7 @@ bool MainWindow::event(QEvent *event){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() & Qt::LeftButton){
-        int x = event->x(), y = event->y();
+        int x = event->position().x(), y = event->position().y();
         int bottom = this->height() - RESIZE_LIMIT, right = this->width() - RESIZE_LIMIT;
 
         QPoint posCursor = event->globalPos();
@@ -3402,16 +3085,14 @@ void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
     int dx = e->globalX() - last.x();
     int dy = e->globalY() - last.y();
     move(x()+dx, y()+dy);
-    isPressWidget=false;
+    isPressWidget = false;
 }
 
 void MainWindow::on_pushButton_CodeRun_clicked()
 {
-    Interpreter::interpret(editor->text(), info.editor());
-    editor->clearSearchIndic(0, editor->text().size());
-    ui->plainTextEdit_terminal->appendPlainText(info.editor().toJson());
-    ui->plainTextEdit_terminal->appendPlainText(info.editor().varsToJson());
-    setErrorInfo(info.editor());
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    ui->textEdit_terminal->insertPlainText("run");
+    runCode();
 }
 
 void MainWindow::updateEditorInfo()
@@ -3435,10 +3116,482 @@ void MainWindow::on_actionSave_As_A_triggered()
     {
         save_or_not = true;
         Open_Location = new_dir;
-        setWindowTitle(QFileInfo(Open_Location).fileName() + " - <strong>Fractal Designer</strong>");
+        setWindowTitle(QFileInfo(Open_Location).fileName() + " - Fractal Designer");
         on_actionSave_S_triggered();
     }
     info.print(new_dir);
+}
+
+void MainWindow::preview()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    normalTerminalMessage("Start creating preview image ...");
+    currentTerminalWorkName = "Preview";
+    initTerminalProgressBar();
+
+    Create_Image_Task* preview = new Create_Image_Task(this);
+
+    if (!createImagePre(preview))
+    {
+        delete preview;
+        return;
+    }
+
+    QString Pre_Img_Dir;
+
+
+    QDir ck(QCoreApplication::applicationDirPath() + "/../tmp");
+    if(!ck.exists())
+    {
+        ck.mkdir(ck.absolutePath());
+    }
+    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/../tmp";
+
+    /*
+    if(curr_info.template_ == 2)
+    {
+        double t = ui->doubleSpinBox_t->value();
+        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+        double& k = curr_info.Julia_c_rate;
+        preview->setTemplate2(_curr_complex(c1, c2, t, k));
+    }
+    else if(curr_info.template_ == 4)
+    {
+        double t = ui->doubleSpinBox_t->value();
+
+        double& k = curr_info.Newton_c_rate;
+
+        std::complex<double> arr[10];
+        for(int i = 0; i != 10; i++)
+        {
+            arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
+        }
+
+        preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
+                              arr,
+                              _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
+                              _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
+                              _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
+    }
+    else if(curr_info.template_ == 5)
+    {
+
+    }
+    */
+
+    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
+                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
+                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
+                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
+                      "png", Pre_Img_Dir, "Preview Image", "Preview",
+                      info.curr().inverseYAsis());
+
+    QThreadPool::globalInstance()->start(preview);
+    qDebug() << "Refreshed";
+}
+
+void MainWindow::createImages()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    if (!ui->actionCreate_Images->isEnabled())
+    {
+        errorTerminalMessage("Can not create images.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+    auto currInfo = info.curr();
+    if(!save_or_not)
+    {
+        errorTerminalMessage("Can not create images. You have not saved the project.");
+        QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+//    if(!isRouteValid)
+//    {
+//        QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
+//        return;
+//    }
+
+    QString image_format = "png";
+    QString path = currInfo.imageDir();
+    QString name = currInfo.imagePrefix();
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        errorTerminalMessage("Can not create images. The output path does not exist.");
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+    ui->actionStop->setDisabled(false);
+    ui->actionCreate_Images->setDisabled(true);
+    ui->actionCreate_Images_in_Range->setDisabled(true);
+    ui->actionCheck_Images->setDisabled(true);
+
+    int total_image = currInfo.outputTime() * currInfo.fps() / 1000;
+    int X = currInfo.ImageSize("X");
+    int Y = currInfo.ImageSize("Y");
+
+    normalTerminalMessage("Start creating images ...");
+    currentTerminalWorkName = "Create Images";
+    initTerminalProgressBar(total_image);
+
+    create_image_info = new Create_Image_Info;
+    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
+    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
+    connect(create_image_info, &Create_Image_Info::releaseInfo, this, &MainWindow::updateTerminalCreateImagesProgresssBar);
+    create_image_info->show();
+
+    emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);
+
+    int current_index = 0;
+    for(int i = 0; i < total_image - 1; i++)
+    {
+        double T = static_cast<double>(i) / total_image;
+        while(current_index + 2 < currInfo.routePointCount(0) && T > currInfo.routePoint(0, current_index + 1, "Ts"))
+        {
+            current_index++;
+        }
+        double w1 = currInfo.routePoint(0, current_index,     "Widths");
+        double w2 = currInfo.routePoint(0, current_index + 1, "Widths");
+        double t1 = currInfo.routePoint(0, current_index,     "Ts");
+        double t2 = currInfo.routePoint(0, current_index + 1, "Ts");
+        double x1 = currInfo.routePoint(0, current_index,     "CentreXs");
+        double x2 = currInfo.routePoint(0, current_index + 1, "CentreXs");
+        double y1 = currInfo.routePoint(0, current_index,     "CentreYs");
+        double y2 = currInfo.routePoint(0, current_index + 1, "CentreYs");
+        double k  = currInfo.routePoint(0, current_index,     "Rates");
+        /** \todo Add information check here */
+        double t  = (T - t1) / (t2 - t1);
+        double x, y;
+
+        double angle = currInfo.routePoint(0, current_index, "Angles")
+                + (currInfo.routePoint(0, current_index + 1, "Angles") - currInfo.routePoint(0, current_index, "Angles"))
+                * ((1 - k) * t + k * pow(t, 2));
+        double width = 1 / (t * (1 / w2) + (1 - t) * (1 / w1));
+
+        if(fabs(1 - w1 / w2) < 1E-5)
+        {
+            x = x1 + t * x2 + (1 - t) * x1;
+            y = y1 + t * y2 + (1 - t) * y1;
+        }
+        else
+        {
+            x = x1 + (x2 - x1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+            y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+        }
+
+        // qDebug() << t << current_index << x << y << width << angle;
+        Create_Image_Task* create_images = new Create_Image_Task(this);
+        if (!createImagePre(create_images))
+        {
+            delete create_images;
+            return;
+        }
+
+        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path,
+                                name + QString::number(i), "Create_Image", info.curr().inverseYAsis());
+        QThreadPool::globalInstance()->start(create_images);
+    }
+
+    Create_Image_Task* create_images = new Create_Image_Task(this);
+    // create_images->setAutoDelete(false);
+
+    createImagePre(create_images);
+    create_images->setImage(currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "CentreXs"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "CentreYs"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Widths"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Widths") * Y / X,
+                            X, Y,
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Angles"),
+                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
+                            currInfo.inverseYAsis());
+    QThreadPool::globalInstance()->start(create_images);
+}
+
+void MainWindow::createVideo()
+{
+
+#if !(defined (WIN32) || defined (_WIN64) || defined (__linux__))
+    UNSUPPORTED_PLATFORM;
+    return;
+#endif
+
+    if(!save_or_not)
+    {
+        QMessageBox::information(this, "Information", "You have not saved the project.");
+        return;
+    }
+
+    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
+
+    auto currInfo = info.curr();
+
+    int crf_value = currInfo.videoCrf();
+
+    QString video_file_name = currInfo.videoName().simplified();
+    QString video_file_path = currInfo.videoDir().simplified();
+    QString video_format = "mp4";
+#if defined (WIN32) || defined (WIN64)
+    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -r ";
+#elif defined (__linux__)
+    QString PowerShell_arg1 = "ffmpeg -r ";
+#endif
+    ffmpeg_arg1.append(QString::number(currInfo.fps()));
+    ffmpeg_arg1.append(" -f image2 -i ");
+    ffmpeg_arg1.append(QString("\"") + currInfo.imageDir() + "/" + currInfo.imagePrefix());
+    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
+    ffmpeg_arg1.append(QString::number(crf_value));
+    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
+    ffmpeg_arg1.append(currInfo.videoMusic().isEmpty() ?
+                               "\"" + video_file_name + "." + video_format + "\""
+                             : "\"" + video_file_name + "_temp." + video_format + "\"");
+
+    ui->statusbar->showMessage(tr("Creating Video..."), 300000);
+
+    bool Alive[3] {false, false, false};
+    QFile video(video_file_path + "/" + video_file_name + "." + video_format);
+    if(video.exists())
+    {
+        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
+                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
+        {
+            video.remove();
+        }
+        else
+        {
+            ui->statusbar->showMessage("", 30000);
+            return;
+        }
+    }
+
+    normalTerminalMessage("Start Creating Video ...");
+
+    QFile video_temp(video_file_path + "/" + video_file_name + "_temp." + video_format);
+    if(video_temp.exists())
+    {
+        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "_temp." + video_format
+                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
+        {
+            video_temp.remove();
+        }
+        else
+        {
+            ui->statusbar->showMessage("", 30000);
+            return;
+        }
+    }
+
+    QProcess* create_video = new QProcess(this);
+    create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || defined (_WIN64)
+    std::cout << "ffmpeg_arg1: " << ffmpeg_arg1.toStdString() << std::endl;
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "cmd";
+#elif defined(__linux__)
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "sh";
+#endif
+    Alive[0] = create_video->waitForFinished(300000);
+    QString std_output = create_video->readAllStandardOutput();
+    if (!std_output.isEmpty())
+    {
+        errorTerminalMessage("Get ffmpeg output: " + std_output);
+    }
+
+    if(!Alive[0])
+    {
+        QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
+        create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out1(&create_video_ps);
+        out1 << ffmpeg_arg1;
+        create_video_ps.close();
+
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || (_WIN64)
+        run_sh->start("Create_Video.cmd");
+#elif defined (__linux__)
+        run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
+#endif
+        Alive[0] = run_sh->waitForFinished(300000);
+        if(Alive[0])
+        {
+            QFile ck(video_file_path + "/" +
+                        (currInfo.videoMusic().isEmpty() ?
+                         video_file_name + "." + video_format
+                       : video_file_name + "_temp." + video_format));
+            if(ck.exists())
+            {
+                QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+            }
+            else
+            {
+                Alive[0] = false;
+            }
+        }
+    }
+
+    if (currInfo.videoMusic().isEmpty())
+    {
+        if (Alive[0])
+        {
+            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+            normalTerminalMessage(video_file_name + "." + video_format + " creating finished.");
+            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                           + "\nVideo Creating Finished!");
+
+            return;
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            errorTerminalMessage(video_file_name + "." + video_format + " creating failed."
+                                 "You can run Add_Music." + file_suffix + " code instead.");
+            QMessageBox::warning(this, "Error Information", "Video Creating failed!\nYou can run Create_Video." + file_suffix + " code instead.");
+        }
+        return;
+    }
+
+    normalTerminalMessage("Processing music ...");
+    ui->statusbar->showMessage(tr("Processing Music..."), 300000);
+
+    QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
+    Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&Music_Added_NoEnd_);
+    if (!currInfo.videoMusic().isEmpty())
+    {
+        for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+        {
+            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            if(QFile::copy(currInfo.videoMusic()[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
+            {
+                out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
+            }
+        }
+        Music_Added_NoEnd_.close();
+    }
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM_.mp3";
+#elif defined (__linux__)
+    QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM_.mp3";
+#endif
+    qDebug() << ffmpeg_arg2;
+    create_video->start(ffmpeg_arg2);
+    Alive[1] = create_video->waitForFinished(300000);
+
+    normalTerminalMessage("Adding music to video ...");
+    ui->statusbar->showMessage(tr("Adding Music..."), 300000);
+
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -i BGM_.mp3 -i ";
+#elif defined (__linux__)
+    QString PowerShell_arg3 = "ffmpeg -i BGM_.mp3 -i ";
+#endif
+    ffmpeg_arg3.append("\"" + video_file_name + "_temp." + video_format + "\"");
+    ffmpeg_arg3.append(" -shortest -f mp4 ");
+    ffmpeg_arg3.append("\"" + video_file_name + "." + video_format + "\"");
+    if(Alive[0] && Alive[1])
+    {
+        std::cout << "ffmpeg_arg3: " << ffmpeg_arg3.toStdString();
+        create_video->start(ffmpeg_arg3);
+        Alive[2] = create_video->waitForFinished(60000);
+        QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
+        if(ck_result.exists())
+        {
+            QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+            QFile::remove(video_file_path + "/BGM_.mp3");
+            QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+            for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+            {
+                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            }
+        }
+        else
+        {
+            Alive[2] = false;
+        }
+    }
+
+    if(!Alive[2])
+    {
+        QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
+        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out2(&add_music_ps);
+        out2 << ffmpeg_arg2 << Qt::endl;
+        out2 << ffmpeg_arg3;
+        add_music_ps.close();
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+
+        if(Alive[0])
+        {
+#if defined (WIN32) || (_WIN64)
+            run_sh->start("Add_Music.cmd");
+#elif defined (__linux__)
+            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
+#endif
+            Alive[2] = run_sh->waitForFinished(300000);
+            if(Alive[2])
+            {
+                QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
+                if(ck.exists())
+                {
+                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+                    QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+                    QFile::remove(video_file_path + "/BGM_.mp3");
+                    QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+                    for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+                    {
+                        QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+                    }
+                }
+                else
+                {
+                    Alive[2] = false;
+                }
+            }
+            if(!Alive[2])
+            {
+                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                errorTerminalMessage(video_file_name + "." + video_format + " creating failed."
+                                     "You can run Add_Music." + file_suffix + " code instead.");
+                QMessageBox::warning(this, "Error Information", "Video Creating failed!\nYou can run Add_Music." + file_suffix + " code instead.");
+            }
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            errorTerminalMessage(video_file_name + "." + video_format + " creating failed. First run Create_Video." + file_suffix +
+                                 ", second run Add_Music." + file_suffix + ".");
+            QMessageBox::warning(this, "Error Information", "Video Creating failed!\nFirst run Create_Video." + file_suffix +
+                                 ",\nsecond run Add_Music." + file_suffix + ".");
+        }
+    }
+
+    if(Alive[2])
+    {
+        ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+        normalTerminalMessage(video_file_name + "." + video_format + " creating finished.");
+        QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                       + "\nVideo Creating Finished!");
+    }
+}
+
+void MainWindow::showPreviewInWindow(const QImage &img)
+{
+    int width = img.width();
+    int height = img.height();
+    preview_dialog->resize(width, height);
+    preview_dialog_layout->addWidget(preview_dialog_label);
+    preview_dialog_label->setPixmap(QPixmap::fromImage(img));
+    preview_dialog->show();
 }
 
 void MainWindow::setErrorInfo(const FRD_Json& frd_json)
@@ -3475,4 +3628,288 @@ void MainWindow::on_pushButton_search_clicked()
 void MainWindow::on_lineEdit_searchName_returnPressed()
 {
     on_pushButton_search_clicked();
+}
+
+void MainWindow::on_actionRun_Code_triggered()
+{
+    on_pushButton_CodeRun_clicked();
+}
+
+void MainWindow::updateTerminalProgressBar(int p, int finished, int total, double speed)
+{
+    if (currentTerminalProgress == p && finished < 0) return;
+    currentTerminalProgress = p;
+    // move to the end of the terminal
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    int back_length = 55;
+    if (total >= 0) back_length += QString::number(total).length() * 2 + 18;
+    for (int i = 0; i != back_length; i++)
+    {
+        ui->textEdit_terminal->textCursor().deletePreviousChar();
+    }
+    for (int i = 0; i < p / 2; i++)
+    {
+        ui->textEdit_terminal->insertPlainText("█");
+    }
+    for (int i = p / 2; i < 50; i++)
+    {
+        ui->textEdit_terminal->insertPlainText("-");
+    }
+    ui->textEdit_terminal->insertPlainText("|");
+    QString space(3 - QString::number(p).size(), ' ');
+    ui->textEdit_terminal->insertPlainText(space);
+    ui->textEdit_terminal->insertPlainText(QString::number(p) + "%");
+    if (total >= 0)
+    {
+        int total_length = QString::number(total).length();
+        ui->textEdit_terminal->insertPlainText(QString(total_length - QString::number(finished).length() + 1, ' ') +
+                                               QString::number(finished) + "/" + QString::number(total) + " ");
+        if (speed >= 0)
+        {
+            QString str = QString::number(speed, 'g', 4);
+            int speed_length = str.length() + 4;
+            ui->textEdit_terminal->insertPlainText(str + "kb/s" + QString(15 - speed_length, ' '));
+        }
+        else
+        {
+            ui->textEdit_terminal->insertPlainText("               ");
+        }
+    }
+
+}
+
+void MainWindow::initTerminalProgressBar(int total)
+{
+    ui->textEdit_terminal->append("Progress: |--------------------------------------------------|  0%");
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    if (total >= 0)
+    {
+        int total_length = QString::number(total).length();
+        ui->textEdit_terminal->insertPlainText(" 0" + QString(total_length - 1, ' ') + "/" + QString::number(total) + "                ");
+    }
+}
+
+void MainWindow::finishTerminalProgressBar(int total)
+{
+    updateTerminalProgressBar(100, total, total);
+    if (currentTerminalWorkName == "Preview")
+    {
+        normalTerminalMessage("Preview image creating finished.");
+    }
+    else if (currentTerminalWorkName == "Create Images")
+    {
+        normalTerminalMessage("Creating images finished.");
+    }
+    ui->textEdit_terminal->append("\n>> ");
+    ui->textEdit_terminal->setReadOnly(false);
+    currentTerminalWorkName.clear();
+    currentTerminalProgress = 0;
+}
+
+void MainWindow::updateTerminalCreateImagesProgresssBar(int current_num, double speed)
+{
+    int total = info.curr().outputTime() * info.curr().fps() / 1000;
+    if (current_num == total)
+    {
+        finishTerminalProgressBar(total);
+    }
+    else
+    {
+        updateTerminalProgressBar(100 * current_num / total, current_num, total, speed);
+    }
+}
+
+void MainWindow::runCode()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    QString fileName = Open_Location.isEmpty() ? "Unsaved Project" : Open_Location;
+    normalTerminalMessage("Starting " + fileName + "...");
+    Interpreter::interpret(editor->text(), info.editor());
+    editor->clearSearchIndic(0, editor->text().size());
+    ui->textEdit_terminal->append(info.editor().toJson());
+    ui->textEdit_terminal->append(info.editor().varsToJson());
+    setErrorInfo(info.editor());
+    if (!info.editor().errors().isEmpty())
+    {
+        errorTerminalMessage(fileName + " finished with errors.");
+        ui->textEdit_terminal->append("\n>> ");
+    }
+    else
+    {        
+        normalTerminalMessage(fileName + " finished.");
+        ui->textEdit_terminal->append("\n>> ");
+    }
+    ui->textEdit_terminal->setReadOnly(false);
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+}
+
+void MainWindow::normalTerminalMessage(const QString& str)
+{
+    QString time = QTime::currentTime().toString("hh:mm:ss");
+    // yellow, bold
+    ui->textEdit_terminal->append("<p style=\"color:#ffff00\"><strong>" + time + ": " + str + "</strong></p>");
+}
+
+void MainWindow::errorTerminalMessage(const QString& str)
+{
+    QString time = QTime::currentTime().toString("hh:mm:ss");
+    // red, bold
+    ui->textEdit_terminal->append("<p style=\"color:#ff0000\"><strong>" + time + ": " + str + "</strong></p>");
+}
+
+void MainWindow::outsideCommand(const QString& cmd)
+{
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    ui->textEdit_terminal->insertPlainText(cmd);
+    terminalCommands.push_back(cmd);
+}
+
+void MainWindow::terminalCommand()
+{
+    QTextDocument* doc = ui->textEdit_terminal->document();
+    QTextBlock tb = doc->findBlockByLineNumber(doc->lineCount() - 1); // The second line.
+    QString cmdline = tb.text();
+    qDebug() << "Get terminal command" << cmdline;
+    if (cmdline.length() > 2 && cmdline.left(2) == ">>")
+    {
+        QString cmd = cmdline.right(cmdline.length() - 2).simplified().toLower();
+        QStringList cmds = cmd.split(" ", Qt::SkipEmptyParts);
+        if (cmd.isEmpty())
+        {
+            ui->textEdit_terminal->append(">> ");
+            return;
+        }
+        if (cmds[0] == "!!") // repeat the last command
+        {
+            if (terminalCommands.isEmpty())
+            {
+                errorTerminalMessage("No previous commands.");
+                ui->textEdit_terminal->append("\n>> ");
+                return;
+            }
+            else
+            {
+                ui->textEdit_terminal->append(terminalCommands.last());
+                cmd = terminalCommands.last();
+                cmds = cmd.split(" ", Qt::SkipEmptyParts);
+            }
+        }
+        // no else here
+        // if the command is "!!", it will go through all these
+        if (cmds[0] == "help")
+        {
+            ui->textEdit_terminal->append("Fractal Designer 6.0.9 Terminal\n"
+                                          "Lists of all commands:\n"
+                                          "  clear                  Clear the terminal screen.\n"
+                                          "  createimages           Create fractal images.\n"
+                                          "  createvideo            Create fractal video.\n"
+                                          "  closepreview           Close the preview window.\n"
+                                          "  exit                   Exit Fractal Designer.\n"
+                                          "    -f                     Force exit no matter whether script is saved.\n"
+                                          "    -s                     Save script before exir.\n"
+                                          "  help                   View help information.\n"
+                                          "  history                View command histories.\n"
+                                          "  info                   View current parameter information.\n"
+                                          "    -config                View information after configuration only.\n"
+                                          "                           These parameters are set using function \"%CONFIGURE\".\n"
+                                          "    -var                   View all variables information.\n"
+                                          "    -all                   View both configuration and variable information.\n"
+                                          "  run                    Run the frd script and display information in the form of Json.\n"
+                                          "  preview                View the preview image.\n"
+                                          "                         Need to run the script first to get information updated.\n"
+                                          "  save                   Save the frd script.\n");
+            ui->textEdit_terminal->append(">> ");
+        }
+        else if (cmds[0] == "save")
+        {
+            on_actionSave_S_triggered();
+            if (save_or_not) normalTerminalMessage("Project " + Open_Location + " saved.");
+            else errorTerminalMessage("Project " + Open_Location + " is not saved.");
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "clear")
+        {
+            clearTerminal();
+        }
+        else if (cmds[0] == "run")
+        {
+            runCode();
+        }
+        else if (cmds[0] == "info")
+        {
+            if (cmds.size() >= 2 && cmds[1] == "-config")
+            {
+                ui->textEdit_terminal->append(info.editor().toJson());
+            }
+            else if (cmds.size() >= 2 && cmds[1] == "-var")
+            {
+                ui->textEdit_terminal->append(info.editor().varsToJson());
+            }
+            else // which is "-all"
+            {
+                ui->textEdit_terminal->append(info.editor().toJson());
+                ui->textEdit_terminal->append(info.editor().varsToJson());
+            }
+            ui->textEdit_terminal->append(">> ");
+        }
+        else if (cmds[0] == "preview")
+        {
+            preview();
+        }
+        else if (cmds[0] == "closepreview")
+        {
+            preview_dialog->close();
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "createimages")
+        {
+            createImages();
+        }
+        else if (cmds[0] == "createvideo")
+        {
+            createVideo();
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "history")
+        {
+            int entry_number = terminalCommands.size();
+            int entry_number_length = QString::number(entry_number).length();
+            for (int i = 0; i != terminalCommands.size(); i++)
+            {
+                QString space(entry_number_length + 1 - QString::number(i + 1).length(), ' ');
+                ui->textEdit_terminal->append(space + QString::number(i + 1) + ": " + terminalCommands[i]);
+            }
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "exit")
+        {
+            if (cmds.size() >= 2)
+            {
+                if (cmds[1] == "-f")
+                {
+                    // forse exit
+                    save_or_not = true;
+                }
+                else if (cmds[1] == "-s")
+                {
+                    // save before exit
+                    on_actionSave_S_triggered();
+                }
+            }
+            close();
+        }
+        else
+        {
+            errorTerminalMessage(QString("'%1' is not recognized as a command.").arg(cmd));
+            ui->textEdit_terminal->append("\n>> ");
+        }
+        terminalCommands.push_back(cmd);
+    }
+}
+
+void MainWindow::clearTerminal()
+{
+    ui->textEdit_terminal->clear();
+    ui->textEdit_terminal->append(">> ");
+    ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }

@@ -39,7 +39,7 @@ class QSCINTILLA_EXPORT QsciLexerFRD : public QsciLexer
 
 public:
     //! This enum defines the meanings of the different styles used by the
-    //! C++ lexer.
+    //! FRD lexer.
     enum {
         //! The default.
         Default = 0,

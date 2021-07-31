@@ -11,7 +11,7 @@ FRD_Error::FRD_Error(int type, int row_, int col_, int length_, const QString& m
       msg(msg_) { }
 
 FRD_Json::FRD_Json() {
-    main.insert("Version", "6.0.6");
+    main.insert("Version", "6.0.9");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -57,6 +57,8 @@ QString FRD_Json::type(const QString& block, const QStringList& names) const {
             return "number";
         else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates", "ImageSize", "PreviewSize", "PreviewImageSize", "PreviewCentre"}).contains(member))
             return "array";
+        else if (QVector<QString>({"Music"}).contains(member))
+            return "list";
         else if (QVector<QString>({"InverseYAxis"}).contains(member))
             return "bool";
         else {
@@ -284,7 +286,7 @@ QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
 
 void FRD_Json::clear() {
     main = QJsonObject();
-    main.insert("Version", "6.0.6");
+    main.insert("Version", "6.0.8");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -308,6 +310,11 @@ QVector<FRD_Error> FRD_Json::errors() const {
                                      err.toObject()["Message"].toString()));
     }
     return err_list;
+}
+
+QString FRD_Json::layerName(int index) const {
+    QJsonValue value = main["Layers"][index]["name"];
+    return value.toString("");
 }
 
 void FRD_Json::updateText(QString text) {
@@ -362,6 +369,11 @@ bool FRD_Json::inverseYAsis() const {
     return value.toBool(false);
 }
 
+QString FRD_Json::distance(int index) const {
+    QJsonValue value = main["Layers"][index]["Template"]["Distance"];
+    return value.toString("abs($z)");
+}
+
 QString FRD_Json::templateMin(int index) const {
     QJsonValue value = main["Layers"][index]["Template"]["Min"];
     return value.toString("0");
@@ -375,4 +387,80 @@ QString FRD_Json::templateMax(int index) const {
 QString FRD_Json::iterationLimit(int index) const {
     QJsonValue value = main["Layers"][index]["Template"]["IterationLimit"];
     return value.toString("50");
+}
+
+double FRD_Json::fps() const {
+    QJsonValue value = main["Output"]["Fps"];
+    return value.toDouble(24);
+}
+
+QString FRD_Json::imageDir() const {
+    QJsonValue value = main["Output"]["ImageDir"];
+    return value.toString("");
+}
+
+QString FRD_Json::imagePrefix() const {
+    QJsonValue value = main["Output"]["ImagePrefix"];
+    return value.toString("");
+}
+
+int FRD_Json::ImageSize(QString tag) const {
+    int index = (tag.toUpper() == "Y") ? 1 : 0;
+    QJsonValue value = main["Output"]["ImageSize"][index];
+    return value.toInt(index ? 1080 : 1920);
+}
+
+int FRD_Json::outputTime() const {
+    QJsonValue value = main["Output"]["Time"];
+    return value.toInt(30000);
+}
+
+QString FRD_Json::videoDir() const {
+    QJsonValue value = main["Output"]["VideoDir"];
+    return value.toString("");
+}
+
+QString FRD_Json::videoFormat() const {
+    QJsonValue value = main["Output"]["VideoFormat"];
+    return value.toString("mp4");
+}
+
+QString FRD_Json::videoName() const {
+    QJsonValue value = main["Output"]["VideoName"];
+    return value.toString(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss"));
+}
+
+int FRD_Json::videoCrf() const
+{
+    QJsonValue value = main["Output"]["Crf"];
+    return value.toDouble(18);
+}
+
+QStringList FRD_Json::videoMusic() const {
+    QJsonArray arr = main["Output"]["Music"].toArray();
+    QStringList music_names;
+    for (const auto& name : arr) {
+        music_names.push_back(name.toString());
+    }
+    return music_names;
+}
+
+int FRD_Json::routePointCount(int layer) const {
+    QJsonValue value = main["Layers"][layer]["Template"]["Route"]["Ts"];
+    return value.toArray().size();
+}
+
+double FRD_Json::routePoint(int layer, int t_index, QString tag) const {
+    QJsonValue value = main["Layers"][layer]["Template"]["Route"][tag][t_index];
+    return value.toDouble(0);
+}
+
+QDateTime FRD_Json::runTime() const {
+    QJsonValue value = main["Time"];
+    return QDateTime::fromString(value.toString(""), "yyyy/MM/dd hh:mm UTC");
+}
+
+QString FRD_Json::runVersion() const {
+    QJsonValue value = main["Version"];
+    return value.toString();
 }
