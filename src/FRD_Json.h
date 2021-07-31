@@ -123,6 +123,10 @@ public:
 
     QString videoName() const;
 
+    int routePointCount(int layer) const;
+
+    double routePoint(int layer, int t_index, QString tag) const;
+
     QDateTime runTime() const;
 
     QString runVersion() const;

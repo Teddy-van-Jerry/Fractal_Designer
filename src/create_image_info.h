@@ -35,6 +35,8 @@ private slots:
 signals:
     void timeOut();
 
+    void releaseInfo(int current_num, double speed);
+
 private:
     Ui::Create_Image_Info *ui;
 
@@ -53,6 +55,8 @@ private:
     int index;
 
     int start;
+
+    double speed = 0;
 
     bool usingQList = false;
 

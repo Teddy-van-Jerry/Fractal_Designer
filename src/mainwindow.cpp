@@ -128,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->textEdit_terminal->setContextMenuPolicy(Qt::NoContextMenu);               // no content menu when right button clicked
     ui->textEdit_terminal->setUndoRedoEnabled(false);                             // no undo and redo
     ui->textEdit_terminal->setAcceptDrops(false);                                 // no drag or drop
-    ui->textEdit_terminal->setText("Fractal Designer 6.0.6 Terminal\n"
+    ui->textEdit_terminal->setText("Fractal Designer 6.0.8 Terminal\n"
                                    "-------------------------------\n"
                                    "   (C) 2021 Teddy van Jerry    \n"
                                    "===============================\n"
@@ -653,7 +653,7 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
     std::string Max       = currInfo.templateMax(0).toStdString();
     std::string IterLimit = currInfo.iterationLimit(0).toStdString();
 
-    std::cout << Formula << " " << Distance << " " << Min << " " << Max << " " << IterLimit << std::endl;
+//    std::cout << Formula << " " << Distance << " " << Min << " " << Max << " " << IterLimit << std::endl;
 
 //    Read_RGBA(Colour1, Colour2, Colour1_, Colour2_);
     Colour1_[0] = currInfo.layerColor(0, "Con.R").toStdString();
@@ -665,7 +665,7 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
     Colour2_[2] = currInfo.layerColor(0, "Div.B").toStdString();
     Colour2_[3] = currInfo.layerColor(0, "Div.A").toStdString();
 
-    qDebug() << QString::fromLatin1(Colour1_[0]);
+//    qDebug() << QString::fromLatin1(Colour1_[0]);
 
     std::string msg1[4], msg2[4], msgFormula, msgDistance, msgMin, msgMax, msgIterLimit;
     std::vector<_var> post1[4], post2[4], postFormula, postDistance, postMin, postMax, postIterLimit;
@@ -722,67 +722,8 @@ bool MainWindow::createImagePre(Create_Image_Task* task)
 
 void MainWindow::on_actionPreview_Refresh_triggered()
 {
-    Create_Image_Task* preview = new Create_Image_Task(this);
-
-    if (!createImagePre(preview))
-    {
-        delete preview;
-        return;
-    }
-
-    QString Pre_Img_Dir;
-
-
-    QDir ck(QCoreApplication::applicationDirPath() + "/../tmp");
-    if(!ck.exists())
-    {
-        ck.mkdir(ck.absolutePath());
-    }
-    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/../tmp";
-
-    /*
-    if(curr_info.template_ == 2)
-    {
-        double t = ui->doubleSpinBox_t->value();
-        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-        double& k = curr_info.Julia_c_rate;
-        preview->setTemplate2(_curr_complex(c1, c2, t, k));
-    }
-    else if(curr_info.template_ == 4)
-    {
-        double t = ui->doubleSpinBox_t->value();
-
-        double& k = curr_info.Newton_c_rate;
-
-        std::complex<double> arr[10];
-        for(int i = 0; i != 10; i++)
-        {
-            arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
-        }
-
-        preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
-                              arr,
-                              _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
-                              _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
-                              _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
-    }
-    else if(curr_info.template_ == 5)
-    {
-
-    }
-    */
-
-    // customTemplatePre(preview);
-
-    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
-                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
-                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
-                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
-                      "png", Pre_Img_Dir, "Preview Image", "Preview",
-                      info.curr().inverseYAsis());
-
-    QThreadPool::globalInstance()->start(preview);
-    qDebug() << "Refreshed";
+    outsideCommand("preview");
+    preview();
 }
 
 void MainWindow::getImage(QImage img)
@@ -816,6 +757,11 @@ void MainWindow::getImage(QImage img)
     {
         ui->label_previewInVideo->setPixmap(QPixmap::fromImage(image_preview).scaledToWidth(preview_w_width_video));
     }
+
+    finishTerminalProgressBar();
+
+    if (ui->Tab->currentIndex() != 2) showPreviewInWindow(image_preview);
+    ui->textEdit_terminal->setReadOnly(false);
 }
 
 void MainWindow::dealClose(QObject* sd)
@@ -968,142 +914,8 @@ void MainWindow::on_pushButton_routeClear_clicked()
 
 void MainWindow::on_actionCreate_Images_triggered()
 {
-    if(!ui->actionCreate_Images->isEnabled()) return;
-
-    if(!save_or_not)
-    {
-        QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
-        return;
-    }
-
-    // get data from json
-
-    if(!isRouteValid)
-    {
-        QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
-        return;
-    }
-
-    QString image_format = "png";
-    QString path = info.curr().imageDir();
-    QString name = info.curr().imagePrefix();
-    if(path.isEmpty() || !QDir(path).exists())
-    {
-        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
-        return;
-    }
-
-    ui->actionStop->setDisabled(false);
-    ui->actionCreate_Images->setDisabled(true);
-    ui->actionCreate_Images_in_Range->setDisabled(true);
-    ui->actionCheck_Images->setDisabled(true);
-
-    int total_image = ui->comboBox_fps->currentText().toInt() * (ui->timeEdit->time().second() + 60 * ui->timeEdit->time().minute());
-    int current_index = 0;
-    int X = ui->Image_size_X->value();
-    int Y = ui->Image_size_Y->value();
-
-    create_image_info = new Create_Image_Info;
-    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
-    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
-    create_image_info->show();
-    emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);
-
-    for(int i = 0; i < total_image - 1; i++)
-    {
-        double T = static_cast<double>(i) / total_image;
-        while(current_index + 2 < table_route_model->rowCount() && T > Tb(current_index + 1, 0))
-        {
-            current_index++;
-        }
-        double w1 = Tb(current_index, 4);
-        double w2 = Tb(current_index + 1, 4);
-        double t1 = Tb(current_index, 0);
-        double t2 = Tb(current_index + 1, 0);
-        double x1 = Tb(current_index, 1);
-        double x2 = Tb(current_index + 1, 1);
-        double y1 = Tb(current_index, 2);
-        double y2 = Tb(current_index + 1, 2);
-        double k  = Tb(current_index, 5);
-        double t  = (T - t1) / (t2 - t1);
-        double x, y;
-
-        double angle = Tb(current_index, 3)
-                + (Tb(current_index + 1, 3) - Tb(current_index, 3))
-                * ((1 - k) * t + k * pow(t, 2));
-        double width = 1 / (t * (1 / w2) + (1 - t) * (1 / w1));
-
-        if(fabs(1 - w1 / w2) < 1E-5)
-        {
-            x = x1 + t * x2 + (1 - t) * x1;
-            y = y1 + t * y2 + (1 - t) * y1;
-        }
-        else
-        {
-            x = x1 + (x2 - x1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
-            y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
-        }
-
-        // qDebug() << t << current_index << x << y << width << angle;
-        Create_Image_Task* create_images = new Create_Image_Task(this);
-        if (!createImagePre(create_images))
-        {
-            delete create_images;
-            return;
-        }
-        if(curr_info.template_ == 2)
-        {
-            std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
-            double k = curr_info.Julia_c_rate;
-            create_images->setTemplate2(c1 + (c2 - c1) * ((1 - k) * T + k * T * T));
-        }
-        if(curr_info.template_ == 4)
-        {
-            double& k = curr_info.Newton_c_rate;
-
-            std::complex<double> arr[10];
-            for(int i = 0; i != 10; i++)
-            {
-                arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], T, k);
-            }
-
-            create_images->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, T, k),
-                                        arr,
-                                        _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, T, k),
-                                        _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, T, k),
-                                        _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, T, k));
-
-        }
-        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path, name + QString::number(i), "Create_Image", curr_info.y_inverse);
-        QThreadPool::globalInstance()->start(create_images);
-    }
-
-    Create_Image_Task* create_images = new Create_Image_Task(this);
-    // create_images->setAutoDelete(false);
-
-    createImagePre(create_images);
-    if(curr_info.template_ == 2)
-    {
-        create_images->setTemplate2(curr_info.Julia_c2);
-    }
-    if(curr_info.template_ == 4)
-    {
-        create_images->setTemplate4(curr_info.Newton_a_2,
-                                    curr_info.Newton_xn_2,
-                                    curr_info.Newton_sin_2,
-                                    curr_info.Newton_cos_2,
-                                    curr_info.Newton_ex_2);
-    }
-    create_images->setImage(Tb(table_route_model->rowCount() - 1, 1),
-                            Tb(table_route_model->rowCount() - 1, 2),
-                            Tb(table_route_model->rowCount() - 1, 4),
-                            Tb(table_route_model->rowCount() - 1, 4) * Y / X,
-                            X, Y,
-                            Tb(table_route_model->rowCount() - 1, 3),
-                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
-                            curr_info.y_inverse);
-    QThreadPool::globalInstance()->start(create_images);
-    qDebug() << "Here Here !!!!";
+    outsideCommand("createimages");
+    createImages();
 }
 
 void MainWindow::on_commandLinkButton_Image_clicked()
@@ -3511,7 +3323,7 @@ void MainWindow::mouseReleaseEvent_2(QMouseEvent *e)
 void MainWindow::on_pushButton_CodeRun_clicked()
 {
     ui->textEdit_terminal->moveCursor(QTextCursor::End);
-    ui->textEdit_terminal->insertHtml("run");
+    ui->textEdit_terminal->insertPlainText("run");
     runCode();
 }
 
@@ -3540,6 +3352,207 @@ void MainWindow::on_actionSave_As_A_triggered()
         on_actionSave_S_triggered();
     }
     info.print(new_dir);
+}
+
+void MainWindow::preview()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    normalTerminalMessage("Start creating preview image ...");
+    currentTerminalWorkName = "Preview";
+    initTerminalProgressBar();
+
+    Create_Image_Task* preview = new Create_Image_Task(this);
+
+    if (!createImagePre(preview))
+    {
+        delete preview;
+        return;
+    }
+
+    QString Pre_Img_Dir;
+
+
+    QDir ck(QCoreApplication::applicationDirPath() + "/../tmp");
+    if(!ck.exists())
+    {
+        ck.mkdir(ck.absolutePath());
+    }
+    Pre_Img_Dir = QCoreApplication::applicationDirPath() + "/../tmp";
+
+    /*
+    if(curr_info.template_ == 2)
+    {
+        double t = ui->doubleSpinBox_t->value();
+        std::complex<double> c1 = curr_info.Julia_c1, c2 = curr_info.Julia_c2;
+        double& k = curr_info.Julia_c_rate;
+        preview->setTemplate2(_curr_complex(c1, c2, t, k));
+    }
+    else if(curr_info.template_ == 4)
+    {
+        double t = ui->doubleSpinBox_t->value();
+
+        double& k = curr_info.Newton_c_rate;
+
+        std::complex<double> arr[10];
+        for(int i = 0; i != 10; i++)
+        {
+            arr[i] = _curr_complex(curr_info.Newton_xn_1[i], curr_info.Newton_xn_2[i], t, k);
+        }
+
+        preview->setTemplate4(_curr_complex(curr_info.Newton_a_1, curr_info.Newton_a_2, t, k),
+                              arr,
+                              _curr_complex(curr_info.Newton_sin_1, curr_info.Newton_sin_2, t, k),
+                              _curr_complex(curr_info.Newton_cos_1, curr_info.Newton_cos_2, t, k),
+                              _curr_complex(curr_info.Newton_ex_1, curr_info.Newton_ex_2, t, k));
+    }
+    else if(curr_info.template_ == 5)
+    {
+
+    }
+    */
+
+    preview->setImage(info.curr().PreviewCentre("X"), info.curr().PreviewCentre("Y"),
+                      info.curr().PreviewSize("X"), info.curr().PreviewSize("Y"),
+                      info.curr().PreviewImageSize("X"), info.curr().PreviewImageSize("Y"),
+                      info.curr().PreviewRotation(), info.curr().PreviewTime(),
+                      "png", Pre_Img_Dir, "Preview Image", "Preview",
+                      info.curr().inverseYAsis());
+
+    QThreadPool::globalInstance()->start(preview);
+    qDebug() << "Refreshed";
+}
+
+void MainWindow::createImages()
+{
+    ui->textEdit_terminal->setReadOnly(true);
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    if (!ui->actionCreate_Images->isEnabled())
+    {
+        errorTerminalMessage("Can not create images.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+    auto currInfo = info.curr();
+    if(!save_or_not)
+    {
+        errorTerminalMessage("Can not create images. You have not saved the project.");
+        QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+//    if(!isRouteValid)
+//    {
+//        QMessageBox::warning(this, "Can not create images", "The Route Settings are invalid.");
+//        return;
+//    }
+
+    QString image_format = "png";
+    QString path = currInfo.imageDir();
+    QString name = currInfo.imagePrefix();
+    if(path.isEmpty() || !QDir(path).exists())
+    {
+        errorTerminalMessage("Can not create images. The output path does not exist.");
+        QMessageBox::warning(this, "Can not create images", "The path does not exist.");
+        ui->textEdit_terminal->append("\n>>");
+        return;
+    }
+
+    ui->actionStop->setDisabled(false);
+    ui->actionCreate_Images->setDisabled(true);
+    ui->actionCreate_Images_in_Range->setDisabled(true);
+    ui->actionCheck_Images->setDisabled(true);
+
+    int total_image = currInfo.outputTime() * currInfo.fps() / 1000;
+    int X = currInfo.ImageSize("X");
+    int Y = currInfo.ImageSize("Y");
+
+    normalTerminalMessage("Start creating images ...");
+    currentTerminalWorkName = "Create Images";
+    initTerminalProgressBar(total_image);
+
+    create_image_info = new Create_Image_Info;
+    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
+    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
+    connect(create_image_info, &Create_Image_Info::releaseInfo, this, &MainWindow::updateTerminalCreateImagesProgresssBar);
+    create_image_info->show();
+
+    emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);
+
+    int current_index = 0;
+    for(int i = 0; i < total_image - 1; i++)
+    {
+        double T = static_cast<double>(i) / total_image;
+        while(current_index + 2 < currInfo.routePointCount(0) && T > currInfo.routePoint(0, current_index + 1, "Ts"))
+        {
+            current_index++;
+        }
+        double w1 = currInfo.routePoint(0, current_index,     "Widths");
+        double w2 = currInfo.routePoint(0, current_index + 1, "Widths");
+        double t1 = currInfo.routePoint(0, current_index,     "Ts");
+        double t2 = currInfo.routePoint(0, current_index + 1, "Ts");
+        double x1 = currInfo.routePoint(0, current_index,     "CentreXs");
+        double x2 = currInfo.routePoint(0, current_index + 1, "CentreXs");
+        double y1 = currInfo.routePoint(0, current_index,     "CentreYs");
+        double y2 = currInfo.routePoint(0, current_index + 1, "CentreYs");
+        double k  = currInfo.routePoint(0, current_index,     "Rates");
+        /** \todo Add information check here */
+        double t  = (T - t1) / (t2 - t1);
+        double x, y;
+
+        double angle = currInfo.routePoint(0, current_index, "Angles")
+                + (currInfo.routePoint(0, current_index + 1, "Angles") - currInfo.routePoint(0, current_index, "Angles"))
+                * ((1 - k) * t + k * pow(t, 2));
+        double width = 1 / (t * (1 / w2) + (1 - t) * (1 / w1));
+
+        if(fabs(1 - w1 / w2) < 1E-5)
+        {
+            x = x1 + t * x2 + (1 - t) * x1;
+            y = y1 + t * y2 + (1 - t) * y1;
+        }
+        else
+        {
+            x = x1 + (x2 - x1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+            y = y1 + (y2 - y1) / log(w1 / w2) * log((w1 / w2 - 1) * t + 1);
+        }
+
+        // qDebug() << t << current_index << x << y << width << angle;
+        Create_Image_Task* create_images = new Create_Image_Task(this);
+        if (!createImagePre(create_images))
+        {
+            delete create_images;
+            return;
+        }
+
+        create_images->setImage(x, y, width, width * Y / X, X, Y, angle, T, image_format, path,
+                                name + QString::number(i), "Create_Image", info.curr().inverseYAsis());
+        QThreadPool::globalInstance()->start(create_images);
+    }
+
+    Create_Image_Task* create_images = new Create_Image_Task(this);
+    // create_images->setAutoDelete(false);
+
+    createImagePre(create_images);
+    create_images->setImage(currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "CentreXs"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "CentreYs"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Widths"),
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Widths") * Y / X,
+                            X, Y,
+                            currInfo.routePoint(0, currInfo.routePointCount(0) - 1, "Angles"),
+                            1, image_format, path, name + QString::number(total_image - 1), "Create_Image_Last",
+                            currInfo.inverseYAsis());
+    QThreadPool::globalInstance()->start(create_images);
+}
+
+void MainWindow::showPreviewInWindow(const QImage &img)
+{
+    int width = img.width();
+    int height = img.height();
+    preview_dialog->resize(width, height);
+    preview_dialog_layout->addWidget(preview_dialog_label);
+    preview_dialog_label->setPixmap(QPixmap::fromImage(img));
+    preview_dialog->show();
 }
 
 void MainWindow::setErrorInfo(const FRD_Json& frd_json)
@@ -3583,13 +3596,15 @@ void MainWindow::on_actionRun_Code_triggered()
     on_pushButton_CodeRun_clicked();
 }
 
-void MainWindow::updateTerminalProgressBar(int p)
+void MainWindow::updateTerminalProgressBar(int p, int finished, int total, double speed)
 {
     if (currentTerminalProgress == p) return;
     currentTerminalProgress = p;
     // move to the end of the terminal
     ui->textEdit_terminal->moveCursor(QTextCursor::End);
-    for (int i = 0; i != 55; i++)
+    int back_length = 55;
+    if (total >= 0) back_length += QString::number(total).length() * 2 + 12;
+    for (int i = 0; i != back_length; i++)
     {
         ui->textEdit_terminal->textCursor().deletePreviousChar();
     }
@@ -3605,26 +3620,60 @@ void MainWindow::updateTerminalProgressBar(int p)
     QString space(3 - QString::number(p).size(), ' ');
     ui->textEdit_terminal->insertPlainText(space);
     ui->textEdit_terminal->insertPlainText(QString::number(p) + "%");
-
-    if (p == 100)
+    if (total >= 0)
     {
-        ui->textEdit_terminal->setReadOnly(false);
-        if (currentTerminalWorkName == "Preview")
+        int total_length = QString::number(total).length();
+        ui->textEdit_terminal->insertPlainText(QString(total_length - QString::number(finished).length() + 1, ' ') +
+                                               QString::number(finished) + "/" + QString::number(total) + " ");
+        if (speed >= 0)
         {
-            normalTerminalMessage("Preview image creating finished.");
+            QString str = QString::number(speed, 'g', 3);
+            int speed_length = str.length() + 4;
+            ui->textEdit_terminal->insertPlainText(str + "kb/s" + QString(9 - speed_length, ' '));
         }
-        else if (currentTerminalWorkName == "Create Images")
-        {
-            normalTerminalMessage("Creating images finished.");
-        }
-        ui->textEdit_terminal->append("\n>> ");
-        currentTerminalWorkName.clear();
+    }
+
+}
+
+void MainWindow::initTerminalProgressBar(int total)
+{
+    ui->textEdit_terminal->append("Progress: |--------------------------------------------------|  0%");
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    if (total >= 0)
+    {
+        int total_length = QString::number(total).length();
+        ui->textEdit_terminal->insertPlainText(" 0" + QString(total_length - 1, ' ') + "/" + QString::number(total) + "          ");
     }
 }
 
-void MainWindow::initTerminalProgressBar()
+void MainWindow::finishTerminalProgressBar(int total)
 {
-    ui->textEdit_terminal->append("Progress: |--------------------------------------------------|  0%");
+    updateTerminalProgressBar(100, total, total);
+    if (currentTerminalWorkName == "Preview")
+    {
+        normalTerminalMessage("Preview image creating finished.");
+    }
+    else if (currentTerminalWorkName == "Create Images")
+    {
+        normalTerminalMessage("Creating images finished.");
+    }
+    ui->textEdit_terminal->append("\n>> ");
+    ui->textEdit_terminal->setReadOnly(false);
+    currentTerminalWorkName.clear();
+    currentTerminalProgress = 0;
+}
+
+void MainWindow::updateTerminalCreateImagesProgresssBar(int current_num, double speed)
+{
+    int total = info.curr().outputTime() * info.curr().fps() / 1000;
+    if (current_num == total)
+    {
+        finishTerminalProgressBar(total);
+    }
+    else
+    {
+        updateTerminalProgressBar(100 * current_num / total, current_num, total, speed);
+    }
 }
 
 void MainWindow::runCode()
@@ -3665,6 +3714,13 @@ void MainWindow::errorTerminalMessage(const QString& str)
     ui->textEdit_terminal->append("<p style=\"color:#ff0000\"><strong>" + time + ": " + str + "</strong></p>");
 }
 
+void MainWindow::outsideCommand(const QString& cmd)
+{
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    ui->textEdit_terminal->insertPlainText(cmd);
+    terminalCommands.push_back(cmd);
+}
+
 void MainWindow::terminalCommand()
 {
     QTextDocument* doc = ui->textEdit_terminal->document();
@@ -3698,11 +3754,12 @@ void MainWindow::terminalCommand()
         // if the command is "!!", it will go through all these
         if (cmds[0] == "help")
         {
-            ui->textEdit_terminal->append("Fractal Designer 6.0.7 Terminal\n"
+            ui->textEdit_terminal->append("Fractal Designer 6.0.8 Terminal\n"
                                           "Lists of all commands:\n"
                                           "  clear                  Clear the terminal screen.\n"
                                           "  createimages           Create fractal images.\n"
                                           "  createvideo            Create fractal video.\n"
+                                          "  closepreview           Close the preview window.\n"
                                           "  exit                   Exit Fractal Designer.\n"
                                           "    -f                     Force exit no matter whether script is saved.\n"
                                           "    -s                     Save script before exir.\n"
@@ -3753,15 +3810,16 @@ void MainWindow::terminalCommand()
         }
         else if (cmds[0] == "preview")
         {
-            normalTerminalMessage("Start creating preview image ...");
-            currentTerminalWorkName = "Preview";
-            initTerminalProgressBar();
-            on_actionPreview_Refresh_triggered();
-            ui->textEdit_terminal->setReadOnly(true);
+            preview();
+        }
+        else if (cmds[0] == "closepreview")
+        {
+            preview_dialog->close();
+            ui->textEdit_terminal->append("\n>> ");
         }
         else if (cmds[0] == "createimages")
         {
-            currentTerminalWorkName = "Creating Images";
+            createImages();
         }
         else if (cmds[0] == "createvideo")
         {

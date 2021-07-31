@@ -428,6 +428,16 @@ QString FRD_Json::videoName() const {
     return value.toString(QDateTime::currentDateTime().toString("Fractal Designer - yyyy_MM_dd_hh_mm_ss"));
 }
 
+int FRD_Json::routePointCount(int layer) const {
+    QJsonValue value = main["Layers"][layer]["Template"]["Route"]["Ts"];
+    return value.toArray().size();
+}
+
+double FRD_Json::routePoint(int layer, int t_index, QString tag) const {
+    QJsonValue value = main["Layers"][layer]["Template"]["Route"][tag][t_index];
+    return value.toDouble(0);
+}
+
 QDateTime FRD_Json::runTime() const {
     QJsonValue value = main["Time"];
     return QDateTime::fromString(value.toString(""), "yyyy/MM/dd hh:mm UTC");

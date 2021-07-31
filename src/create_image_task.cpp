@@ -29,8 +29,8 @@ void Create_Image_Task::run()
         progress = 100 * static_cast<double>(X - i) / X;
         if(static_cast<int>(progress) > progress_now)
         {
-            if(work_name == "Preview") emit progressInform_preview(progress);
-            if(work_name == "Route") emit progressInform_route(progress);
+            if (work_name == "Preview") emit progressInform_preview(progress);
+            else if (work_name == "Route") emit progressInform_route(progress);
             progress_now = static_cast<int>(progress);
         }
         for(int j = Y - 1; j >= 0; j--)

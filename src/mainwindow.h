@@ -349,6 +349,12 @@ private slots:
 
     void on_actionSave_As_A_triggered();
 
+    void preview();
+
+    void createImages();
+
+    void showPreviewInWindow(const QImage& img);
+
     void setErrorInfo(const FRD_Json& frd_json);
 
     void on_pushButton_search_clicked();
@@ -357,13 +363,19 @@ private slots:
 
     void on_actionRun_Code_triggered();
 
-    void updateTerminalProgressBar(int p);
+    void updateTerminalProgressBar(int percent, int finished = -1, int total = -1, double speed = -1);
 
-    void initTerminalProgressBar();
+    void initTerminalProgressBar(int total = -1);
+
+    void finishTerminalProgressBar(int total = -1);
+
+    void updateTerminalCreateImagesProgresssBar(int current_num, double speed);
 
     void normalTerminalMessage(const QString& str);
 
     void errorTerminalMessage(const QString& str);
+
+    void outsideCommand(const QString& cmd);
 
     void terminalCommand();
 
@@ -433,6 +445,10 @@ private:
     Template_4_Settings* template_4_dialog = new Template_4_Settings(this);
 
     Preview_Setting* preview_setting = new Preview_Setting(this);
+
+    QDialog* preview_dialog = new QDialog(this);
+    QHBoxLayout* preview_dialog_layout = new QHBoxLayout(preview_dialog);
+    QLabel* preview_dialog_label = new QLabel;
 
 public:
 
