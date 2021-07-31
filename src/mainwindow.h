@@ -481,7 +481,7 @@ public:
 
 protected:
 
-    int RESIZE_LIMIT;
+    int RESIZE_LIMIT=4;
 
     bool event(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
