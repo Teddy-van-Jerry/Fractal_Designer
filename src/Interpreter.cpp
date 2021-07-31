@@ -246,6 +246,17 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                         }
                         info.setValue(block, name, var_name, "array", arr);
                     }
+                    else if (var_type == "list") {
+                        col--;
+                        // int init_row = row, init_col = col;
+                        QString value = nextString(";}", true, true);
+                        QStringList str_list = value.split(',', Qt::SkipEmptyParts);
+                        QJsonArray arr;
+                        for (const auto& str : str_list) {
+                            arr.append(str);
+                        }
+                        info.setValue(block, name, var_name, "list", arr);
+                    }
                     else if (var_type == "bool") {
                         col--;
                         int init_row = row, init_col = col;

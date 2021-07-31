@@ -1,4 +1,3 @@
-//#include <QTextCodec>
 #include "mainwindow.h"
 
 #include <QApplication>

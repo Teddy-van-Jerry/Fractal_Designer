@@ -21,7 +21,6 @@ void Create_Image_Task::run()
     double progress = 0;
     int progress_now = 0;
 
-//    qDebug() << QThread::currentThreadId();
     QImage image_build(X, Y, QImage::Format_ARGB32);
     for(int i = X - 1; i >= 0; i--)
     {

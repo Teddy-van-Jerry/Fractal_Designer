@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
                    " - Fractal Designer");
 
     Line_Search = new QLineEdit(this);
-    // Line_Search->setToolTip("Search");
     Line_Search->setFixedSize(180, 20);
     Line_Search->setStyleSheet("border-radius: 10px; border: 1px solid green;");
     Line_Search->setPlaceholderText("Search");
@@ -301,7 +300,7 @@ void MainWindow::on_actionNew_N_triggered()
 
     Open_Location = QFileDialog::getSaveFileName(this,
                                                  tr("New Project"),
-                                                 QDir::homePath() + "/Untitled",
+                                                 QDir::currentPath() + "/../usr/frd/Untitled",
                                                  tr("FRD File (*.frd);; FRD Json File (*.frdjson);; Json File (*.json)"));
     if (Open_Location.isEmpty())
     {
@@ -323,7 +322,7 @@ void MainWindow::on_actionOpen_O_triggered()
     QString Old_Open_Location = Open_Location;
     QString New_Open_Location = QFileDialog::getOpenFileName(this,
                                                              tr("Open Project"),
-                                                             QDir::currentPath(),
+                                                             QDir::currentPath() + "/../usr/frd",
                                                              tr("FRD File (*.frd)"));
     qDebug() << New_Open_Location;
     QFile check(New_Open_Location);
@@ -988,17 +987,20 @@ void MainWindow::on_actionCreate_Video_triggered()
     // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
 
     int crf_value = 18;
-    QString video_file_name = ui->lineEdit_videoName->text();
-    QString video_file_path = ui->lineEdit_videoPath->text(); // only used in high version
+
+    auto currInfo = info.curr();
+
+    QString video_file_name = currInfo.videoName().simplified();
+    QString video_file_path = currInfo.videoDir().simplified();
     QString video_format = "mp4";
 #if defined (WIN32) || defined (WIN64)
-    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -r ";
+    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\win\\ffmpeg.exe\" -r ";
 #elif defined (__linux__)
     QString PowerShell_arg1 = "ffmpeg -r ";
 #endif
     ffmpeg_arg1.append(ui->comboBox_fps->currentText());
     ffmpeg_arg1.append(" -f image2 -i ");
-    ffmpeg_arg1.append(tr("\"") + ui->lineEdit_imagePath->text() + "/" + ui->lineEdit_imagePrefix->text());
+    ffmpeg_arg1.append(tr("\"") + currInfo.imageDir() + "/" + currInfo.imagePrefix());
     ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
     ffmpeg_arg1.append(QString::number(crf_value));
     ffmpeg_arg1.append(" -pix_fmt yuv420p ");
@@ -3685,14 +3687,14 @@ void MainWindow::runCode()
     editor->clearSearchIndic(0, editor->text().size());
     ui->textEdit_terminal->append(info.editor().toJson());
     ui->textEdit_terminal->append(info.editor().varsToJson());
+    setErrorInfo(info.editor());
     if (!info.editor().errors().isEmpty())
     {
-        setErrorInfo(info.editor());
         errorTerminalMessage(fileName + " finished with errors.");
         ui->textEdit_terminal->append("\n>> ");
     }
     else
-    {
+    {        
         normalTerminalMessage(fileName + " finished.");
         ui->textEdit_terminal->append("\n>> ");
     }

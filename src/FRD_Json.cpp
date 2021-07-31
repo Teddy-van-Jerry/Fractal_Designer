@@ -11,7 +11,7 @@ FRD_Error::FRD_Error(int type, int row_, int col_, int length_, const QString& m
       msg(msg_) { }
 
 FRD_Json::FRD_Json() {
-    main.insert("Version", "6.0.6");
+    main.insert("Version", "6.0.9");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -57,6 +57,8 @@ QString FRD_Json::type(const QString& block, const QStringList& names) const {
             return "number";
         else if (QVector<QString>({"Ts", "CentreXs", "CentreYs", "Widths", "Angles", "Rates", "ImageSize", "PreviewSize", "PreviewImageSize", "PreviewCentre"}).contains(member))
             return "array";
+        else if (QVector<QString>({"Music"}).contains(member))
+            return "list";
         else if (QVector<QString>({"InverseYAxis"}).contains(member))
             return "bool";
         else {
@@ -284,7 +286,7 @@ QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
 
 void FRD_Json::clear() {
     main = QJsonObject();
-    main.insert("Version", "6.0.6");
+    main.insert("Version", "6.0.8");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
@@ -426,6 +428,21 @@ QString FRD_Json::videoFormat() const {
 QString FRD_Json::videoName() const {
     QJsonValue value = main["Output"]["VideoName"];
     return value.toString(QDateTime::currentDateTime().toString("Fractal Designer - yyyy_MM_dd_hh_mm_ss"));
+}
+
+int FRD_Json::videoCrf() const
+{
+    QJsonValue value = main["Output"]["Crf"];
+    return value.toDouble(18);
+}
+
+QStringList FRD_Json::videoMusic() const {
+    QJsonArray arr = main["Output"]["Music"].toArray();
+    QStringList music_names;
+    for (const auto& name : arr) {
+        music_names.push_back(name.toString());
+    }
+    return music_names;
 }
 
 int FRD_Json::routePointCount(int layer) const {
