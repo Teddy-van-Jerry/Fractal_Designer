@@ -87,6 +87,8 @@ public slots:
 
     void build_image_one_ok();
 
+    void runCode();
+
 private slots:
 
     void getUserName(QString);
@@ -347,11 +349,39 @@ private slots:
 
     void on_actionSave_As_A_triggered();
 
+    void preview();
+
+    void createImages();
+
+    void createVideo();
+
+    void showPreviewInWindow(const QImage& img);
+
     void setErrorInfo(const FRD_Json& frd_json);
 
     void on_pushButton_search_clicked();
 
     void on_lineEdit_searchName_returnPressed();
+
+    void on_actionRun_Code_triggered();
+
+    void updateTerminalProgressBar(int percent, int finished = -1, int total = -1, double speed = -1);
+
+    void initTerminalProgressBar(int total = -1);
+
+    void finishTerminalProgressBar(int total = -1);
+
+    void updateTerminalCreateImagesProgresssBar(int current_num, double speed);
+
+    void normalTerminalMessage(const QString& str);
+
+    void errorTerminalMessage(const QString& str);
+
+    void outsideCommand(const QString& cmd);
+
+    void terminalCommand();
+
+    void clearTerminal();
 
 signals:
 
@@ -418,6 +448,10 @@ private:
 
     Preview_Setting* preview_setting = new Preview_Setting(this);
 
+    QDialog* preview_dialog = new QDialog(this);
+    QHBoxLayout* preview_dialog_layout = new QHBoxLayout(preview_dialog);
+    QLabel* preview_dialog_label = new QLabel;
+
 public:
 
     Route_Tool* route_tool_window;
@@ -447,7 +481,7 @@ public:
 
 protected:
 
-    int RESIZE_LIMIT;
+    int RESIZE_LIMIT=4;
 
     bool event(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -478,6 +512,12 @@ private:
     QLabel FRD_icon;
     Qt::Edges m_lock;
     QPoint m_posCursor;
+
+    QStringList terminalCommands;
+
+    int currentTerminalProgress = 0;
+
+    QString currentTerminalWorkName;
 
     QToolBar * generateBorder(Qt::ToolBarArea area, Qt::Orientation orientation);
 };

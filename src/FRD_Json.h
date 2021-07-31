@@ -81,6 +81,8 @@ public:
 
     QVector<FRD_Error> errors() const;
 
+    QString layerName(int index) const;
+
     QString layerFormula(int index) const;
 
     QString layerColor(int index, QString tag) const;
@@ -97,11 +99,41 @@ public:
 
     bool inverseYAsis() const;
 
+    QString distance(int index) const;
+
     QString templateMin(int index) const;
 
     QString templateMax(int index) const;
 
     QString iterationLimit(int index) const;
+
+    double fps() const;
+
+    QString imageDir() const;
+
+    QString imagePrefix() const;
+
+    int ImageSize(QString tag) const;
+
+    int outputTime() const;
+
+    QString videoDir() const;
+
+    QString videoFormat() const;
+
+    QString videoName() const;
+
+    int videoCrf() const;
+
+    QStringList videoMusic() const;
+
+    int routePointCount(int layer) const;
+
+    double routePoint(int layer, int t_index, QString tag) const;
+
+    QDateTime runTime() const;
+
+    QString runVersion() const;
 
 public slots:
     void updateText(QString text);

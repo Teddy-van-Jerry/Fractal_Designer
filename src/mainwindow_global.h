@@ -41,9 +41,10 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDialog>
+#include <QTextDocument>
+#include <QTextBlock>
 #include <complex> // std::complex
 #include "login.h"
-#include "new_file.h"
 #include "route_tool.h"
 #include "create_image_info.h"
 #include "search_result.h"
@@ -72,16 +73,6 @@
 #define SetTb(i, j, v) table_route_model->item(i, j)->setData(QVariant(v), Qt::EditRole)
 
 #define NameIs(C1_, C2_) (name_1 == C1_ && name_2 == C2_)
-
-#ifndef For_All_Colour
-#define For_All_Colour(it__, jt__) \
-    for(int it__ = 0; it__ != 4; it__++) { \
-        for(int jt__ = 0; jt__ != 29; jt__++) {
-#endif
-
-#ifndef End_All_Colour
-#define End_All_Colour }}
-#endif
 
 #ifndef UNSUPPORTED_PLATFORM
 #define UNSUPPORTED_PLATFORM \
