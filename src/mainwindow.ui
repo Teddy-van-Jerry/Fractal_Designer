@@ -117,18 +117,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  This is the dev version of Fractal Designer and does not support all the functions. You can refer to Help, or contact Teddy van Jerry for help.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  For more information, please refer to Help (Ctrl + H) or view the Chinese version with Ctrl + Shift + H. (Access to the Internet is required.)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.3 supports Julia Set in addition to Mandelbrot Set.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.4 supports Linux (tested on Ubuntu) in addition some other minor changes.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  The update of FRD 5.5 supports two more templates: Burning Ship Fractal and Generalized Newton Fractal.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  In FRD 5.6, without the burden of supporting older versions, it features customized formula settings, which offer even more freedom to designers.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Currently, there is only release version for Windows. Release versions for other platforms will be released in the near future.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 6.0 under development&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  Version: 6.0.9 Alpha [Only support editor page]&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#555500;&quot;&gt;Designer: &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;TVJ Group | Teddy van Jerry&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; color:#aa00ff;&quot;&gt;  &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#000000;&quot;&gt;* TVJ Group     : &lt;/span&gt;&lt;a href=&quot;http://group.teddy-van-jerry.org&quot;&gt;&lt;span style=&quot; font-size:16pt; text-decoration: underline; color:#0000ff;&quot;&gt;group.teddy-van-jerry.org&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
@@ -1002,8 +991,8 @@ A = 255;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>422</width>
-               <height>439</height>
+               <width>401</width>
+               <height>443</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2207,6 +2196,7 @@ p, li { white-space: pre-wrap; }
      <string>Editor(&amp;D)</string>
     </property>
     <addaction name="actionRun_Code"/>
+    <addaction name="actionStop_Code"/>
    </widget>
    <addaction name="menuFile_F"/>
    <addaction name="menuEdit_E"/>
@@ -2240,10 +2230,11 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionDelete_All_Parameters"/>
    <addaction name="separator"/>
    <addaction name="actionRoute_Tool"/>
-   <addaction name="actionRun_Code"/>
    <addaction name="actionCreate_Images"/>
    <addaction name="actionCreate_Video"/>
    <addaction name="actionStop"/>
+   <addaction name="separator"/>
+   <addaction name="actionRun_Code"/>
    <addaction name="separator"/>
    <addaction name="actionEnglish"/>
    <addaction name="separator"/>
@@ -2777,7 +2768,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="Icon_resources.qrc">
      <normaloff>:/Menu Icon/Close.svg</normaloff>:/Menu Icon/Close.svg</iconset>
    </property>
    <property name="text">
@@ -3073,10 +3064,18 @@ p, li { white-space: pre-wrap; }
     <string>F5</string>
    </property>
   </action>
+  <action name="actionStop_Code">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="Icon_resources.qrc"/>
   <include location="EXE_Icons.qrc"/>
+  <include location="Icon_resources.qrc"/>
  </resources>
  <connections/>
 </ui>

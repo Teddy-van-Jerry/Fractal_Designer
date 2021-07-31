@@ -20,9 +20,6 @@ bool Interpreter::interpret() {
     bool error = false;
     error |= !removeComments();
     error |= !readBlock();
-//    info.setValue("1.2.3.", "num.X.", "Number", 123);
-//    info.setExistantValue("1.2.3.", "num.X.", "", -1234);
-//    qDebug() << info.type("1.2.3.", "num.X.") << info.type("1.2.3.", "num.");
     return !error;
 }
 

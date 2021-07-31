@@ -54,12 +54,17 @@ void Create_Image_Task::run()
 
             for (k = 0; k < iterLimit.real() && k < 1000000000; k++)
             {
-                num_list =
-                {
-                    this_point, this_point.real(), this_point.imag(),
-                    last_point, last_point.real(), last_point.imag(),
-                    z0, z0.real(), z0.imag(), t, double(k)
-                };
+                num_list[3] = num_list[0];
+                num_list[4] = num_list[1];
+                num_list[5] = num_list[2];
+                num_list[6] = z0;
+                num_list[7] = z0.real();
+                num_list[8] = z0.imag();
+                num_list[9] = t;
+                num_list[10] = k;
+                num_list[0] = this_point;
+                num_list[1] = this_point.real();
+                num_list[2] = this_point.imag();
                 bool ok;
                 iterLimit = evalExpr(max_loop_t, num_list, EVAL_ITER, &ok); if (!ok) break;
                 Min       = evalExpr(min_class_v, num_list, EVAL_MIN, &ok); if (!ok) break;
@@ -203,13 +208,3 @@ std::complex<double> Create_Image_Task::evalExpr(const std::vector<_var>& expr,
     if (ok) *ok = true;
     return val;
 }
-
-//template<typename T>
-//bool Create_Image_Task::evalExpr(T& val, std::vector<_var> expr,
-//                                 std::vector<std::complex<double>> num_list, Eval_Type type)
-//{
-//    std::complex<double> temp = val;
-//    bool ok = evalExpr(temp, expr, num_list, type);
-//    val = temp.real();
-//    return ok;
-//}

@@ -801,6 +801,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
         }
     }
     emit destroyed();
+    exit(0);
 }
 
 void MainWindow::iniTemplate(int n)
@@ -3636,12 +3637,12 @@ void MainWindow::on_actionRun_Code_triggered()
 
 void MainWindow::updateTerminalProgressBar(int p, int finished, int total, double speed)
 {
-    if (currentTerminalProgress == p) return;
+    if (currentTerminalProgress == p && finished < 0) return;
     currentTerminalProgress = p;
     // move to the end of the terminal
     ui->textEdit_terminal->moveCursor(QTextCursor::End);
     int back_length = 55;
-    if (total >= 0) back_length += QString::number(total).length() * 2 + 12;
+    if (total >= 0) back_length += QString::number(total).length() * 2 + 18;
     for (int i = 0; i != back_length; i++)
     {
         ui->textEdit_terminal->textCursor().deletePreviousChar();
@@ -3667,11 +3668,11 @@ void MainWindow::updateTerminalProgressBar(int p, int finished, int total, doubl
         {
             QString str = QString::number(speed, 'g', 4);
             int speed_length = str.length() + 4;
-            ui->textEdit_terminal->insertPlainText(str + "kb/s" + QString(9 - speed_length, ' '));
+            ui->textEdit_terminal->insertPlainText(str + "kb/s" + QString(15 - speed_length, ' '));
         }
         else
         {
-            ui->textEdit_terminal->insertPlainText("         ");
+            ui->textEdit_terminal->insertPlainText("               ");
         }
     }
 
@@ -3684,7 +3685,7 @@ void MainWindow::initTerminalProgressBar(int total)
     if (total >= 0)
     {
         int total_length = QString::number(total).length();
-        ui->textEdit_terminal->insertPlainText(" 0" + QString(total_length - 1, ' ') + "/" + QString::number(total) + "          ");
+        ui->textEdit_terminal->insertPlainText(" 0" + QString(total_length - 1, ' ') + "/" + QString::number(total) + "                ");
     }
 }
 

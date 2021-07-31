@@ -1,7 +1,7 @@
 /**
  * \file Mandelbrot Set Sample
  * \author Teddy van Jerry
- * \date 2021/07/31
+ * \date 2021/08/01
  * \version 6.0.9
  *
  * \note Doxygen comments are supported.
@@ -22,7 +22,7 @@
 
 // image and video output settings
 @output $Output = {
-	$Time = 65 * 1000; // time is measured in millisecond
+	$Time = 65 * 100; // time is measured in millisecond
 	$Fps = 30;
 	$Crf = 18; // constant rate factor, from 0 to 51
 	$VideoDir = $Your_Local_Dir; // assignment
@@ -36,7 +36,7 @@
 		// Music names are divided by comma.
 		// If you want to play that in a loop,
 		// You can add that name more than once.
-		// NOTE: please 
+		// NOTE: please change that into your music file
 		C:\Users\Teddy van Jerry\Music\Vorspiel.mp3;
 }
 
@@ -48,15 +48,15 @@
 	$A = 255;
 }
 
-@array $TimeForRoute = 0, 0.062, 0.125,0.1855,0.3077, 0.493, 0.693, 0.815, 1;
+@array $TimeForRoute = 0, 0.062, 0.125, 0.1855, 0.3077, 0.493, 0.693, 0.815, 1;
 
 @route $Route1 = {
 	$Type = _POINTS_;
 	$Ts = $TimeForRoute;
-	$CentreXs = -0.7 ,-0.315 , 0.273, 0.342666666, 0.404552776,
-				0.412830305,0.412016541,0.412155724,0.412217596;
-	$CentreYs = 0   , 0.397333333,0.526333333,0.6,0.606677459,
-				0.605971048,0.606226187,0.606238798,0.606238916;
+	$CentreXs = -0.7, -0.315, 0.273, 0.342666666, 0.404552776,
+				0.412830305, 0.412016541, 0.412155724, 0.412217596;
+	$CentreYs = 0, 0.397333333, 0.526333333, 0.6, 0.606677459,
+				0.605971048, 0.606226187, 0.606238798, 0.606238916;
 	$Widths   = 3.6, 1.8, 1, 0.4, 0.1, 0.02, 0.0015, 0.0001, 8e-06;
 	$Angles   = 0, 0, 0, 0, 15, 45, 45, 45, 45;
 }
