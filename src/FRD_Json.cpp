@@ -427,7 +427,7 @@ QString FRD_Json::videoFormat() const {
 
 QString FRD_Json::videoName() const {
     QJsonValue value = main["Output"]["VideoName"];
-    return value.toString(QDateTime::currentDateTime().toString("Fractal Designer - yyyy_MM_dd_hh_mm_ss"));
+    return value.toString(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss"));
 }
 
 int FRD_Json::videoCrf() const

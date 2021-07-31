@@ -972,243 +972,8 @@ void MainWindow::on_toolButton_imagePath_clicked()
 
 void MainWindow::on_actionCreate_Video_triggered()
 {
-
-#if !(defined (WIN32) || defined (_WIN64) || defined (__linux__))
-    UNSUPPORTED_PLATFORM;
-    return;
-#endif
-
-    if(!save_or_not)
-    {
-        QMessageBox::information(this, "Information", "You have not saved the project.");
-        return;
-    }
-
-    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
-
-    int crf_value = 18;
-
-    auto currInfo = info.curr();
-
-    QString video_file_name = currInfo.videoName().simplified();
-    QString video_file_path = currInfo.videoDir().simplified();
-    QString video_format = "mp4";
-#if defined (WIN32) || defined (WIN64)
-    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "\\win\\ffmpeg.exe\" -r ";
-#elif defined (__linux__)
-    QString PowerShell_arg1 = "ffmpeg -r ";
-#endif
-    ffmpeg_arg1.append(ui->comboBox_fps->currentText());
-    ffmpeg_arg1.append(" -f image2 -i ");
-    ffmpeg_arg1.append(tr("\"") + currInfo.imageDir() + "/" + currInfo.imagePrefix());
-    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
-    ffmpeg_arg1.append(QString::number(crf_value));
-    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
-    ffmpeg_arg1.append(ui->textBrowser_music->toPlainText().isEmpty() ?
-                               video_file_name + "." + video_format
-                             : video_file_name + "_temp." + video_format);
-
-    ui->statusbar->showMessage(tr("Creating Video..."), 300000);
-
-    bool Alive[3] {false, false, false};
-    QFile video(video_file_path + "/" + video_file_name + "." + video_format);
-    if(video.exists())
-    {
-        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
-                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
-        {
-            video.remove();
-        }
-        else
-        {
-            ui->statusbar->showMessage("", 30000);
-            return;
-        }
-    }
-
-    qDebug() << "Creating Video...";
-
-    QProcess* create_video = new QProcess(this);
-    create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || defined (_WIN64)
-    qDebug() << ffmpeg_arg1;
-    create_video->start(ffmpeg_arg1);
-    QString file_suffix = "cmd";
-#elif defined(__linux__)
-    create_video->start(ffmpeg_arg1);
-    QString file_suffix = "sh";
-#endif
-    Alive[0] = create_video->waitForFinished(300000);
-    qDebug() << create_video->readAllStandardOutput();
-
-    if(!Alive[0])
-    {
-        QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
-        create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out1(&create_video_ps);
-        out1 << ffmpeg_arg1;
-        create_video_ps.close();
-
-        // Retry running shell file
-        QProcess* run_sh = new QProcess(this);
-        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-#if defined (WIN32) || (_WIN64)
-        run_sh->start("Create_Video.cmd");
-#elif defined (__linux__)
-        run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
-#endif
-        Alive[0] = run_sh->waitForFinished(300000);
-        if(Alive[0])
-        {
-            QFile ck(video_file_path + "/" +
-                        (ui->textBrowser_music->toPlainText().isEmpty() ?
-                         video_file_name + "." + video_format
-                       : video_file_name + "_temp." + video_format));
-            if(ck.exists())
-            {
-                QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-            }
-            else
-            {
-                Alive[0] = false;
-            }
-        }
-    }
-
-    if(ui->textBrowser_music->toPlainText().isEmpty())
-    {
-        if(Alive[0])
-        {
-            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                           + "\nVideo Creating Finished!");
-            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-            return;
-        }
-        else
-        {
-            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Create_Video." + file_suffix + " code instead.");
-        }
-        return;
-    }
-
-    ui->statusbar->showMessage(tr("Processing Music..."), 300000);
-
-    QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
-    Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&Music_Added_NoEnd_);
-    if(!curr_info.music_list.empty())
-    {
-        for(int i = 1; i <= curr_info.music_list.size(); i++)
-        {
-            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-            if(QFile::copy(curr_info.music_list[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
-            {
-                out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
-            }
-        }
-        Music_Added_NoEnd_.close();
-    }
-#if defined (WIN32) || (WIN64)
-    QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#elif defined (__linux__)
-    QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM.mp3";
-#endif
-    qDebug() << ffmpeg_arg2;
-    create_video->start(ffmpeg_arg2);
-    Alive[1] = create_video->waitForFinished(300000);
-
-    ui->statusbar->showMessage(tr("Adding Music..."), 300000);
-
-#if defined (WIN32) || (WIN64)
-    QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "\\Resources\\ffmpeg.exe\" -i BGM.mp3 -i ";
-#elif defined (__linux__)
-    QString PowerShell_arg3 = "ffmpeg -i BGM.mp3 -i ";
-#endif
-    ffmpeg_arg3.append(video_file_name + "_temp." + video_format);
-    ffmpeg_arg3.append(" -shortest -f mp4 ");
-    ffmpeg_arg3.append(video_file_name + "." + video_format);
-    if(Alive[0] && Alive[1])
-    {
-        qDebug() << ffmpeg_arg3;
-        create_video->start(ffmpeg_arg3);
-        Alive[2] = create_video->waitForFinished(60000);
-        QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
-        if(ck_result.exists())
-        {
-            QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-            QFile::remove(video_file_path + "/BGM.mp3");
-            QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-            for(int i = 1; i <= curr_info.music_list.size(); i++)
-            {
-                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-            }
-        }
-        else
-        {
-            Alive[2] = false;
-        }
-    }
-
-    if(!Alive[2])
-    {
-        QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
-        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out2(&add_music_ps);
-        out2 << ffmpeg_arg2 << Qt::endl;
-        out2 << ffmpeg_arg3;
-        add_music_ps.close();
-        // Retry running shell file
-        QProcess* run_sh = new QProcess(this);
-        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
-
-        if(Alive[0])
-        {
-#if defined (WIN32) || (_WIN64)
-            run_sh->start("Add_Music.cmd");
-#elif defined (__linux__)
-            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
-#endif
-            Alive[2] = run_sh->waitForFinished(300000);
-            if(Alive[2])
-            {
-                QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
-                if(ck.exists())
-                {
-                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
-                    QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
-                    QFile::remove(video_file_path + "/BGM.mp3");
-                    QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
-                    for(int i = 1; i <= curr_info.music_list.size(); i++)
-                    {
-                        QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
-                    }
-                }
-                else
-                {
-                    Alive[2] = false;
-                }
-            }
-            if(!Alive[2])
-            {
-                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-                QMessageBox::warning(this, "Error Information", "Video Creation failed!\nYou can run Add_Music." + file_suffix + " code instead.");
-            }
-        }
-        else
-        {
-            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
-            QMessageBox::warning(this, "Error Information", "Video Creation failed!\nFirst run Create_Video." + file_suffix
-                                       + ",\nsecond run Add_Music." + file_suffix + ".");
-        }
-    }
-
-    if(Alive[2])
-    {
-        ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
-        QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
-                                       + "\nVideo Creating Finished!");
-    }
+    outsideCommand("createvideo");
+    createVideo();
 }
 
 void MainWindow::on_toolButton_videoPath_clicked()
@@ -3547,6 +3312,277 @@ void MainWindow::createImages()
     QThreadPool::globalInstance()->start(create_images);
 }
 
+void MainWindow::createVideo()
+{
+
+#if !(defined (WIN32) || defined (_WIN64) || defined (__linux__))
+    UNSUPPORTED_PLATFORM;
+    return;
+#endif
+
+    if(!save_or_not)
+    {
+        QMessageBox::information(this, "Information", "You have not saved the project.");
+        return;
+    }
+
+    // QMessageBox::information(this, "Information", "Creating video...", QMessageBox::NoButton);
+
+    auto currInfo = info.curr();
+
+    int crf_value = currInfo.videoCrf();
+
+    QString video_file_name = currInfo.videoName().simplified();
+    QString video_file_path = currInfo.videoDir().simplified();
+    QString video_format = "mp4";
+#if defined (WIN32) || defined (WIN64)
+    QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -r ";
+#elif defined (__linux__)
+    QString PowerShell_arg1 = "ffmpeg -r ";
+#endif
+    ffmpeg_arg1.append(QString::number(currInfo.fps()));
+    ffmpeg_arg1.append(" -f image2 -i ");
+    ffmpeg_arg1.append(QString("\"") + currInfo.imageDir() + "/" + currInfo.imagePrefix());
+    ffmpeg_arg1.append("%d.png\" -vcodec libx264 -crf ");
+    ffmpeg_arg1.append(QString::number(crf_value));
+    ffmpeg_arg1.append(" -pix_fmt yuv420p ");
+    ffmpeg_arg1.append(currInfo.videoMusic().isEmpty() ?
+                               "\"" + video_file_name + "." + video_format + "\""
+                             : "\"" + video_file_name + "_temp." + video_format + "\"");
+
+    ui->statusbar->showMessage(tr("Creating Video..."), 300000);
+
+    bool Alive[3] {false, false, false};
+    QFile video(video_file_path + "/" + video_file_name + "." + video_format);
+    if(video.exists())
+    {
+        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "." + video_format
+                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
+        {
+            video.remove();
+        }
+        else
+        {
+            ui->statusbar->showMessage("", 30000);
+            return;
+        }
+    }
+
+    normalTerminalMessage("Start Creating Video ...");
+
+    QFile video_temp(video_file_path + "/" + video_file_name + "_temp." + video_format);
+    if(video_temp.exists())
+    {
+        if(QMessageBox::question(this, "Choice", tr("The video ") + video_file_name + "_temp." + video_format
+                                 + " already exists.\nDo you want to overwrite it?") == QMessageBox::Yes)
+        {
+            video_temp.remove();
+        }
+        else
+        {
+            ui->statusbar->showMessage("", 30000);
+            return;
+        }
+    }
+
+    QProcess* create_video = new QProcess(this);
+    create_video->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || defined (_WIN64)
+    std::cout << "ffmpeg_arg1: " << ffmpeg_arg1.toStdString() << std::endl;
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "cmd";
+#elif defined(__linux__)
+    create_video->start(ffmpeg_arg1);
+    QString file_suffix = "sh";
+#endif
+    Alive[0] = create_video->waitForFinished(300000);
+    QString std_output = create_video->readAllStandardOutput();
+    if (!std_output.isEmpty())
+    {
+        errorTerminalMessage("Get ffmpeg output: " + std_output);
+    }
+
+    if(!Alive[0])
+    {
+        QFile create_video_ps(video_file_path + "/Create_Video." + file_suffix);
+        create_video_ps.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out1(&create_video_ps);
+        out1 << ffmpeg_arg1;
+        create_video_ps.close();
+
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+#if defined (WIN32) || (_WIN64)
+        run_sh->start("Create_Video.cmd");
+#elif defined (__linux__)
+        run_sh->start("/bin/sh", QStringList() << "Create_Video.sh");
+#endif
+        Alive[0] = run_sh->waitForFinished(300000);
+        if(Alive[0])
+        {
+            QFile ck(video_file_path + "/" +
+                        (currInfo.videoMusic().isEmpty() ?
+                         video_file_name + "." + video_format
+                       : video_file_name + "_temp." + video_format));
+            if(ck.exists())
+            {
+                QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+            }
+            else
+            {
+                Alive[0] = false;
+            }
+        }
+    }
+
+    if (currInfo.videoMusic().isEmpty())
+    {
+        if (Alive[0])
+        {
+            ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+            normalTerminalMessage(video_file_name + "." + video_format + " creating finished.");
+            QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                           + "\nVideo Creating Finished!");
+
+            return;
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            errorTerminalMessage(video_file_name + "." + video_format + " creating failed."
+                                 "You can run Add_Music." + file_suffix + " code instead.");
+            QMessageBox::warning(this, "Error Information", "Video Creating failed!\nYou can run Create_Video." + file_suffix + " code instead.");
+        }
+        return;
+    }
+
+    normalTerminalMessage("Processing music ...");
+    ui->statusbar->showMessage(tr("Processing Music..."), 300000);
+
+    QFile Music_Added_NoEnd_(video_file_path + "/Music_Added_NoEnd.txt");
+    Music_Added_NoEnd_.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&Music_Added_NoEnd_);
+    if (!currInfo.videoMusic().isEmpty())
+    {
+        for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+        {
+            QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            if(QFile::copy(currInfo.videoMusic()[i - 1], video_file_path + "/" + QString::number(i) + ".mp3"))
+            {
+                out << "file '" << QString::number(i) + ".mp3'" << Qt::endl;
+            }
+        }
+        Music_Added_NoEnd_.close();
+    }
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg2 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -f concat -i Music_Added_NoEnd.txt -c copy BGM_.mp3";
+#elif defined (__linux__)
+    QString ffmpeg_arg2 = "ffmpeg -f concat -i Music_Added_NoEnd.txt -c copy BGM_.mp3";
+#endif
+    qDebug() << ffmpeg_arg2;
+    create_video->start(ffmpeg_arg2);
+    Alive[1] = create_video->waitForFinished(300000);
+
+    normalTerminalMessage("Adding music to video ...");
+    ui->statusbar->showMessage(tr("Adding Music..."), 300000);
+
+#if defined (WIN32) || (WIN64)
+    QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -i BGM_.mp3 -i ";
+#elif defined (__linux__)
+    QString PowerShell_arg3 = "ffmpeg -i BGM_.mp3 -i ";
+#endif
+    ffmpeg_arg3.append("\"" + video_file_name + "_temp." + video_format + "\"");
+    ffmpeg_arg3.append(" -shortest -f mp4 ");
+    ffmpeg_arg3.append("\"" + video_file_name + "." + video_format + "\"");
+    if(Alive[0] && Alive[1])
+    {
+        std::cout << "ffmpeg_arg3: " << ffmpeg_arg3.toStdString();
+        create_video->start(ffmpeg_arg3);
+        Alive[2] = create_video->waitForFinished(60000);
+        QFile ck_result(video_file_path + "/" + video_file_name + "." + video_format);
+        if(ck_result.exists())
+        {
+            QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+            QFile::remove(video_file_path + "/BGM_.mp3");
+            QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+            for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+            {
+                QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+            }
+        }
+        else
+        {
+            Alive[2] = false;
+        }
+    }
+
+    if(!Alive[2])
+    {
+        QFile add_music_ps(video_file_path + "/Add_Music." + file_suffix);
+        add_music_ps.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream out2(&add_music_ps);
+        out2 << ffmpeg_arg2 << Qt::endl;
+        out2 << ffmpeg_arg3;
+        add_music_ps.close();
+        // Retry running shell file
+        QProcess* run_sh = new QProcess(this);
+        run_sh->setWorkingDirectory(QDir::fromNativeSeparators(video_file_path));
+
+        if(Alive[0])
+        {
+#if defined (WIN32) || (_WIN64)
+            run_sh->start("Add_Music.cmd");
+#elif defined (__linux__)
+            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
+#endif
+            Alive[2] = run_sh->waitForFinished(300000);
+            if(Alive[2])
+            {
+                QFile ck(video_file_path + "/" + video_file_name + "." + video_format);
+                if(ck.exists())
+                {
+                    QFile::remove(video_file_path + "/Create_Video." + file_suffix);
+                    QFile::remove(video_file_path + "/" + video_file_name + "_temp." + video_format);
+                    QFile::remove(video_file_path + "/BGM_.mp3");
+                    QFile::remove(video_file_path + "/Music_Added_NoEnd.txt");
+                    for(int i = 1; i <= currInfo.videoMusic().size(); i++)
+                    {
+                        QFile::remove(video_file_path + "/" + QString::number(i) + ".mp3");
+                    }
+                }
+                else
+                {
+                    Alive[2] = false;
+                }
+            }
+            if(!Alive[2])
+            {
+                ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+                errorTerminalMessage(video_file_name + "." + video_format + " creating failed."
+                                     "You can run Add_Music." + file_suffix + " code instead.");
+                QMessageBox::warning(this, "Error Information", "Video Creating failed!\nYou can run Add_Music." + file_suffix + " code instead.");
+            }
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("Video Creating Failed"), 5000);
+            errorTerminalMessage(video_file_name + "." + video_format + " creating failed. First run Create_Video." + file_suffix +
+                                 ", second run Add_Music." + file_suffix + ".");
+            QMessageBox::warning(this, "Error Information", "Video Creating failed!\nFirst run Create_Video." + file_suffix +
+                                 ",\nsecond run Add_Music." + file_suffix + ".");
+        }
+    }
+
+    if(Alive[2])
+    {
+        ui->statusbar->showMessage(tr("Video Creating Finished!"), 5000);
+        normalTerminalMessage(video_file_name + "." + video_format + " creating finished.");
+        QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
+                                       + "\nVideo Creating Finished!");
+    }
+}
+
 void MainWindow::showPreviewInWindow(const QImage &img)
 {
     int width = img.width();
@@ -3629,9 +3665,13 @@ void MainWindow::updateTerminalProgressBar(int p, int finished, int total, doubl
                                                QString::number(finished) + "/" + QString::number(total) + " ");
         if (speed >= 0)
         {
-            QString str = QString::number(speed, 'g', 3);
+            QString str = QString::number(speed, 'g', 4);
             int speed_length = str.length() + 4;
             ui->textEdit_terminal->insertPlainText(str + "kb/s" + QString(9 - speed_length, ' '));
+        }
+        else
+        {
+            ui->textEdit_terminal->insertPlainText("         ");
         }
     }
 
@@ -3738,7 +3778,7 @@ void MainWindow::terminalCommand()
             ui->textEdit_terminal->append(">> ");
             return;
         }
-        else if (cmds[0] == "!!")
+        if (cmds[0] == "!!") // repeat the last command
         {
             if (terminalCommands.isEmpty())
             {
@@ -3750,13 +3790,14 @@ void MainWindow::terminalCommand()
             {
                 ui->textEdit_terminal->append(terminalCommands.last());
                 cmd = terminalCommands.last();
+                cmds = cmd.split(" ", Qt::SkipEmptyParts);
             }
         }
         // no else here
         // if the command is "!!", it will go through all these
         if (cmds[0] == "help")
         {
-            ui->textEdit_terminal->append("Fractal Designer 6.0.8 Terminal\n"
+            ui->textEdit_terminal->append("Fractal Designer 6.0.9 Terminal\n"
                                           "Lists of all commands:\n"
                                           "  clear                  Clear the terminal screen.\n"
                                           "  createimages           Create fractal images.\n"
@@ -3825,7 +3866,8 @@ void MainWindow::terminalCommand()
         }
         else if (cmds[0] == "createvideo")
         {
-
+            createVideo();
+            ui->textEdit_terminal->append("\n>> ");
         }
         else if (cmds[0] == "history")
         {

@@ -48,6 +48,17 @@ private:
 
     bool isString(int pos) const;
 
+    /**
+     * \brief set the indicator
+     *
+     * \details This is used to highlight variable name, function name, class name,
+     *          error, warning, and search result.
+     * \bug When there are characters taking more than 1 byte,
+     *      indicators can be at the wrong position.
+     * \param start the starting point of string
+     * \param length the length of string
+     * \param indicator the type of string
+     */
     void setIndicator(int start, int length, FRD_Indicator indicator);
 
     FRD_Indicator indicatorFromSymbol(QChar symbol) const;

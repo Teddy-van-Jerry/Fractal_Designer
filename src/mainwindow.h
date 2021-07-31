@@ -353,6 +353,8 @@ private slots:
 
     void createImages();
 
+    void createVideo();
+
     void showPreviewInWindow(const QImage& img);
 
     void setErrorInfo(const FRD_Json& frd_json);

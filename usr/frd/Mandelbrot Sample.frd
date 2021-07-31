@@ -1,7 +1,7 @@
 /**
  * \file Mandelbrot Set Sample
  * \author Teddy van Jerry
- * \date 2021/07/27
+ * \date 2021/07/31
  * \version 6.0.9
  *
  * \note Doxygen comments are supported.
@@ -22,7 +22,7 @@
 
 // image and video output settings
 @output $Output = {
-	$Time = 65 * 1000; // time is measured in millisecond
+	$Time = 65 * 100; // time is measured in millisecond
 	$Fps = 30;
 	$Crf = 18; // constant rate factor, from 0 to 51
 	$VideoDir = $Your_Local_Dir; // assignment
@@ -53,9 +53,10 @@
 @route $Route1 = {
 	$Type = _POINTS_;
 	$Ts = $TimeForRoute;
-	$CentreXs = -0.7, 0, 0.3;
-	$CentreYs = 0, 0.4, 0.6;
-	$Widths = 3.2, 1.2, 0.5;
+	$CentreXs = -0.7, 0  , 0.3;
+	$CentreYs = 0   , 0.4, 0.6;
+	$Widths   = 3.2 , 1.2, 0.5;
+	$Angles   = 0   , 0  , 30 ;
 }
 
 @template $MandelbrotTemplate = {
@@ -120,6 +121,10 @@
 	}
 }
 
+/**
+ * CONFIGURE sets what variables should be used in
+ * preview, image creating and video creating.
+ */
 %CONFIGURE($Config, $Output, $FractalMandelbrot); // function
 
 // ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry
