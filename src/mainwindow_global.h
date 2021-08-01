@@ -79,9 +79,9 @@
     QMessageBox::critical(this, "Error", "This project now only supports Windows and Linux.")
 #endif
 
-const QString Chinese_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help-zh";
-const QString English_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-5-6-lts-help";
-const QString Bug_Report       = "https://github.com/Teddy-van-Jerry/Fractal_Designer/issues/11";
+const QString Chinese_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-6-0-help-zh";
+const QString English_Help_Url = "https://frd.teddy-van-jerry.org/help/fractal-designer-6-0-help";
+const QString Bug_Report       = "https://github.com/Teddy-van-Jerry/Fractal_Designer/issues";
 
 class PeciseDoubleFactory : public QItemEditorFactory
 {

@@ -21,6 +21,16 @@ void Create_Image_Task::run()
     double progress = 0;
     int progress_now = 0;
 
+    std::complex<double> iterLimit = 1;
+    std::complex<double> Min = 1000000000, Max = 1000000000;
+
+    // If they are constant,
+    // this will save the effort of calculation
+    bool isIterLimitConst, isMinConst, isMaxConst;
+    iterLimit = evalExpr(max_loop_t, {}, EVAL_ITER, &isIterLimitConst);
+    Min       = evalExpr(min_class_v, {}, EVAL_MIN, &isMinConst);
+    Max       = evalExpr(max_class_v, {}, EVAL_MAX, &isMaxConst);
+
     QImage image_build(X, Y, QImage::Format_ARGB32);
     for(int i = X - 1; i >= 0; i--)
     {
@@ -36,17 +46,14 @@ void Create_Image_Task::run()
         {
             double dx = x_width * (static_cast<double>(i) / X - 0.5);
             double dy = - y_height * (static_cast<double>(j) / Y - 0.5);
-            if (y_inverse) dy = - dy;
+            if (y_inverse) dy = -dy;
             double mod = sqrt(dx * dx + dy * dy);
             double theta = atan2(dy, dx) + rotate_angle / 180 * Pi;
             std::complex<double> this_point(x + mod * cos(theta), y + mod * sin(theta));
             std::complex<double> z0(this_point), last_point(-this_point);
             bool convergent = true;
             int k = 0;
-            std::complex<double> iterLimit = 1;
-            std::complex<double> Min = 1000000000, Max = 1000000000;
-            std::vector<std::complex<double>> num_list
-            {
+            std::vector<std::complex<double>> num_list = {
                 this_point, this_point.real(), this_point.imag(),
                 last_point, last_point.real(), last_point.imag(),
                 z0, z0.real(), z0.imag(), t, double(k)
@@ -66,9 +73,21 @@ void Create_Image_Task::run()
                 num_list[1] = this_point.real();
                 num_list[2] = this_point.imag();
                 bool ok;
-                iterLimit = evalExpr(max_loop_t, num_list, EVAL_ITER, &ok); if (!ok) break;
-                Min       = evalExpr(min_class_v, num_list, EVAL_MIN, &ok); if (!ok) break;
-                Max       = evalExpr(max_class_v, num_list, EVAL_MAX, &ok); if (!ok) break;
+                if (!isIterLimitConst)
+                {
+                    iterLimit = evalExpr(max_loop_t, num_list, EVAL_ITER, &ok);
+                    if (!ok) break;
+                }
+                if (!isMinConst)
+                {
+                    Min = evalExpr(min_class_v, num_list, EVAL_MIN, &ok);
+                    if (!ok) break;
+                }
+                if (!isMaxConst)
+                {
+                    Max = evalExpr(max_class_v, num_list, EVAL_MAX, &ok);
+                    if (!ok) break;
+                }
                 // qDebug() << iterLimit.real() << Min.real() << Max.real();
                 if (abs(this_point) < Min.real())
                 {
@@ -205,6 +224,6 @@ std::complex<double> Create_Image_Task::evalExpr(const std::vector<_var>& expr,
         emit error_calc(type);
         if (ok) *ok = false;
     }
-    if (ok) *ok = true;
+    else if (ok) *ok = true;
     return val;
 }

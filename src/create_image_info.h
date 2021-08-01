@@ -27,6 +27,8 @@ public slots:
 
     void close_create_image_info();
 
+    void init();
+
 private slots:
     void updateTime();
 
