@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>New_Features</class>
+ <widget class="QDialog" name="New_Features">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>New Features</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTreeWidget" name="treeWidget">
+     <property name="locale">
+      <locale language="English" country="UnitedKingdom"/>
+     </property>
+     <attribute name="headerHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>New Features</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Version</string>
+      </property>
+     </column>
+     <item>
+      <property name="text">
+       <string>Infomation Storage</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <item>
+       <property name="text">
+        <string>frd Language</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>File</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <item>
+       <property name="text">
+        <string>Save As</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Json Support</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Maintaince Module</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <item>
+       <property name="text">
+        <string>Check Update</string>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Editor</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <item>
+       <property name="text">
+        <string>Editor</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Terminal</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Error List</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>New Item</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Search</string>
+       </property>
+       <property name="text">
+        <string>6.0</string>
+       </property>
+      </item>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

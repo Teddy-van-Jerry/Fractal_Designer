@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/exe_icon">
-        <file>EXE Icons/FRD_icon.png</file>
-        <file>EXE Icons/FRD_File.ico</file>
-    </qresource>
-</RCC>

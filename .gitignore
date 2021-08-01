@@ -9,6 +9,10 @@
 *.so.*
 *.dll
 *.dylib
+*.exe
+*.pdb
+*.ilk
+*.pdb.*
 
 # Qt-es
 object_script.*.Release
@@ -31,6 +35,7 @@ Makefile*
 *build-*
 *.qm
 *.prl
+*.stash
 
 # Qt unit tests
 target_wrapper.*
@@ -53,3 +58,11 @@ compile_commands.json
 
 # This Project
 /Outdated/
+/src/release/
+/src/debug/
+/tmp/
+!lib/qscintilla2_qt6.dll
+!lib/qscintilla2_qt6d.dll
+src/Fractal_Designer_resource.rc
+src/Fractal_Designer_resource.rc
+src/Fractal_Designer_resource.rc

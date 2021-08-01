@@ -1,0 +1,132 @@
+/**
+ * \file Mandelbrot Set Sample
+ * \author Teddy van Jerry
+ * \date 2021/08/01
+ * \version 6.0.9
+ *
+ * \note Doxygen comments are supported.
+ *
+ */
+ 
+@string $Your_Local_Dir = D:\FRD\Mandelbrot; // No quatation mark
+
+@config $Config = {
+	$InverseYAxis = _FALSE_; // _FALSE_ can be substituted by false
+	/* preview image setting */
+	$PreviewCentre    = -0.7, 0;  // centre coordinate (X, Y)
+	$PreviewSize      = 3.2, 2.4; // mathematic size (width, height)
+	$PreviewImageSize = 800, 600; // pixel size (width, height)
+	$PreviewRotation  = 0;        // measured in degree
+	$PreviewTime      = 0;        // in the range [0, 1]
+}
+
+// image and video output settings
+@output $Output = {
+	$Time = 65 * 100; // time is measured in millisecond
+	$Fps = 30;
+	$Crf = 18; // constant rate factor, from 0 to 51
+	$VideoDir = $Your_Local_Dir; // assignment
+	$VideoFormat = mp4;
+	$VideoName = Mandelbrot Set Sample;
+	$ImageDir = D:\FRD\Mandelbrot\img;
+	$ImagePrefix = img_;
+	$ImageSize = 192, 108; // set as 1080p
+	$Music =
+		// Music will be played by sequence.
+		// Music names are divided by comma.
+		// If you want to play that in a loop,
+		// You can add that name more than once.
+		// NOTE: please change that into your music file
+		C:\Users\Teddy van Jerry\Music\Vorspiel.mp3;
+}
+
+@color $Color1 = {
+	$Type = _RGBA_;
+	$R = (42 - 12$t) * $k + 10($x + $y); // colour formula
+	$G = 20(1 - $t) * $k;
+	$B = (6 + 16$t) * $k + (10$t + 20) * abs($z) + abs($z0);
+	$A = 255;
+}
+
+@array $TimeForRoute = 0, 0.062, 0.125, 0.1855, 0.3077, 0.493, 0.693, 0.815, 1;
+
+@route $Route1 = {
+	$Type = _POINTS_;
+	$Ts = $TimeForRoute;
+	$CentreXs = -0.7, -0.315, 0.273, 0.342666666, 0.404552776,
+				0.412830305, 0.412016541, 0.412155724, 0.412217596;
+	$CentreYs = 0, 0.397333333, 0.526333333, 0.6, 0.606677459,
+				0.605971048, 0.606226187, 0.606238798, 0.606238916;
+	$Widths   = 3.6, 1.8, 1, 0.4, 0.1, 0.02, 0.0015, 0.0001, 8e-06;
+	$Angles   = 0, 0, 0, 0, 15, 45, 45, 45, 45;
+}
+
+@template $MandelbrotTemplate = {
+	$Formula = $z ^ 2 + $z0; // iteration formula
+	$Min = 0.25; // This actually can be a formula
+	$Max = 2;
+	$Distance = abs($z); // This is the default value
+	$IterationLimit = 50;
+	
+	// variables can be nexted
+	// colour for convergent points
+	$Con = {
+		$Type = _RGBA_;
+		// it is ok to break expressions into different lines
+		$R = (3$t + 10) * $k + (8$t + 36) * $x + 150 * abs($z) +
+		     (3$t + 20) * abs($z) / 0.25 + 100 * cos(arg($z));
+		$G = 3$k + (5$t + 1) * abs($z) / 0.25 + 20 * arg($z) +
+		     10($x0 + $y0) + 75 * abs($z0) + 0.1 * exp(abs($z)) + 3$t + 64;
+		$B = (6$t + 15) * $k + 0.6($x + $y) + 30 * abs($z0) +
+		     10 * arg($z0) + 0.0000001 * exp($k) + 10 ^ ($k - 4) + 136;
+		$A = 255;
+	}
+	// colour for dicergent points
+	$Div = $Color1;
+	
+	// route information
+	$Route = $Route1;
+}
+
+@layer $FractalMandelbrot = {
+	$Name = Mandelbrot Layer;
+	$Template = $MandelbrotTemplate;
+}
+
+@formula $JuliaFormula =
+	$z ^ 2 + (-0.8 + 0.156i)(1 - $t) + (-0.70176 - 0.3842i)$t;
+
+@layer $FractalJulia = {
+	$Name = Julia Layer;
+	$Template = {
+		$Formula := $JuliaFormula;
+		$Con = $MandelbrotTemplate.Div;
+		$Min = 0.000001;
+		$Max = 10;
+		$IterationLimit = 1000;
+		// This can not change the value in $Con.A
+		// due to bug in 'QJsonValueRef'
+		$Con.A = 255 * sqrt(4 * t * (1 - $t));
+		$Div = {
+			$Type = _HSVA_;
+			// These values are just exanples.
+			$H = 360$t;
+			$S = 1 - $t;
+			$V = 1 - $z ^ 2;
+		}
+	}
+	$Route = {
+		$Type = _FORMULA_; // defined by formula
+		$CentreX = 0;
+		$CentreY = 0;
+		$Width = 3.2;
+	}
+}
+
+/**
+ * CONFIGURE sets what variables should be used in
+ * preview, image creating and video creating.
+ */
+%CONFIGURE($Config, $Output, $FractalMandelbrot); // function
+
+// ALL RIGHTS RESERVED (C) 2021 Teddy van Jerry
