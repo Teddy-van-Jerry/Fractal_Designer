@@ -22,7 +22,7 @@
 
 // image and video output settings
 @output $Output = {
-	$Time = 65 * 100; // time is measured in millisecond
+	$Time = 65 * 10; // time is measured in millisecond
 	$Fps = 30;
 	$Crf = 18; // constant rate factor, from 0 to 51
 	$VideoDir = $Your_Local_Dir; // assignment
@@ -30,7 +30,7 @@
 	$VideoName = Mandelbrot Set Sample;
 	$ImageDir = D:\FRD\Mandelbrot\img;
 	$ImagePrefix = img_;
-	$ImageSize = 1920, 1080; // set as 1080p
+	$ImageSize = 400, 300; // set as 1080p
 	$Music =
 		// Music will be played by sequence.
 		// Music names are divided by comma.

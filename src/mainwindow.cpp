@@ -134,6 +134,11 @@ MainWindow::MainWindow(QWidget *parent)
                                    ">> ");                                        // start of the terminal
     ui->textEdit_terminal->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor); // move the cursor
 
+    create_image_info = new Create_Image_Info;
+    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
+    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
+    connect(create_image_info, &Create_Image_Info::releaseInfo, this, &MainWindow::updateTerminalCreateImagesProgresssBar);
+
     ReadStyle();
     updateMaxButton();
 }
@@ -3243,10 +3248,7 @@ void MainWindow::createImages()
     currentTerminalWorkName = "Create Images";
     initTerminalProgressBar(total_image);
 
-    create_image_info = new Create_Image_Info;
-    connect(this, &MainWindow::build_image_info_signal, create_image_info, &Create_Image_Info::set_info);
-    connect(this, &MainWindow::build_image_updateInfo_signal, create_image_info, &Create_Image_Info::updateInfo);
-    connect(create_image_info, &Create_Image_Info::releaseInfo, this, &MainWindow::updateTerminalCreateImagesProgresssBar);
+    create_image_info->init();
     create_image_info->show();
 
     emit build_image_info_signal(path + "/" + name, image_format, total_image, 0);

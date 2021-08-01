@@ -52,7 +52,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Creating Images...</string>
+    <string>Creating Images ...</string>
    </property>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget">
