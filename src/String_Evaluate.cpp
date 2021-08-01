@@ -473,7 +473,17 @@ std::complex<double> eval_postorder(
     do {
         if (iter->str.empty()) {
             // num
-            s.push(iter->is_var ? num_list[static_cast<size_t>(iter->num.real())] : iter->num);
+            if (iter->is_var) {
+                if (num_list.size() > static_cast<size_t>(iter->num.real()))
+                    s.push(num_list[static_cast<size_t>(iter->num.real())]);
+                else {
+                    _error_msg(msg, "num_list size smaller than var_list");
+                    return ERROR_COMPLEX;
+                }
+            }
+            else {
+                s.push(iter->num);
+            }
         }
         else {
             // str

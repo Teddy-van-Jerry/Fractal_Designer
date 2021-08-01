@@ -23,7 +23,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Fractal Designer 6.0.9 Alpha</string>
+      <string>Fractal Designer 6.0.9 Beta1</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

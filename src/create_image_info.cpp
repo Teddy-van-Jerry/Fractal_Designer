@@ -135,6 +135,18 @@ void Create_Image_Info::close_create_image_info()
 
 }
 
+void Create_Image_Info::init()
+{
+    ui->label_Creating->setText("Creating Images ...");
+    ui->label_leftTime->setVisible(true);
+    ui->label_speed->setVisible(true);
+    ui->label_now->setVisible(true);
+    ui->progressBar->setValue(0);
+    timer->start(50);
+    if(!time_left.isValid())
+        qDebug() << "invalid";
+}
+
 void Create_Image_Info::closeEvent(QCloseEvent*)
 {
     timer->stop();

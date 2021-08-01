@@ -30,7 +30,7 @@
 	$VideoName = Mandelbrot Set Sample;
 	$ImageDir = D:\FRD\Mandelbrot\img;
 	$ImagePrefix = img_;
-	$ImageSize = 1920, 1080; // set as 1080p
+	$ImageSize = 192, 108; // set as 1080p
 	$Music =
 		// Music will be played by sequence.
 		// Music names are divided by comma.
