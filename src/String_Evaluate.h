@@ -32,10 +32,10 @@
 static const std::vector<std::string> empty_string_list_;           // an empty string list
 static const std::vector<std::complex<double>> empty_complex_list_; // an empty complex list
 static constexpr std::complex<double> ERROR_COMPLEX { 0, 0 };       // complex of error result
-static constexpr std::complex<double> IMAG_I{ 0, 1 };               // the imaginary unit
+static constexpr std::complex<double> IMAG_I { 0, 1 };               // the imaginary unit
 
 // If it is defined, error information will be printed.
-#define COMPLEX_CERR_ERROR_
+// #define COMPLEX_CERR_ERROR_
 
 /**
  * \brief type '_var' is used in stack

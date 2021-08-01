@@ -127,7 +127,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->textEdit_terminal->setContextMenuPolicy(Qt::NoContextMenu);               // no content menu when right button clicked
     ui->textEdit_terminal->setUndoRedoEnabled(false);                             // no undo and redo
     ui->textEdit_terminal->setAcceptDrops(false);                                 // no drag or drop
-    ui->textEdit_terminal->setText("Fractal Designer 6.0.8 Terminal\n"
+    ui->textEdit_terminal->setText("Fractal Designer 6.0.9 Terminal\n"
                                    "-------------------------------\n"
                                    "   (C) 2021 Teddy van Jerry    \n"
                                    "===============================\n"
@@ -3197,7 +3197,8 @@ void MainWindow::createImages()
     if (!ui->actionCreate_Images->isEnabled())
     {
         errorTerminalMessage("Can not create images.");
-        ui->textEdit_terminal->append("\n>>");
+        ui->textEdit_terminal->append("\n>> ");
+        ui->textEdit_terminal->setReadOnly(false);
         return;
     }
 
@@ -3206,7 +3207,8 @@ void MainWindow::createImages()
     {
         errorTerminalMessage("Can not create images. You have not saved the project.");
         QMessageBox::warning(this, "Can not create images", "You have not saved the project.");
-        ui->textEdit_terminal->append("\n>>");
+        ui->textEdit_terminal->append("\n>> ");
+        ui->textEdit_terminal->setReadOnly(false);
         return;
     }
 
@@ -3223,7 +3225,8 @@ void MainWindow::createImages()
     {
         errorTerminalMessage("Can not create images. The output path does not exist.");
         QMessageBox::warning(this, "Can not create images", "The path does not exist.");
-        ui->textEdit_terminal->append("\n>>");
+        ui->textEdit_terminal->append("\n>> ");
+        ui->textEdit_terminal->setReadOnly(false);
         return;
     }
 
