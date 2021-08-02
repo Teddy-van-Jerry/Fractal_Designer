@@ -5,8 +5,8 @@
  * \class Interpreter
  * \include QString Info.h
  * \author Teddy-van-Jerry
- * \version 6.0.0
- * \date 2021-07-18
+ * \version 6.0
+ * \date 2021-08-02
  *
  */
 

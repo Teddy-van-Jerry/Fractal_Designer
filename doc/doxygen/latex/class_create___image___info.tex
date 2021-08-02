@@ -1,0 +1,98 @@
+\hypertarget{class_create___image___info}{}\doxysection{Create\+\_\+\+Image\+\_\+\+Info Class Reference}
+\label{class_create___image___info}\index{Create\_Image\_Info@{Create\_Image\_Info}}
+Inheritance diagram for Create\+\_\+\+Image\+\_\+\+Info\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_create___image___info}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a40281b58cd6477aba3f31fd69929f70e}\label{class_create___image___info_a40281b58cd6477aba3f31fd69929f70e}} 
+void {\bfseries set\+\_\+info} (QString name, QString format, int total, int start=0)
+\item 
+\mbox{\Hypertarget{class_create___image___info_a863651dea1575468da1dbc1cfc842b1a}\label{class_create___image___info_a863651dea1575468da1dbc1cfc842b1a}} 
+void {\bfseries set\+\_\+info\+\_\+} (QString name, QString format, QList$<$ int $>$ list)
+\item 
+\mbox{\Hypertarget{class_create___image___info_a9fbcadbfc4d1377980f28f56786dfe45}\label{class_create___image___info_a9fbcadbfc4d1377980f28f56786dfe45}} 
+void {\bfseries update\+Info} ()
+\item 
+\mbox{\Hypertarget{class_create___image___info_a94a75daf182b564b92a1556e6f8b7436}\label{class_create___image___info_a94a75daf182b564b92a1556e6f8b7436}} 
+void {\bfseries close\+\_\+create\+\_\+image\+\_\+info} ()
+\item 
+\mbox{\Hypertarget{class_create___image___info_ad82611891df4b5d67a2a36ba757b8eda}\label{class_create___image___info_ad82611891df4b5d67a2a36ba757b8eda}} 
+void {\bfseries init} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___info_aa813386ce74e3808729bdcd6cc3b5e84}\label{class_create___image___info_aa813386ce74e3808729bdcd6cc3b5e84}} 
+void {\bfseries time\+Out} ()
+\item 
+\mbox{\Hypertarget{class_create___image___info_a902e270264335f209e2abe09a74d666d}\label{class_create___image___info_a902e270264335f209e2abe09a74d666d}} 
+void {\bfseries release\+Info} (int current\+\_\+num, double speed)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a26d5672332defd8302a925b1e36963c5}\label{class_create___image___info_a26d5672332defd8302a925b1e36963c5}} 
+{\bfseries Create\+\_\+\+Image\+\_\+\+Info} (QWidget $\ast$parent=nullptr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___info_aa3e4713067d2736c7cc2fc34f94e8b01}\label{class_create___image___info_aa3e4713067d2736c7cc2fc34f94e8b01}} 
+void {\bfseries update\+Time} ()
+\item 
+\mbox{\Hypertarget{class_create___image___info_ad0f8a514ca36b9c977525cbbe3a73862}\label{class_create___image___info_ad0f8a514ca36b9c977525cbbe3a73862}} 
+void {\bfseries close\+Event} (QClose\+Event $\ast$)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___info_abaef6b4da053e2f8026230d559980e23}\label{class_create___image___info_abaef6b4da053e2f8026230d559980e23}} 
+Ui\+::\+Create\+\_\+\+Image\+\_\+\+Info $\ast$ {\bfseries ui}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a0feb23163fac785a46ef4ebecd2e21cb}\label{class_create___image___info_a0feb23163fac785a46ef4ebecd2e21cb}} 
+QTimer $\ast$ {\bfseries timer}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a1afe780d6000cb0de2017d126f5e4c58}\label{class_create___image___info_a1afe780d6000cb0de2017d126f5e4c58}} 
+QTime {\bfseries time\+\_\+now} = QTime\+::from\+String(\char`\"{}0\char`\"{}, \char`\"{}s\char`\"{})
+\item 
+\mbox{\Hypertarget{class_create___image___info_a004319713b507b496640348f47e489cd}\label{class_create___image___info_a004319713b507b496640348f47e489cd}} 
+QTime {\bfseries time\+\_\+left} = QTime\+::from\+String(\char`\"{}1\char`\"{}, \char`\"{}h\char`\"{})
+\item 
+\mbox{\Hypertarget{class_create___image___info_ad4b4367f0035a135ab8b205b6fdc3684}\label{class_create___image___info_ad4b4367f0035a135ab8b205b6fdc3684}} 
+QTime {\bfseries time\+\_\+ten} = QTime\+::from\+String(\char`\"{}0\char`\"{}, \char`\"{}s\char`\"{})
+\item 
+\mbox{\Hypertarget{class_create___image___info_afc8ad85634156a356056adaf114963c2}\label{class_create___image___info_afc8ad85634156a356056adaf114963c2}} 
+QString {\bfseries name}
+\item 
+\mbox{\Hypertarget{class_create___image___info_ae16995273d6b67bb1108239c64f9471f}\label{class_create___image___info_ae16995273d6b67bb1108239c64f9471f}} 
+QString {\bfseries format}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a6b12f3e52d572a6ee6dea6a6b8b0a590}\label{class_create___image___info_a6b12f3e52d572a6ee6dea6a6b8b0a590}} 
+int {\bfseries total}
+\item 
+\mbox{\Hypertarget{class_create___image___info_af69eefddc3531781654f7caf5ccd0e7d}\label{class_create___image___info_af69eefddc3531781654f7caf5ccd0e7d}} 
+int {\bfseries index}
+\item 
+\mbox{\Hypertarget{class_create___image___info_aa446208869a9d36f870fadb86eea56d8}\label{class_create___image___info_aa446208869a9d36f870fadb86eea56d8}} 
+int {\bfseries start}
+\item 
+\mbox{\Hypertarget{class_create___image___info_a8c13fe0722b639c477ea95e3d18e0901}\label{class_create___image___info_a8c13fe0722b639c477ea95e3d18e0901}} 
+double {\bfseries speed} = 0
+\item 
+\mbox{\Hypertarget{class_create___image___info_a79a39ecc1fda624fb18886b8f57bcb33}\label{class_create___image___info_a79a39ecc1fda624fb18886b8f57bcb33}} 
+bool {\bfseries using\+QList} = false
+\item 
+\mbox{\Hypertarget{class_create___image___info_a001fb9199c48d8d8c7ee7a8397adfa23}\label{class_create___image___info_a001fb9199c48d8d8c7ee7a8397adfa23}} 
+QList$<$ int $>$ {\bfseries list\+\_\+}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/create\+\_\+image\+\_\+info.\+h\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/create\+\_\+image\+\_\+info.\+cpp\end{DoxyCompactItemize}
