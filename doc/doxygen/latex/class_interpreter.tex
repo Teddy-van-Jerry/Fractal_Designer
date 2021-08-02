@@ -1,0 +1,326 @@
+\hypertarget{class_interpreter}{}\doxysection{Interpreter Class Reference}
+\label{class_interpreter}\index{Interpreter@{Interpreter}}
+
+
+the FRD script interpreter  
+
+
+
+
+{\ttfamily \#include $<$Interpreter.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_interpreter_a9faf0dca72cd27223e5c447b580de2a5}\label{class_interpreter_a9faf0dca72cd27223e5c447b580de2a5}} 
+\mbox{\hyperlink{class_interpreter_a9faf0dca72cd27223e5c447b580de2a5}{Interpreter}} ()
+\begin{DoxyCompactList}\small\item\em default constructor of class \mbox{\hyperlink{class_interpreter}{Interpreter}} \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_interpreter_a23f1fb8991964511fa94560997254e74}{interpret}} ()
+\begin{DoxyCompactList}\small\item\em interpret strings \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_interpreter_a4be05a451866883c4352bad1f329d017}{interpret}} (const QString \&text, \mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}} \&\mbox{\hyperlink{structinfo}{info}})
+\begin{DoxyCompactList}\small\item\em interpret the text and store into info \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_interpreter_a4e75d51bab764105e655961f2f94134b}\label{class_interpreter_a4e75d51bab764105e655961f2f94134b}} 
+enum {\bfseries FRD\+\_\+block\+\_\+content\+\_\+} \{ {\bfseries \+\_\+\+FRD\+\_\+\+BLOCK\+\_\+\+BLANK\+\_\+}
+, {\bfseries \+\_\+\+FRD\+\_\+\+BLOCK\+\_\+\+VARIABLE\+\_\+}
+, {\bfseries \+\_\+\+FRD\+\_\+\+BLOCK\+\_\+\+FUNCTION\+\_\+}
+, {\bfseries \+\_\+\+FRD\+\_\+\+BLOCK\+\_\+\+CLASS\+\_\+}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_interpreter_a8d78e4d33148b993937eee94f28e0901}{set\+Strings}} (const QString \&text)
+\begin{DoxyCompactList}\small\item\em set strings \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_interpreter_a73aaee995cb8e3083f42198add793e7d}{set\+Info\+Ptr}} (\mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}} \&\mbox{\hyperlink{structinfo}{info}})
+\begin{DoxyCompactList}\small\item\em set info\+\_\+ptr \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_interpreter_a5c8780005d2d6dabf7efb1b3327dc90a}{remove\+Comments}} ()
+\begin{DoxyCompactList}\small\item\em change comments into whitespace \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_interpreter_ab5c18ec8c606ce7e48df71a873e08fc3}{read\+Var}} (FRD\+\_\+block\+\_\+content\+\_\+ content, const QString \&block, const QString \&name, bool existed=true, QString new\+\_\+class\+\_\+name=\char`\"{}\char`\"{})
+\begin{DoxyCompactList}\small\item\em get the next non-\/space char in strings. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_interpreter_a7df2c2cad844a4f54e2f9d2e73d9082f}{read\+Fun}} (FRD\+\_\+block\+\_\+content\+\_\+ content, const QString \&block, const QString \&name)
+\begin{DoxyCompactList}\small\item\em read function defination \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_interpreter_af0bd060e847fdd8a628e9baf54f68bc4}\label{class_interpreter_af0bd060e847fdd8a628e9baf54f68bc4}} 
+bool {\bfseries read\+Class} ()
+\item 
+\mbox{\Hypertarget{class_interpreter_ac6e4e6bd333b9f9de2325eaff79772a7}\label{class_interpreter_ac6e4e6bd333b9f9de2325eaff79772a7}} 
+bool {\bfseries custom\+Class} ()
+\item 
+\mbox{\Hypertarget{class_interpreter_a737ed99d002580c8a06730f7bd39defa}\label{class_interpreter_a737ed99d002580c8a06730f7bd39defa}} 
+bool {\bfseries read\+Def} ()
+\item 
+\mbox{\Hypertarget{class_interpreter_a71e327bbb492ef4382203e32dfd739a5}\label{class_interpreter_a71e327bbb492ef4382203e32dfd739a5}} 
+bool {\bfseries read\+Block} ()
+\item 
+\mbox{\Hypertarget{class_interpreter_a022f640bf4ca46ae98634e87d9355a63}\label{class_interpreter_a022f640bf4ca46ae98634e87d9355a63}} 
+bool {\bfseries read\+Block} (FRD\+\_\+block\+\_\+content\+\_\+ content, const QString \&block, const QString \&name)
+\item 
+\mbox{\Hypertarget{class_interpreter_a5acb285e8a601636f2d1ec5fe4494b7f}\label{class_interpreter_a5acb285e8a601636f2d1ec5fe4494b7f}} 
+std\+::complex$<$ double $>$ {\bfseries eval\+Expr} (const QString \&expr, const QString \&block, const QString \&name, int start\+\_\+row, int start\+\_\+col, bool $\ast$ok=nullptr)
+\item 
+\mbox{\Hypertarget{class_interpreter_a10299defb9b45c294c06bf4ffb8b134a}\label{class_interpreter_a10299defb9b45c294c06bf4ffb8b134a}} 
+QChar {\bfseries next\+Char} ()
+\item 
+\mbox{\Hypertarget{class_interpreter_ab6e1bc0cbfee3cb779b8d6a638a816ec}\label{class_interpreter_ab6e1bc0cbfee3cb779b8d6a638a816ec}} 
+QString {\bfseries pure\+Name} (const QString \&name) const
+\item 
+\mbox{\Hypertarget{class_interpreter_a3f564364429c7873c68bf233de597da0}\label{class_interpreter_a3f564364429c7873c68bf233de597da0}} 
+QString {\bfseries next\+String} (QString end\+\_\+of\+\_\+string=\+\_\+empty\+\_\+string, bool discard\+\_\+space=false, bool discard\+\_\+linebreak=false)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+QString\+List \mbox{\hyperlink{class_interpreter_a9ecc18aa0b1690802ee1be0bd70be932}{strings}}
+\item 
+\mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}} $\ast$ \mbox{\hyperlink{class_interpreter_a43f9bf1d432939980c7164677d2c4639}{info\+\_\+ptr}}
+\item 
+int \mbox{\hyperlink{class_interpreter_a0168d73623aa451bc704ec8c8f69df7a}{row}} = 1
+\item 
+int \mbox{\hyperlink{class_interpreter_a54299e17e9310d3e8be4496e297e05bf}{col}} = 0
+\item 
+\mbox{\Hypertarget{class_interpreter_ac9965787684860c262bb279da6a727ef}\label{class_interpreter_ac9965787684860c262bb279da6a727ef}} 
+bool {\bfseries reach\+\_\+end} = false
+\item 
+\mbox{\Hypertarget{class_interpreter_af56c68b0bc94a1986f381583c52cb6f9}\label{class_interpreter_af56c68b0bc94a1986f381583c52cb6f9}} 
+int {\bfseries block\+\_\+count} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_interpreter_a6d25203d2f5b0abb0d5b7b224ad9fe8a}\label{class_interpreter_a6d25203d2f5b0abb0d5b7b224ad9fe8a}} 
+static const QString {\bfseries \+\_\+empty\+\_\+string}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+the FRD script interpreter 
+
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+
+
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \mbox{\hyperlink{_info_8h_source}{Info.\+h}} \begin{DoxyAuthor}{Author}
+Teddy-\/van-\/\+Jerry 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+6.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2021-\/08-\/02
+\end{DoxyDate}
+\begin{DoxyAuthor}{Author}
+Teddy-\/van-\/\+Jerry 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+6.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2021-\/08-\/02 
+\end{DoxyDate}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_interpreter_a23f1fb8991964511fa94560997254e74}\label{class_interpreter_a23f1fb8991964511fa94560997254e74}} 
+\index{Interpreter@{Interpreter}!interpret@{interpret}}
+\index{interpret@{interpret}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{interpret()}{interpret()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool Interpreter\+::interpret (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+interpret strings 
+
+\begin{DoxyReturn}{Returns}
+whether there is syntax error 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & There is no syntax error. \\
+\hline
+{\em false} & There are syntax errors. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{class_interpreter_a4be05a451866883c4352bad1f329d017}\label{class_interpreter_a4be05a451866883c4352bad1f329d017}} 
+\index{Interpreter@{Interpreter}!interpret@{interpret}}
+\index{interpret@{interpret}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{interpret()}{interpret()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Interpreter\+::interpret (\begin{DoxyParamCaption}\item[{const QString \&}]{text,  }\item[{\mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}} \&}]{info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+interpret the text and store into info 
+
+This interprets FRD script, which is programming language to create fractal images and videos in Fractal Designer. After interpretation, is there is no syntax error, the information of the current script will be stores.
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & the QString of Editor text \\
+\hline
+{\em info} & the current info \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether there is not syntax error 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & There is no syntax error. \\
+\hline
+{\em false} & There are syntax errors. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyRemark}{Remarks}
+This is a static function, you can call it by\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{bool} ok = \mbox{\hyperlink{class_interpreter_a23f1fb8991964511fa94560997254e74}{Interpreter::interpret}}(text, \mbox{\hyperlink{structinfo}{info}});}
+
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\mbox{\Hypertarget{class_interpreter_a7df2c2cad844a4f54e2f9d2e73d9082f}\label{class_interpreter_a7df2c2cad844a4f54e2f9d2e73d9082f}} 
+\index{Interpreter@{Interpreter}!readFun@{readFun}}
+\index{readFun@{readFun}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{readFun()}{readFun()}}
+{\footnotesize\ttfamily bool Interpreter\+::read\+Fun (\begin{DoxyParamCaption}\item[{FRD\+\_\+block\+\_\+content\+\_\+}]{content,  }\item[{const QString \&}]{block,  }\item[{const QString \&}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+read function defination 
+
+\begin{DoxyReturn}{Returns}
+whether there is error in reading function. 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & There is no error in reading function. \\
+\hline
+{\em false} & There is error in reading function. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{class_interpreter_ab5c18ec8c606ce7e48df71a873e08fc3}\label{class_interpreter_ab5c18ec8c606ce7e48df71a873e08fc3}} 
+\index{Interpreter@{Interpreter}!readVar@{readVar}}
+\index{readVar@{readVar}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{readVar()}{readVar()}}
+{\footnotesize\ttfamily bool Interpreter\+::read\+Var (\begin{DoxyParamCaption}\item[{FRD\+\_\+block\+\_\+content\+\_\+}]{content,  }\item[{const QString \&}]{block,  }\item[{const QString \&}]{name,  }\item[{bool}]{existed = {\ttfamily true},  }\item[{QString}]{new\+\_\+class\+\_\+name = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+get the next non-\/space char in strings. 
+
+\begin{DoxyReturn}{Returns}
+the next char 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em EOF} & It has already reached the end of text. \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyRemark}{Remarks}
+This will update the value of row and col.
+\end{DoxyRemark}
+read variable defination
+
+\begin{DoxyReturn}{Returns}
+whether there is error in reading variable. 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & There is no error in reading variable. \\
+\hline
+{\em false} & There is error in reading variable. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{class_interpreter_a5c8780005d2d6dabf7efb1b3327dc90a}\label{class_interpreter_a5c8780005d2d6dabf7efb1b3327dc90a}} 
+\index{Interpreter@{Interpreter}!removeComments@{removeComments}}
+\index{removeComments@{removeComments}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{removeComments()}{removeComments()}}
+{\footnotesize\ttfamily bool Interpreter\+::remove\+Comments (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+change comments into whitespace 
+
+\begin{DoxyReturn}{Returns}
+whether there are not unfinished comments 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & There is no comment error. \\
+\hline
+{\em false} & There exists unfinished comments.\\
+\hline
+\end{DoxyRetVals}
+Replace comments with whitespace, so as not to influence row and col. \mbox{\Hypertarget{class_interpreter_a73aaee995cb8e3083f42198add793e7d}\label{class_interpreter_a73aaee995cb8e3083f42198add793e7d}} 
+\index{Interpreter@{Interpreter}!setInfoPtr@{setInfoPtr}}
+\index{setInfoPtr@{setInfoPtr}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{setInfoPtr()}{setInfoPtr()}}
+{\footnotesize\ttfamily void Interpreter\+::set\+Info\+Ptr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}} \&}]{info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+set info\+\_\+ptr 
+
+
+\begin{DoxyParams}{Parameters}
+{\em info} & the current info \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_interpreter_a8d78e4d33148b993937eee94f28e0901}\label{class_interpreter_a8d78e4d33148b993937eee94f28e0901}} 
+\index{Interpreter@{Interpreter}!setStrings@{setStrings}}
+\index{setStrings@{setStrings}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{setStrings()}{setStrings()}}
+{\footnotesize\ttfamily void Interpreter\+::set\+Strings (\begin{DoxyParamCaption}\item[{const QString \&}]{text }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+set strings 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & the QString of Editor text \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_interpreter_a54299e17e9310d3e8be4496e297e05bf}\label{class_interpreter_a54299e17e9310d3e8be4496e297e05bf}} 
+\index{Interpreter@{Interpreter}!col@{col}}
+\index{col@{col}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{col}{col}}
+{\footnotesize\ttfamily int Interpreter\+::col = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+column count that starts at 1 \mbox{\Hypertarget{class_interpreter_a43f9bf1d432939980c7164677d2c4639}\label{class_interpreter_a43f9bf1d432939980c7164677d2c4639}} 
+\index{Interpreter@{Interpreter}!info\_ptr@{info\_ptr}}
+\index{info\_ptr@{info\_ptr}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{info\_ptr}{info\_ptr}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_f_r_d___json}{FRD\+\_\+\+Json}}$\ast$ Interpreter\+::info\+\_\+ptr\hspace{0.3cm}{\ttfamily [private]}}
+
+the pointer to current info \mbox{\Hypertarget{class_interpreter_a0168d73623aa451bc704ec8c8f69df7a}\label{class_interpreter_a0168d73623aa451bc704ec8c8f69df7a}} 
+\index{Interpreter@{Interpreter}!row@{row}}
+\index{row@{row}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{row}{row}}
+{\footnotesize\ttfamily int Interpreter\+::row = 1\hspace{0.3cm}{\ttfamily [private]}}
+
+row count that starts at 1 \mbox{\Hypertarget{class_interpreter_a9ecc18aa0b1690802ee1be0bd70be932}\label{class_interpreter_a9ecc18aa0b1690802ee1be0bd70be932}} 
+\index{Interpreter@{Interpreter}!strings@{strings}}
+\index{strings@{strings}!Interpreter@{Interpreter}}
+\doxysubsubsection{\texorpdfstring{strings}{strings}}
+{\footnotesize\ttfamily QString\+List Interpreter\+::strings\hspace{0.3cm}{\ttfamily [private]}}
+
+text to be interpreted stored by lines 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/\mbox{\hyperlink{_interpreter_8h}{Interpreter.\+h}}\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/Interpreter.\+cpp\end{DoxyCompactItemize}

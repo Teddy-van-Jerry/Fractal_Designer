@@ -1,0 +1,105 @@
+\label{index_md_D__GitHub_TVJ_Group_Fractal_Designer_src_Doxygen_Mainpage}%
+\Hypertarget{index_md_D__GitHub_TVJ_Group_Fractal_Designer_src_Doxygen_Mainpage}%
+This is an application to make fractal videos based on Qt(6.\+2.\+0), C++ and FFmpeg.\hypertarget{index_autotoc_md1}{}\doxysection{Version Information}\label{index_autotoc_md1}
+This is version 6.\+0.\+9 updated in 2021/08/01.
+
+{\bfseries{What\textquotesingle{}s new in beta1 version than alpha version}}\+:
+\begin{DoxyItemize}
+\item Solve bugs listed in \href{https://github.com/T-V-J/Fractal_Designer/releases/tag/v6.0.9-alpha}{\texttt{ 6.\+0.\+9 Alpha Release}}.
+\item Improve efficiency by up to 100\% than alpha version.
+\end{DoxyItemize}
+
+Current version is now only available for Windows. Release for Linux will be published in the near future.
+
+Visit our \href{https://frd.teddy-van-jerry.org}{\texttt{ Fractal Designer Website}} for more information.\hypertarget{index_autotoc_md2}{}\doxysection{Build the Project}\label{index_autotoc_md2}
+Besides the build version for Windows (using Qt 6.\+2.\+0), you can compile it yourself by following steps\+:
+
+
+\begin{DoxyItemize}
+\item Build project {\ttfamily include/qscintilla.\+pro} with both Debug and Release mode. Remember to uncheck {\itshape shadow build}.
+\item Open project {\ttfamily src/\+Fractal\+\_\+\+Designer.\+pro} and {\itshape release translations} (lrelease). In Qt Creator, it is in {\ttfamily Tools-\/$>$External-\/$>$Qt Languist}.
+\item Build {\ttfamily src/\+Fractal\+\_\+\+Designer.\+pro} with the same kit as that of building QScintilla. Also remember to uncheck {\itshape shadow build}.
+\item To distribute the project, you need to
+\begin{DoxyItemize}
+\item Build in release mode.
+\item Deploy with {\ttfamily windeployqt}, {\ttfamily macdeployqt}, {\ttfamily linuxdeployqt} or other methods to get the dependency files.
+\item Copy the release dynamic library file of QScintilla ({\ttfamily qscintilla2\+\_\+qt6.\+dll} in Windows) to directory {\ttfamily bin} and delete directory {\ttfamily lib}, {\ttfamily scintilla}, {\ttfamily include}, {\ttfamily tmp}.
+\item Download \href{http://www.ffmpeg.org/download.html}{\texttt{ ffmpeg}} and put it in the right directory. (For Windows, it is {\ttfamily bin/win/ffmpeg.\+exe}.)
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md3}{}\doxysection{Use Fractal Designer}\label{index_autotoc_md3}
+Type {\ttfamily help} in the terminal to get the list of all commands supported by Fractal Designer 6.\+0.\+9. Use the sample file to have a quick look at how the {\ttfamily frd} language is like. Details about {\ttfamily frd} language will be updated in the near future.\hypertarget{index_autotoc_md4}{}\doxysubsection{FRD Script}\label{index_autotoc_md4}
+Here is the basic syntax of {\ttfamily frd} script\+:
+\begin{DoxyItemize}
+\item {\ttfamily frd} language is case-\/sensitive.
+\item Variable names are started with {\ttfamily \$}, function names are started with {\ttfamily \%} and class names are started with {\ttfamily @}.
+\item Each statement is ended with {\ttfamily ;} or a block (i.\+e. {\ttfamily \{\}}).
+\item Comments follow the {\ttfamily C++} rule (i.\+e. {\ttfamily //} and {\ttfamily /$\ast$ $\ast$/}).
+\item No custom class name is allowed in this version.
+\item Members of a class are specified also.
+\item No quote mark is needed outside {\ttfamily @string} value.
+\item To assign a {\ttfamily @formula} value, use {\ttfamily \+:=} instead of {\ttfamily =}.
+\item Currently a value can only be set during initialization. (Which seems to a bug of {\ttfamily QJson})
+\item Variables is only valid in its scope block.
+\item {\ttfamily @number} values are acctually stored as complex numbers.
+\item {\ttfamily @array} stores {\ttfamily @number} and {\ttfamily @list} stores {\ttfamily @string}.
+\item {\ttfamily @array} and {\ttfamily @list} values are set by using {\ttfamily ,} to divide different elements. No {\ttfamily \{\}} should be used.
+\item Function now only support {\ttfamily CONFIGURE}.
+\end{DoxyItemize}
+
+\begin{quote}
+Note\+:
+\begin{DoxyItemize}
+\item Non Ascii characters can lead to the misplace of syntax highlight of variable, function and class names.
+\item Try to avoid syntax error or mathematics error. (For example, {\ttfamily Ts} in route should between 0 to 1 and {\ttfamily Widths} should not be negative.) The behavoir of the interpreter is undefined faced with these circumstances. {\itshape \mbox{[}This will be improved in the future.\mbox{]}} 
+\end{DoxyItemize}\end{quote}
+\hypertarget{index_autotoc_md5}{}\doxysubsection{FRD Terminal}\label{index_autotoc_md5}
+
+\begin{DoxyItemize}
+\item Currently you just need to use the {\bfseries{Editor}} tab.
+\item {\ttfamily Ctrl + O} to open {\ttfamily frd} files. (The default directory will have a sample file.)
+\item Change the {\itshape file location} and {\itshape image size} information of sample file according to your need.
+\item Enter {\ttfamily save} in terminal or use {\ttfamily Ctrl + S} to save your changes.
+\item Enter {\ttfamily run} to interpret the script (Every time you change the file you need to {\ttfamily run} to get the data updated.)
+\item Enter {\ttfamily preview} (or {\ttfamily F12}) to view the preview image and {\ttfamily closepreview} to close the preview window.
+\item Enter {\ttfamily createimages} (or {\ttfamily Ctrl + R}) to create images. This process can be time-\/consuming.
+\item Enter {\ttfamily createvideo} to create the video. This process is much faster than that of creating images but the window will not respond until this process finishes.
+\item Other useful commands\+:
+\begin{DoxyItemize}
+\item {\ttfamily help} to view all commands. This can help you choose what command and argument to use.
+\item {\ttfamily clear} to clear the screen.
+\item {\ttfamily history} to view the command history.
+\item {\ttfamily info} to view data stored in json format.
+\item {\ttfamily !!} to repeat the previous command.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md6}{}\doxysection{TODOs in Version 6.\+0}\label{index_autotoc_md6}
+
+\begin{DoxyItemize}
+\item Validity Check in {\ttfamily frd} script.
+\item Improve error indication of interpreter.
+\item Add termination control in preview, creating images and creating video.
+\item Add more terminal commands.
+\end{DoxyItemize}\hypertarget{index_autotoc_md7}{}\doxysection{Sample Videos}\label{index_autotoc_md7}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Video Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Watch on You\+Tube   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Watch on Bilibili    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Video Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Watch on You\+Tube   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Watch on Bilibili    }\\\cline{1-3}
+\endhead
+\PBS\centering Mandelbrot Set 1   &\PBS\centering \href{https://youtu.be/LU9eL1-9V0E}{\texttt{ https\+://youtu.\+be/\+LU9e\+L1-\/9\+V0E}}   &\PBS\centering \href{https://b23.tv/BV1TU4y147ta}{\texttt{ https\+://b23.\+tv/\+BV1\+TU4y147ta}}    \\\cline{1-3}
+\PBS\centering Mandelbrot Set 2   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV1qX4y1P74d}{\texttt{ https\+://b23.\+tv/\+BV1q\+X4y1\+P74d}}    \\\cline{1-3}
+\PBS\centering Mandelbrot Set 3   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV17K4y1J7XM}{\texttt{ https\+://b23.\+tv/\+BV17\+K4y1\+J7\+XM}}    \\\cline{1-3}
+\PBS\centering Mandelbrot Set 4   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV1Hy4y1T7MD}{\texttt{ https\+://b23.\+tv/\+BV1\+Hy4y1\+T7\+MD}}    \\\cline{1-3}
+\PBS\centering Julia Set 1   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV1wB4y1N7pU}{\texttt{ https\+://b23.\+tv/\+BV1w\+B4y1\+N7pU}}    \\\cline{1-3}
+\PBS\centering Burning Ship Fractal 1   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV1RA41157kJ}{\texttt{ https\+://b23.\+tv/\+BV1\+RA41157kJ}}    \\\cline{1-3}
+\PBS\centering Newton Fractal 1   &\PBS\centering -\/   &\PBS\centering \href{https://b23.tv/BV1Tb4y1D7oN}{\texttt{ https\+://b23.\+tv/\+BV1\+Tb4y1\+D7oN}}   \\\cline{1-3}
+\end{longtabu}
+
+
+\begin{quote}
+More videos are being uploaded. \end{quote}
+\hypertarget{index_autotoc_md8}{}\doxysection{Download Release}\label{index_autotoc_md8}
+Now there is only release versions for Windows in this version. 

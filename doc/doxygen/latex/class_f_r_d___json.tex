@@ -1,0 +1,161 @@
+\hypertarget{class_f_r_d___json}{}\doxysection{FRD\+\_\+\+Json Class Reference}
+\label{class_f_r_d___json}\index{FRD\_Json@{FRD\_Json}}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a7850d88f61f751a67bfef7995619e7a8}\label{class_f_r_d___json_a7850d88f61f751a67bfef7995619e7a8}} 
+void {\bfseries update\+Text} (QString text)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a149e0e070c0d8e37ecb18e5fce738af0}\label{class_f_r_d___json_a149e0e070c0d8e37ecb18e5fce738af0}} 
+QJson\+Value {\bfseries operator\mbox{[}$\,$\mbox{]}} (const QString \&name) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a333042fad7453309460ac3f6b69dfc59}\label{class_f_r_d___json_a333042fad7453309460ac3f6b69dfc59}} 
+QString {\bfseries type} (const QString \&block, const QString \&name) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a5879ab96393ed072cc9b40abc553da29}\label{class_f_r_d___json_a5879ab96393ed072cc9b40abc553da29}} 
+QString {\bfseries type} (const QString \&block, const QString\+List \&names) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ad23ca4e382b35b26402ab1d187c0b9a5}\label{class_f_r_d___json_ad23ca4e382b35b26402ab1d187c0b9a5}} 
+QJson\+Value {\bfseries get\+Value} (const QString \&block, const QString \&base\+\_\+name, const QString \&var\+\_\+name) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a36e43293dac9a0e7d81946f11e49aaec}\label{class_f_r_d___json_a36e43293dac9a0e7d81946f11e49aaec}} 
+QJson\+Value {\bfseries get\+Value} (const QString \&block, const QString\+List \&base\+\_\+names, const QString\+List \&var\+\_\+names) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aea36dc205916934495a6143363969698}\label{class_f_r_d___json_aea36dc205916934495a6143363969698}} 
+bool {\bfseries contains} (const QString \&block, const QString \&name) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a2e545a5bb4c18f9d7583478c04629b4d}\label{class_f_r_d___json_a2e545a5bb4c18f9d7583478c04629b4d}} 
+bool {\bfseries contains\+Absolute} (const QString \&block, const QString \&name)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ab6dfd4f32a697a5b539672ea202da350}\label{class_f_r_d___json_ab6dfd4f32a697a5b539672ea202da350}} 
+FRD\+\_\+error\+\_\+type {\bfseries set\+Value} (const QString \&block, const QString \&base\+\_\+name, const QString \&var\+\_\+name, const QString \&type, QJson\+Value value)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ad7fcc639216162c7d6b3e31661f07eb2}\label{class_f_r_d___json_ad7fcc639216162c7d6b3e31661f07eb2}} 
+FRD\+\_\+error\+\_\+type {\bfseries set\+Existant\+Value} (const QString \&block, const QString \&base\+\_\+name, const QString \&var\+\_\+name, const QString \&type, QJson\+Value value)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aa962b8caa0cbf91607e76b492efd542b}\label{class_f_r_d___json_aa962b8caa0cbf91607e76b492efd542b}} 
+FRD\+\_\+error\+\_\+type {\bfseries set\+Existant\+Value} (const QString \&block, const QString\+List \&base\+\_\+names, const QString\+List \&var\+\_\+names, const QString \&type, QJson\+Value value)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_af28ab9a1f81c2028c0709909b7bb0fd7}\label{class_f_r_d___json_af28ab9a1f81c2028c0709909b7bb0fd7}} 
+FRD\+\_\+error\+\_\+type {\bfseries use\+Value} (const QString \&block, const QString \&name)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a6056526d4d3b724807295bcbb4a6b174}\label{class_f_r_d___json_a6056526d4d3b724807295bcbb4a6b174}} 
+void {\bfseries add\+Error} (FRD\+\_\+error\+\_\+type error\+\_\+type, const QString \&msg, int row, int col, int length)
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a1b6c718ce6e80671b1ec7432b05896b5}\label{class_f_r_d___json_a1b6c718ce6e80671b1ec7432b05896b5}} 
+QString {\bfseries to\+Json} (QJson\+Document\+::\+Json\+Format=QJson\+Document\+::\+Json\+Format\+::\+Indented) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ac2f9d000d1ca665b98a5ca41672ffab8}\label{class_f_r_d___json_ac2f9d000d1ca665b98a5ca41672ffab8}} 
+QString {\bfseries vars\+To\+Json} (QJson\+Document\+::\+Json\+Format=QJson\+Document\+::\+Json\+Format\+::\+Indented) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a788b152e96fa29152eb8280f5075f00a}\label{class_f_r_d___json_a788b152e96fa29152eb8280f5075f00a}} 
+void {\bfseries clear} ()
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a73b59c267adffd81a500738be3b15027}\label{class_f_r_d___json_a73b59c267adffd81a500738be3b15027}} 
+QString {\bfseries text} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ac83c2a08bf8efdec7e963634e2d21a23}\label{class_f_r_d___json_ac83c2a08bf8efdec7e963634e2d21a23}} 
+QVector$<$ \mbox{\hyperlink{struct_f_r_d___error}{FRD\+\_\+\+Error}} $>$ {\bfseries errors} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aa4a6f18a5ab569ffdb23494aa6fd3296}\label{class_f_r_d___json_aa4a6f18a5ab569ffdb23494aa6fd3296}} 
+QString {\bfseries layer\+Name} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a45803a6a591926dced949fe5888507f5}\label{class_f_r_d___json_a45803a6a591926dced949fe5888507f5}} 
+QString {\bfseries layer\+Formula} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ae1e98cd2a3851f44e7ec85d6d464a63f}\label{class_f_r_d___json_ae1e98cd2a3851f44e7ec85d6d464a63f}} 
+QString {\bfseries layer\+Color} (int index, QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a363e2e1ef5a655ba5d2fcf055479996b}\label{class_f_r_d___json_a363e2e1ef5a655ba5d2fcf055479996b}} 
+double {\bfseries Preview\+Size} (QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a99f9cb1056397a59fc9490250bb97046}\label{class_f_r_d___json_a99f9cb1056397a59fc9490250bb97046}} 
+double {\bfseries Preview\+Centre} (QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aa5a341d4ed7909bdc9371ba2d35a5861}\label{class_f_r_d___json_aa5a341d4ed7909bdc9371ba2d35a5861}} 
+int {\bfseries Preview\+Image\+Size} (QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a4e4118001ed9bc8f7f068c240ced0e48}\label{class_f_r_d___json_a4e4118001ed9bc8f7f068c240ced0e48}} 
+double {\bfseries Preview\+Rotation} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aa586a630ab30b38a18a2f89a6b55f4b6}\label{class_f_r_d___json_aa586a630ab30b38a18a2f89a6b55f4b6}} 
+double {\bfseries Preview\+Time} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_acb2fa1745de8bc80a9742737313c372f}\label{class_f_r_d___json_acb2fa1745de8bc80a9742737313c372f}} 
+bool {\bfseries inverse\+YAsis} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_afcf3dde9e000c709ae66a0abbf67f799}\label{class_f_r_d___json_afcf3dde9e000c709ae66a0abbf67f799}} 
+QString {\bfseries distance} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a3cc4c286a0cca4ad4b6bdf2c1cac7708}\label{class_f_r_d___json_a3cc4c286a0cca4ad4b6bdf2c1cac7708}} 
+QString {\bfseries template\+Min} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ab739dd6797427e302973c06ff547e818}\label{class_f_r_d___json_ab739dd6797427e302973c06ff547e818}} 
+QString {\bfseries template\+Max} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aceeddbb467e82ac7cd5e5878bc585c49}\label{class_f_r_d___json_aceeddbb467e82ac7cd5e5878bc585c49}} 
+QString {\bfseries iteration\+Limit} (int index) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a8e056a42f334c917874b6448ea5a2eac}\label{class_f_r_d___json_a8e056a42f334c917874b6448ea5a2eac}} 
+double {\bfseries fps} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a4247adbaa6df6cea39fef67ad0bf81c1}\label{class_f_r_d___json_a4247adbaa6df6cea39fef67ad0bf81c1}} 
+QString {\bfseries image\+Dir} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a1eb7c4b20dfec1073deb26c9c500725d}\label{class_f_r_d___json_a1eb7c4b20dfec1073deb26c9c500725d}} 
+QString {\bfseries image\+Prefix} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a3d3d036f113fd916aa57f0918fb76972}\label{class_f_r_d___json_a3d3d036f113fd916aa57f0918fb76972}} 
+int {\bfseries Image\+Size} (QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_ad2305707c942d86b0eb0d58dc012c648}\label{class_f_r_d___json_ad2305707c942d86b0eb0d58dc012c648}} 
+int {\bfseries output\+Time} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a35cc5b32c80539525109f1e62e99d7da}\label{class_f_r_d___json_a35cc5b32c80539525109f1e62e99d7da}} 
+QString {\bfseries video\+Dir} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a1c52acd2bbb2326e90da08ce4c21177c}\label{class_f_r_d___json_a1c52acd2bbb2326e90da08ce4c21177c}} 
+QString {\bfseries video\+Format} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a07e1084665113acec896a3ec76a6cac2}\label{class_f_r_d___json_a07e1084665113acec896a3ec76a6cac2}} 
+QString {\bfseries video\+Name} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a671e193cfab23e7b2686070f3bfae7e6}\label{class_f_r_d___json_a671e193cfab23e7b2686070f3bfae7e6}} 
+int {\bfseries video\+Crf} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_aabd94f3fa7f11a2c405b0ab549bea0fe}\label{class_f_r_d___json_aabd94f3fa7f11a2c405b0ab549bea0fe}} 
+QString\+List {\bfseries video\+Music} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a7b3508b2c6b8b97a329d98ca36c64142}\label{class_f_r_d___json_a7b3508b2c6b8b97a329d98ca36c64142}} 
+int {\bfseries route\+Point\+Count} (int layer) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a5b7c212e593bd4770b81d46d60b15511}\label{class_f_r_d___json_a5b7c212e593bd4770b81d46d60b15511}} 
+double {\bfseries route\+Point} (int layer, int t\+\_\+index, QString tag) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_acb46b9a96351788718e9b4ad53b42974}\label{class_f_r_d___json_acb46b9a96351788718e9b4ad53b42974}} 
+QDate\+Time {\bfseries run\+Time} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a3ea774ad9c0d457054356fcaeae88493}\label{class_f_r_d___json_a3ea774ad9c0d457054356fcaeae88493}} 
+QString {\bfseries run\+Version} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a534d1f3d2b6769bf0e4bfe519deb3d52}\label{class_f_r_d___json_a534d1f3d2b6769bf0e4bfe519deb3d52}} 
+QJson\+Object {\bfseries main}
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a463a79ae8c9963bdc8bfe043ac952665}\label{class_f_r_d___json_a463a79ae8c9963bdc8bfe043ac952665}} 
+QJson\+Object {\bfseries vars}
+\item 
+\mbox{\Hypertarget{class_f_r_d___json_a5ddb6b04675a13aede21c757a3845ada}\label{class_f_r_d___json_a5ddb6b04675a13aede21c757a3845ada}} 
+QString {\bfseries frd\+\_\+text}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/FRD\+\_\+\+Json.\+h\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/FRD\+\_\+\+Json.\+cpp\end{DoxyCompactItemize}

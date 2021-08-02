@@ -1,3 +1,14 @@
+/**
+ * \file mainwindow_global.h
+ * \brief Include and global settings of class MainWindow.
+ *
+ * \class Interpreter
+ * \author Teddy-van-Jerry
+ * \version 6.0
+ * \date 2021-08-02
+ *
+ */
+
 #ifndef MAINWINDOW_GLOBAL_H
 #define MAINWINDOW_GLOBAL_H
 
