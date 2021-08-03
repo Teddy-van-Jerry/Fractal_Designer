@@ -1,0 +1,198 @@
+\hypertarget{class_create___image___task}{}\doxysection{Create\+\_\+\+Image\+\_\+\+Task Class Reference}
+\label{class_create___image___task}\index{Create\_Image\_Task@{Create\_Image\_Task}}
+Inheritance diagram for Create\+\_\+\+Image\+\_\+\+Task\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_create___image___task}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a9d5478f014fbae8730b72896dc1133d9}\label{class_create___image___task_a9d5478f014fbae8730b72896dc1133d9}} 
+enum {\bfseries Eval\+\_\+\+Type} \{ \newline
+{\bfseries EVAL\+\_\+\+FORMULA}
+, {\bfseries EVAL\+\_\+\+CON}
+, {\bfseries EVAL\+\_\+\+DIV}
+, {\bfseries EVAL\+\_\+\+DISTANCE}
+, \newline
+{\bfseries EVAL\+\_\+\+MIN}
+, {\bfseries EVAL\+\_\+\+MAX}
+, {\bfseries EVAL\+\_\+\+ITER}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_abdab61eac47834d3dcc5d7aad2c5a97f}\label{class_create___image___task_abdab61eac47834d3dcc5d7aad2c5a97f}} 
+void {\bfseries stop} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_aa1142f2de51fbe42c2eaa0ccffe116af}\label{class_create___image___task_aa1142f2de51fbe42c2eaa0ccffe116af}} 
+void {\bfseries update\+Image\+\_\+preview} (QImage)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a84881500629d9ec6eff64aa0d724f7d6}\label{class_create___image___task_a84881500629d9ec6eff64aa0d724f7d6}} 
+void {\bfseries progress\+Inform\+\_\+preview} (double)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a07f898cd2cbf5d355934234af4afb07d}\label{class_create___image___task_a07f898cd2cbf5d355934234af4afb07d}} 
+void {\bfseries update\+Image\+\_\+route} (QImage)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a67ec8751d1cc8c724ce45309fe4c159e}\label{class_create___image___task_a67ec8751d1cc8c724ce45309fe4c159e}} 
+void {\bfseries progress\+Inform\+\_\+route} (double)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a852ffe7dbd842c4f5a8a8c507300bc89}\label{class_create___image___task_a852ffe7dbd842c4f5a8a8c507300bc89}} 
+void {\bfseries image\+\_\+build\+\_\+finished} ()
+\item 
+\mbox{\Hypertarget{class_create___image___task_a2192e86b573b9e566e606270ae6c92e3}\label{class_create___image___task_a2192e86b573b9e566e606270ae6c92e3}} 
+void {\bfseries finished} ()
+\item 
+\mbox{\Hypertarget{class_create___image___task_a86f832544753de544b0feddae553541c}\label{class_create___image___task_a86f832544753de544b0feddae553541c}} 
+void {\bfseries one\+\_\+ok} ()
+\item 
+\mbox{\Hypertarget{class_create___image___task_a19fe28339fd5ad9e96d08813c874f05b}\label{class_create___image___task_a19fe28339fd5ad9e96d08813c874f05b}} 
+void {\bfseries error\+\_\+calc} (int)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ad71f4a137ba73278bcce9782bde54ee4}\label{class_create___image___task_ad71f4a137ba73278bcce9782bde54ee4}} 
+{\bfseries Create\+\_\+\+Image\+\_\+\+Task} (QWidget $\ast$)
+\item 
+\mbox{\Hypertarget{class_create___image___task_af16915553a8777950688be5de733d372}\label{class_create___image___task_af16915553a8777950688be5de733d372}} 
+void {\bfseries run} ()
+\item 
+\mbox{\Hypertarget{class_create___image___task_a1cf5e7b29a84b271d0a5269fa815e4a3}\label{class_create___image___task_a1cf5e7b29a84b271d0a5269fa815e4a3}} 
+void {\bfseries set\+Image} (double, double, double, double, int, int, double, double, QString, QString, QString, QString, bool)
+\item 
+\mbox{\Hypertarget{class_create___image___task_ad9e69ef3bf4b6fc4bfe5ac8d10db779c}\label{class_create___image___task_ad9e69ef3bf4b6fc4bfe5ac8d10db779c}} 
+void {\bfseries set\+Data} (const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&formula, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ C1\mbox{[}4\mbox{]}, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ C2\mbox{[}4\mbox{]}, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&distance, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&min, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&max, const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&lpt)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a61eb408742b846c123126b238e0e22a0}\label{class_create___image___task_a61eb408742b846c123126b238e0e22a0}} 
+void {\bfseries set\+Template2} (std\+::complex$<$ double $>$ c)
+\item 
+\mbox{\Hypertarget{class_create___image___task_aefee5391f66b56a1935b475c9efa7cc3}\label{class_create___image___task_aefee5391f66b56a1935b475c9efa7cc3}} 
+void {\bfseries set\+Template4} (const std\+::complex$<$ double $>$ \&c1, std\+::complex$<$ double $>$ c2\mbox{[}10\mbox{]}, const std\+::complex$<$ double $>$ \&c3, const std\+::complex$<$ double $>$ \&c4, const std\+::complex$<$ double $>$ \&c5)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a8aa87d449b834d1c97240e051befaf6d}\label{class_create___image___task_a8aa87d449b834d1c97240e051befaf6d}} 
+void {\bfseries set\+Formula} (const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a3af2ea2bc6ea784a6782b98c73a55b96}\label{class_create___image___task_a3af2ea2bc6ea784a6782b98c73a55b96}} 
+enum {\bfseries Colour\+\_\+\+Type} \{ {\bfseries RGBA}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_af4af20b70a6ff4b202bcd1070948886e}\label{class_create___image___task_af4af20b70a6ff4b202bcd1070948886e}} 
+int {\bfseries range\+\_\+complex\+\_\+to\+\_\+255} (const std\+::complex$<$ double $>$ \&c)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a7cee30767512f3bfd7555aa805fb24e3}\label{class_create___image___task_a7cee30767512f3bfd7555aa805fb24e3}} 
+bool {\bfseries set\+RGBA} (double\mbox{[}4\mbox{]}, bool, std\+::vector$<$ std\+::complex$<$ double $>$$>$ num\+\_\+list)
+\item 
+\mbox{\Hypertarget{class_create___image___task_a8db182a9f5b55f5107b301179bfce8cb}\label{class_create___image___task_a8db182a9f5b55f5107b301179bfce8cb}} 
+std\+::complex$<$ double $>$ {\bfseries eval\+Expr} (const std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ \&expr, const std\+::vector$<$ std\+::complex$<$ double $>$$>$ \&num\+\_\+list, Eval\+\_\+\+Type type, bool $\ast$ok=nullptr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ab9f1e375803f98faebff0e5064126e71}\label{class_create___image___task_ab9f1e375803f98faebff0e5064126e71}} 
+QString {\bfseries pro\+\_\+path}
+\item 
+\mbox{\Hypertarget{class_create___image___task_acd9c202dbd78e3f2d204aa3a99eb3684}\label{class_create___image___task_acd9c202dbd78e3f2d204aa3a99eb3684}} 
+bool {\bfseries Version\+\_\+\+Higher\+\_\+\+Than\+\_\+4} = false
+\item 
+\mbox{\Hypertarget{class_create___image___task_a340c6e7b094bae73f53230ca10e7725a}\label{class_create___image___task_a340c6e7b094bae73f53230ca10e7725a}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries distance\+\_\+}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ad3c692905f6e2deca7e7fdf4ea69ccc6}\label{class_create___image___task_ad3c692905f6e2deca7e7fdf4ea69ccc6}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries max\+\_\+loop\+\_\+t}
+\item 
+\mbox{\Hypertarget{class_create___image___task_acebbceadf29e8f56e04022eda8beb5ac}\label{class_create___image___task_acebbceadf29e8f56e04022eda8beb5ac}} 
+std\+::complex$<$ double $>$ {\bfseries c0}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a610abc6910b9516d409f66e23f86943e}\label{class_create___image___task_a610abc6910b9516d409f66e23f86943e}} 
+std\+::complex$<$ double $>$ {\bfseries Newton\+\_\+a} = 1
+\item 
+\mbox{\Hypertarget{class_create___image___task_a6ffb33942b3bbd0dc44dcc33a6199b13}\label{class_create___image___task_a6ffb33942b3bbd0dc44dcc33a6199b13}} 
+std\+::complex$<$ double $>$ {\bfseries Newton\+\_\+xn} \mbox{[}10\mbox{]} \{0\}
+\item 
+\mbox{\Hypertarget{class_create___image___task_aac5bba5974c1b670f2614fe16882b7f9}\label{class_create___image___task_aac5bba5974c1b670f2614fe16882b7f9}} 
+std\+::complex$<$ double $>$ {\bfseries Newton\+\_\+sin} = 0
+\item 
+\mbox{\Hypertarget{class_create___image___task_aede0aeb21a3bb06c687778cf4f0e105c}\label{class_create___image___task_aede0aeb21a3bb06c687778cf4f0e105c}} 
+std\+::complex$<$ double $>$ {\bfseries Newton\+\_\+cos} = 0
+\item 
+\mbox{\Hypertarget{class_create___image___task_a143c0090c3878092cd2a59c6367f3624}\label{class_create___image___task_a143c0090c3878092cd2a59c6367f3624}} 
+std\+::complex$<$ double $>$ {\bfseries Newton\+\_\+ex} = 0
+\item 
+\mbox{\Hypertarget{class_create___image___task_a10302b5a8eca697c0023fafefce5e90f}\label{class_create___image___task_a10302b5a8eca697c0023fafefce5e90f}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries Colour1\+\_\+f} \mbox{[}4\mbox{]}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a871a9459f4359030c29f7df66671fe82}\label{class_create___image___task_a871a9459f4359030c29f7df66671fe82}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries Colour2\+\_\+f} \mbox{[}4\mbox{]}
+\item 
+\mbox{\Hypertarget{class_create___image___task_af3a7a21b029323b4795a5c4b386657e9}\label{class_create___image___task_af3a7a21b029323b4795a5c4b386657e9}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries Formula}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ac49ddaaf116d60bd2f50e1d7cdd2c9fa}\label{class_create___image___task_ac49ddaaf116d60bd2f50e1d7cdd2c9fa}} 
+enum Create\+\_\+\+Image\+\_\+\+Task\+::\+Colour\+\_\+\+Type {\bfseries c\+\_\+type}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a40ec5fc21c7ebccb9ea65e91b25b6598}\label{class_create___image___task_a40ec5fc21c7ebccb9ea65e91b25b6598}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries min\+\_\+class\+\_\+v}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a34373d0c15dd51e7c8257a53cfe14738}\label{class_create___image___task_a34373d0c15dd51e7c8257a53cfe14738}} 
+std\+::vector$<$ \mbox{\hyperlink{struct__var}{\+\_\+var}} $>$ {\bfseries max\+\_\+class\+\_\+v}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ae1558868c5440c9879c58b2b20a4f100}\label{class_create___image___task_ae1558868c5440c9879c58b2b20a4f100}} 
+double {\bfseries x}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a9e766edb950b4e810c8f1466cdd5fad4}\label{class_create___image___task_a9e766edb950b4e810c8f1466cdd5fad4}} 
+double {\bfseries y}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a92034418b623c6102b1f47ea45f4582f}\label{class_create___image___task_a92034418b623c6102b1f47ea45f4582f}} 
+double {\bfseries x\+\_\+width}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a0ba0d4f5a81e118c430e5bbd02b61dac}\label{class_create___image___task_a0ba0d4f5a81e118c430e5bbd02b61dac}} 
+double {\bfseries y\+\_\+height}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a30be974c65b5751be15e729c98811374}\label{class_create___image___task_a30be974c65b5751be15e729c98811374}} 
+double {\bfseries rotate\+\_\+angle}
+\item 
+\mbox{\Hypertarget{class_create___image___task_abcd0226277a5231bde41a59d2e867769}\label{class_create___image___task_abcd0226277a5231bde41a59d2e867769}} 
+double {\bfseries t}
+\item 
+\mbox{\Hypertarget{class_create___image___task_ad0a9474fc7280573a8020b4662684154}\label{class_create___image___task_ad0a9474fc7280573a8020b4662684154}} 
+int {\bfseries X}
+\item 
+\mbox{\Hypertarget{class_create___image___task_aa05da44acae5e049647d710ea33e8aac}\label{class_create___image___task_aa05da44acae5e049647d710ea33e8aac}} 
+int {\bfseries Y}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a62ae94ec737fc9702e91b16d78d582cf}\label{class_create___image___task_a62ae94ec737fc9702e91b16d78d582cf}} 
+QString {\bfseries img\+\_\+format}
+\item 
+\mbox{\Hypertarget{class_create___image___task_aa0aaad4c1fd63791583a233bceca5687}\label{class_create___image___task_aa0aaad4c1fd63791583a233bceca5687}} 
+QString {\bfseries img\+\_\+path}
+\item 
+\mbox{\Hypertarget{class_create___image___task_aed6c46ba8fe8a23dbf630ffdfb52932e}\label{class_create___image___task_aed6c46ba8fe8a23dbf630ffdfb52932e}} 
+QString {\bfseries img\+\_\+title}
+\item 
+\mbox{\Hypertarget{class_create___image___task_a767756a965d9ef989c05457d5b31d4e4}\label{class_create___image___task_a767756a965d9ef989c05457d5b31d4e4}} 
+QString {\bfseries work\+\_\+name}
+\item 
+\mbox{\Hypertarget{class_create___image___task_af2888955a1e04d2a19dc481cf7ae74d4}\label{class_create___image___task_af2888955a1e04d2a19dc481cf7ae74d4}} 
+bool {\bfseries is\+Cancelled} = false
+\item 
+\mbox{\Hypertarget{class_create___image___task_a40c756d78183228da1ba2fa41cc513d8}\label{class_create___image___task_a40c756d78183228da1ba2fa41cc513d8}} 
+bool {\bfseries y\+\_\+inverse} = false
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/create\+\_\+image\+\_\+task.\+h\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/create\+\_\+image\+\_\+task.\+cpp\end{DoxyCompactItemize}

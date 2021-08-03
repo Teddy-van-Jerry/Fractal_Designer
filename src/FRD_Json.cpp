@@ -88,7 +88,6 @@ QJsonValue FRD_Json::getValue(const QString& block, const QStringList& base_name
     QStringList base_names = base_names_;
     QStringList var_names  = var_names_;
     if (var_names_.size() == 0) return QJsonValue::Null;
-    qDebug() << "=========>>>>>> getValue " << base_names_ << var_names_;
     QString block_ = block;
     QString base_names_str;
     for (const auto& name : base_names_) base_names_str += (name + ".");
@@ -140,8 +139,6 @@ FRD_error_type FRD_Json::setValue(const QString& block, const QString& base_name
     if (names.empty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // change into empty variable name
     QString key = block + names[0];
 
-    qDebug() << "setValue reaches here with key" << key;
-
     QVector<QJsonValueRef> refs;
     if (vars.contains(key)) {
         refs.push_back(vars[key].toObject()["OBJECT"]);
@@ -189,7 +186,6 @@ FRD_error_type FRD_Json::setExistantValue(const QString& block, const QString& b
 }
 
 FRD_error_type FRD_Json::setExistantValue(const QString& block, const QStringList& base_names_, const QStringList& var_names_, const QString& type, QJsonValue value) {
-    qDebug() << vars;
     QStringList base_names = base_names_;
     QStringList var_names  = var_names_;
     if (var_names.isEmpty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // change into empty variable name
@@ -228,16 +224,13 @@ FRD_error_type FRD_Json::setExistantValue(const QString& block, const QStringLis
         }
     }
     refs.last() = value;
-    qDebug() << vars;
     return _FRD_NO_ERROR_;
 }
 
 FRD_error_type FRD_Json::useValue(const QString& block, const QString& name) {
-    qDebug() << "Entrance of useValue";
     if (!contains(block, name)) return _FRD_ERROR_UNDEFINED_VARIABLE_;
     auto var_value = getValue(block, {}, name);
     auto var_type = type(block, name);
-    qDebug() << "useValue var_type:" << var_type;
     if (var_type.isEmpty()) return _FRD_ERROR_UNDEFINED_VARIABLE_; // no type
     else var_type[0] = var_type[0].toUpper();
     if (var_value.isNull()) {
@@ -246,7 +239,6 @@ FRD_error_type FRD_Json::useValue(const QString& block, const QString& name) {
 
     if (var_type == "Layer") {
         // add another
-        qDebug() << "Add layer here";
         auto arr = main["Layers"].toArray();
         arr.append(var_value);
         main["Layers"] = arr;
@@ -284,15 +276,28 @@ QString FRD_Json::varsToJson(QJsonDocument::JsonFormat format) const {
     return doc.toJson(format);
 }
 
+/**
+ * \bug
+ * malloc_consolidate(): invalid chunk size
+ *
+ * Strange that this bug does not appear on MSVC or MinGW.
+ * \code{.cpp}main = QJsonObject();\endcode will not have the problem immediately.
+ * \code{.cpp}vars = QJsonObject();\endcode will lead to crash the first time this function is called.
+ */
 void FRD_Json::clear() {
+#ifndef FRD_JSON_CRASH_WITH_CLEAR
     main = QJsonObject();
-    main.insert("Version", "6.0.8");
+    main.insert("Version", "6.0.9");
     main.insert("Time", QDateTime::currentDateTimeUtc().toString("yyyy/MM/dd hh:mm UTC"));
     main.insert("Layers", QJsonValue::Array);
     main.insert("Config", QJsonValue::Object);
     main.insert("Output", QJsonValue::Object);
     main.insert("Errors", QJsonValue::Array);
     vars = QJsonObject();
+#else
+    // At least error lists can be cleared.
+    main["Errors"] = QJsonArray();
+#endif
 }
 
 QString FRD_Json::text() const {

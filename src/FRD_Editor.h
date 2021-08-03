@@ -6,9 +6,9 @@
 #include <QDebug>
 #include <QLayout>
 #include <QTimer>
-#include <QSci/qsciscintilla.h>
-#include <QSci/qscilexerfrd.h>
-#include <QSci/qsciapis.h>
+#include <Qsci/qsciscintilla.h>
+#include <Qsci/qscilexerfrd.h>
+#include <Qsci/qsciapis.h>
 
 class FRD_Editor : public QWidget
 {

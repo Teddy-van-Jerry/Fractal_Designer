@@ -23,7 +23,7 @@ public:
     bool m_isLog;
 
     void initui();
-    inline FRD_TitleBar& FRD_TitleBar() const { return *this->m_titleBar; }
+    inline FRD_TitleBar& FRD_titleBar() const { return *this->m_titleBar; }
     bool init;
 
     QWidget *m_titleBarW;
