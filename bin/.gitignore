@@ -1,1 +1,5 @@
-*.ini
+*
+!.gitignore
+!/win
+win/*
+!win/README.md

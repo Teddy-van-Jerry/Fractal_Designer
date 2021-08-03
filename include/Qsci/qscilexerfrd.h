@@ -25,8 +25,8 @@
 
 #include <Qsci/qsciglobal.h>
 #include <Qsci/qscilexer.h>
-#include <QSci/qscistyle.h>
-#include <QSci/qsciscintilla.h>
+#include <Qsci/qscistyle.h>
+#include <Qsci/qsciscintilla.h>
 
 class QsciScintilla;
 class QsciStyle;

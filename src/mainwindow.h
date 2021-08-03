@@ -355,6 +355,8 @@ private slots:
 
     void createVideo();
 
+    void playVideo();
+
     void showPreviewInWindow(const QImage& img);
 
     void setErrorInfo(const FRD_Json& frd_json);
@@ -477,7 +479,7 @@ public:
     void setMenuWidget(QWidget *widget);
     QWidget * menuWidget() const;
 
-    inline FRD_TitleBar& FRD_TitleBar() const { return *this->m_titleBar; }
+    inline FRD_TitleBar& FRD_titleBar() const { return *this->m_titleBar; }
 
 protected:
 

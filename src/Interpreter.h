@@ -16,6 +16,7 @@
 #include <QString>
 #include <QStack>
 #include <Info.h>
+#include <memory>
 #include "String_Evaluate.h"
 
 /**
@@ -29,6 +30,8 @@ public:
      * \brief default constructor of class Interpreter
      */
     Interpreter();
+
+    ~Interpreter();
 
     /**
      * \brief interpret the text and store into info
@@ -58,7 +61,7 @@ public:
      * \retval true There is no syntax error.
      * \retval false There are syntax errors.
      */
-    bool interpret();
+    bool interpret(FRD_Json& info);
 
 private:
 
@@ -77,13 +80,6 @@ private:
     void setStrings(const QString& text);
 
     /**
-     * \brief set info_ptr
-     *
-     * \param info the current info
-     */
-    void setInfoPtr(FRD_Json& info);
-
-    /**
      * \brief change comments into whitespace
      * \return whether there are not unfinished comments
      * \retval true There is no comment error.
@@ -93,17 +89,7 @@ private:
      * Replace comments with whitespace,
      * so as not to influence row and col.
      */
-    bool removeComments();
-
-    /**
-     * \brief get the next non-space char in strings.
-     *
-     * \return the next char
-     * \retval EOF It has already reached the end of text.
-     * \remarks
-     * This will update the value of row and col.
-     */
-    // char getNext();
+    bool removeComments(FRD_Json& info);
 
     /**
      * \brief read variable defination
@@ -112,7 +98,7 @@ private:
      * \retval true There is no error in reading variable.
      * \retval false There is error in reading variable.
      */
-    bool readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed = true, QString new_class_name = "");
+    bool readVar(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name, bool existed = true, QString new_class_name = "");
 
     /**
      * \brief read function defination
@@ -121,7 +107,7 @@ private:
      * \retval true There is no error in reading function.
      * \retval false There is error in reading function.
      */
-    bool readFun(FRD_block_content_ content, const QString& block, const QString& name);
+    bool readFun(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name);
 
     bool readClass();
 
@@ -129,12 +115,20 @@ private:
 
     bool readDef();
 
-    bool readBlock();
+    bool readBlock(FRD_Json& info);
 
-    bool readBlock(FRD_block_content_ content, const QString& block, const QString& name);
+    bool readBlock(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name);
 
-    std::complex<double> evalExpr(const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok = nullptr);
+    std::complex<double> evalExpr(FRD_Json& info, const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok = nullptr);
 
+    /**
+     * \brief get the next non-space char in strings.
+     *
+     * \return the next char
+     * \retval 0 It has already reached the end of text.
+     * \remarks
+     * This will update the value of row and col.
+     */
     QChar nextChar();
 
     QString pureName(const QString& name) const;
@@ -143,7 +137,6 @@ private:
                        bool discard_space = false, bool discard_linebreak = false);
 
     QStringList strings; /**< text to be interpreted stored by lines */
-    FRD_Json* info_ptr;  /**< the pointer to current info */
     int row = 1;         /**< row count that starts at 1 */
     int col = 0;         /**< column count that starts at 1 */
     bool reach_end = false;

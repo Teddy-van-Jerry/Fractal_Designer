@@ -2,39 +2,37 @@
 
 // translation
 #define tr QObject::tr
-#define info (*info_ptr)
 
 Interpreter::Interpreter() {
 
 }
 
-bool Interpreter::interpret(const QString& text, FRD_Json& json) {
-    Interpreter interpreter;
-    json.clear();
-    interpreter.setStrings(text);
-    interpreter.setInfoPtr(json);
-    return interpreter.interpret();
+Interpreter::~Interpreter() {
+
 }
 
-bool Interpreter::interpret() {
+bool Interpreter::interpret(const QString& text, FRD_Json& info) {
+    Interpreter interpreter;
+    info.clear();
+    interpreter.setStrings(text);
+    return interpreter.interpret(info);
+}
+
+bool Interpreter::interpret(FRD_Json& info) {
     bool error = false;
-    error |= !removeComments();
-    error |= !readBlock();
+    error |= !removeComments(info);
+    error |= !readBlock(info);
     return !error;
 }
 
 void Interpreter::setStrings(const QString& text) {
     // split text by line break
     // i.e. store each line in strings
+    strings.clear();
     strings = text.split('\n', Qt::KeepEmptyParts);
 }
 
-void Interpreter::setInfoPtr(FRD_Json& ptr) {
-    // get the address of ptr
-    info_ptr = &ptr;
-}
-
-bool Interpreter::removeComments() {
+bool Interpreter::removeComments(FRD_Json& info) {
     int comment_row = 0; // the row that "/*" occurs
     int comment_col = 0; // the row that "/*" occurs
     int current_row = 0; // the current line number
@@ -82,22 +80,25 @@ bool Interpreter::removeComments() {
     // If comment_row is not set to 0,
     // there are unfinshed comments.
     if (comment_row) {
-        info_ptr->addError(_FRD_ERROR_COMMENT_UNFINISHED_,
-                           tr("Unfinished Comments"),
-                           comment_row, comment_col, 2);
+        info.addError(_FRD_ERROR_COMMENT_UNFINISHED_,
+                      tr("Unfinished Comments"),
+                      comment_row, comment_col, 2);
     }
     return !comment_row;
 }
 
-bool Interpreter::readVar(FRD_block_content_ content, const QString& block, const QString& name, bool existed, QString new_class_name) {
+bool Interpreter::readVar(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name, bool existed, QString new_class_name) {
     bool ok = true;
     int init_col = col;
     QString var_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
     if (!existed || info.contains(block, name + var_name) || info.contains(block, name)) {
         if (!existed && info.contains(block, name + var_name)) {
+#ifndef FRD_JSON_CRASH_WITH_CLEAR
+            // Check redifination only when clear function can be called normally.
             info.addError(_FRD_WARNING_VARIABLE_REDEFINITION_,
                           tr("Redefinition of ") + var_name,
                           row, init_col, (int)var_name.length());
+#endif
         }
         else if (!existed) {
             info.setValue(block, name, var_name, new_class_name, QJsonValue::Null);
@@ -162,7 +163,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     // Member variable
                     info.setValue(block, name, var_name, "", QJsonValue::Null);
                 }
-                ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, block, name + var_name + ".");
+                ok = ok && readBlock(info, _FRD_BLOCK_VARIABLE_, block, name + var_name + ".");
             }
             else {
                 col--;
@@ -175,7 +176,7 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
                     int start_row = row, start_col = col;
                     QString expr = nextString(";}", true, true);
                     bool ok_here;
-                    std::complex<double> ret = evalExpr(expr, block, name + ".", start_row, start_col, &ok_here);
+                    std::complex<double> ret = evalExpr(info, expr, block, name + ".", start_row, start_col, &ok_here);
                     ok = ok && ok_here;
                     if (info.type(block, name + var_name + ".") == "number" || (!existed && new_class_name == "number")) {
                         info.setValue(block, name, var_name, "number", ret.real());
@@ -279,19 +280,19 @@ bool Interpreter::readVar(FRD_block_content_ content, const QString& block, cons
             }
         }
         else if (c == '{') {
-            ok = ok && readBlock(_FRD_BLOCK_VARIABLE_, block + QString::number(block_count++) + ".", var_name);
+            ok = ok && readBlock(info, _FRD_BLOCK_VARIABLE_, block + QString::number(block_count++) + ".", var_name);
         }
     }
     else {
-        info_ptr->addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
-                           tr("Unexpected token: ") + var_name,
-                           row, init_col, var_name.length());
+        info.addError(_FRD_ERROR_UNEXPECTED_TOKEN_,
+                      tr("Unexpected token: ") + var_name,
+                      row, init_col, var_name.length());
         ok = false;
     }
     return ok;
 }
 
-bool Interpreter::readFun(FRD_block_content_ content, const QString& block, const QString& name) {
+bool Interpreter::readFun(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name) {
     bool ok = true;
     QString fun_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
     if (fun_name == "CONFIGURE") {
@@ -357,18 +358,18 @@ bool Interpreter::readDef() {
     return true;
 }
 
-bool Interpreter::readBlock() {
-    return readBlock(_FRD_BLOCK_BLANK_, QString::number(block_count++) + ".", ".");
+bool Interpreter::readBlock(FRD_Json& info) {
+    return readBlock(info, _FRD_BLOCK_BLANK_, QString::number(block_count++) + ".", ".");
 }
 
-bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, const QString& name) {
+bool Interpreter::readBlock(FRD_Json& info, FRD_block_content_ content, const QString& block, const QString& name) {
     bool ok = true;
     // when it has not reached the end
     QChar curr;
     while (curr = nextChar(), curr != QChar(0)) { // while (!(reach_end = ((curr = nextChar()) == QChar(EOF)))) {
         if (curr == '}') return ok;
         else if (curr == '{') {
-            ok = ok && readBlock(_FRD_BLOCK_BLANK_, block + QString::number(block_count++) + ".", name);
+            ok = ok && readBlock(info, _FRD_BLOCK_BLANK_, block + QString::number(block_count++) + ".", name);
         }
         else if (curr == ';') continue;
         else if (curr == '#') {
@@ -376,14 +377,14 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
             row++, col = 0;
         }
         else if (curr == '$') {
-            ok = ok && readVar(content, block, name);
+            ok = ok && readVar(info, content, block, name);
         }
         else if (curr == '@') {
             // class
             QString class_name = nextString("!@#$%^&*=+-/?:;()[]{}<>\\'\"~`");
             // This version does not support user-defined class.
             if (nextChar() == '$') {
-                ok = ok && readVar(_FRD_BLOCK_VARIABLE_, block, name, false, class_name);
+                ok = ok && readVar(info, _FRD_BLOCK_VARIABLE_, block, name, false, class_name);
             }
             else {
                 // unexpected token
@@ -399,7 +400,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
         }
         else if (curr == '%') {
             // function
-            ok = ok && readFun(content, block, name);
+            ok = ok && readFun(info, content, block, name);
         }
         else {
             int init_col = col;
@@ -414,7 +415,7 @@ bool Interpreter::readBlock(FRD_block_content_ content, const QString& block, co
     return ok;
 }
 
-std::complex<double> Interpreter::evalExpr(const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok) {
+std::complex<double> Interpreter::evalExpr(FRD_Json& info, const QString& expr, const QString& block, const QString& name, int start_row, int start_col, bool* ok) {
     bool ok_ = true;
     std::vector<std::string> expr_vars;
     std::vector<std::complex<double>> vars_value;
@@ -517,4 +518,3 @@ QString Interpreter::nextString(QString end_of_string, bool discard_space, bool 
 }
 
 #undef tr
-#undef info
