@@ -23,7 +23,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Fractal Designer 6.0.9 Beta1</string>
+      <string>Fractal Designer 6.0.9 Beta2</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -33,7 +33,7 @@
    <item row="1" column="0" colspan="3">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Updated in 2021/08/01.</string>
+      <string>Updated in 2021/08/02.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

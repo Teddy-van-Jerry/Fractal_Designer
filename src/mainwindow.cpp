@@ -164,8 +164,8 @@ void MainWindow::initTitleBar()
     connect(this->m_titleBar, &FRD_TitleBar::requestMaximize, [this]{if (this->isMaximized()) this->showNormal();else this->showMaximized();});
     connect(this->m_titleBar, &FRD_TitleBar::requestMinimize,this, &MainWindow::showMinimized);
     connect(this, &QMainWindow::windowTitleChanged, this->m_titleBar,&QWidget::setWindowTitle);
-    connect(&this->FRD_TitleBar().btn_maximize,SIGNAL(clicked()),this,SLOT(updateMaxButton()));
-    connect(&this->FRD_TitleBar(),SIGNAL(doubleClicked()),this,SLOT(updateMaxButton()));
+    connect(&this->FRD_titleBar().btn_maximize,SIGNAL(clicked()),this,SLOT(updateMaxButton()));
+    connect(&this->FRD_titleBar(),SIGNAL(doubleClicked()),this,SLOT(updateMaxButton()));
 
     this->m_titleBarW = new QWidget();
     this->m_titleBarW->setMouseTracking(true);
@@ -1134,8 +1134,10 @@ void MainWindow::on_actionCheck_Update_triggered()
     QJsonObject jUpdateInfo = doc.object();
 #if defined (WIN32) || defined (WIN64)
     QJsonValue value = jUpdateInfo.value(QString("Windows"));
-#elif defined(_linux_)
+#elif defined(__linux__)
     QJsonValue value = jUpdateInfo.value(QString("Linux"));
+#else
+    UNSUPPORTED_PLATFORM;
 #endif
     QString Latest_Version = value["LatestVersion"].toString();
     QString Update_Info = "Latest version is " + Latest_Version;
@@ -2732,24 +2734,24 @@ void MainWindow::updateMaxButton()
     {
         if(this->isMaximized())
         {
-            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
+            this->FRD_titleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore.svg"));
 
         }
         else if(!this->isMaximized())
         {
-            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
+            this->FRD_titleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize.svg"));
         }
     }
     else
     {
         if(this->isMaximized())
         {
-            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore_white.svg"));
+            this->FRD_titleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Restore_white.svg"));
 
         }
         else if(!this->isMaximized())
         {
-            this->FRD_TitleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
+            this->FRD_titleBar().btn_maximize.setIcon(QIcon(":/EXE Icons/Maximize_white.svg"));
         }
     }
 }
@@ -2962,7 +2964,7 @@ bool MainWindow::eventFilter(QObject* object, QEvent *event)
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if (this->FRD_TitleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_TitleBar().btn_maximize.isEnabled()
+    if (this->FRD_titleBar().m_frameButtons & QCustomAttrs::Maximize && this->FRD_titleBar().btn_maximize.isEnabled()
             && event->buttons() & Qt::LeftButton)
     {
         updateMaxButton();
@@ -3344,7 +3346,7 @@ void MainWindow::createVideo()
 #if defined (WIN32) || defined (WIN64)
     QString ffmpeg_arg1 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -r ";
 #elif defined (__linux__)
-    QString PowerShell_arg1 = "ffmpeg -r ";
+    QString ffmpeg_arg1 = "ffmpeg -r ";
 #endif
     ffmpeg_arg1.append(QString::number(currInfo.fps()));
     ffmpeg_arg1.append(" -f image2 -i ");
@@ -3496,7 +3498,7 @@ void MainWindow::createVideo()
 #if defined (WIN32) || (WIN64)
     QString ffmpeg_arg3 = QString("\"") + QCoreApplication::applicationDirPath() + "/win/ffmpeg.exe\" -i BGM_.mp3 -i ";
 #elif defined (__linux__)
-    QString PowerShell_arg3 = "ffmpeg -i BGM_.mp3 -i ";
+    QString ffmpeg_arg3 = "ffmpeg -i BGM_.mp3 -i ";
 #endif
     ffmpeg_arg3.append("\"" + video_file_name + "_temp." + video_format + "\"");
     ffmpeg_arg3.append(" -shortest -f mp4 ");
@@ -3540,7 +3542,7 @@ void MainWindow::createVideo()
 #if defined (WIN32) || (_WIN64)
             run_sh->start("Add_Music.cmd");
 #elif defined (__linux__)
-            run_sh->start("/bin/sh", QStringList() << "Add_Music.sh");
+            run_sh->start("/bin/sh", {"Add_Music.sh"});
 #endif
             Alive[2] = run_sh->waitForFinished(300000);
             if(Alive[2])
@@ -3587,6 +3589,30 @@ void MainWindow::createVideo()
         QMessageBox::information(this, "Information", video_file_path + "/" + video_file_name + "." + video_format
                                        + "\nVideo Creating Finished!");
     }
+}
+
+void MainWindow::playVideo()
+{
+    ui->textEdit_terminal->moveCursor(QTextCursor::End);
+    QString videoName = info.curr().videoDir() + "/" + info.curr().videoName() + "." + info.curr().videoFormat();
+    QFile videoFile(videoName);
+    if (videoFile.exists())
+    {
+        QProcess* playVideoProcess = new QProcess;
+        playVideoProcess->setWorkingDirectory(QCoreApplication::applicationDirPath());
+#if defined (WIN32) || defined (WIN64)
+        playVideoProcess->start("win/ffplay.exe", {videoName});
+#elif defined (__linux__)
+        playVideoProcess->start("ffplay", {videoName});
+#else
+        errorTerminalMessage("Unsupported platform.");
+#endif
+    }
+    else
+    {
+        errorTerminalMessage(videoName + " does not exist.");
+    }
+    ui->textEdit_terminal->append("\n>> ");
 }
 
 void MainWindow::showPreviewInWindow(const QImage &img)
@@ -3729,8 +3755,9 @@ void MainWindow::runCode()
     ui->textEdit_terminal->setReadOnly(true);
     QString fileName = Open_Location.isEmpty() ? "Unsaved Project" : Open_Location;
     normalTerminalMessage("Starting " + fileName + "...");
-    Interpreter::interpret(editor->text(), info.editor());
-    editor->clearSearchIndic(0, editor->text().size());
+    QString editorText = editor->text();
+    Interpreter::interpret(editorText, info.editor());
+    editor->clearSearchIndic(0, editorText.length());
     ui->textEdit_terminal->append(info.editor().toJson());
     ui->textEdit_terminal->append(info.editor().varsToJson());
     setErrorInfo(info.editor());
@@ -3771,8 +3798,8 @@ void MainWindow::outsideCommand(const QString& cmd)
 
 void MainWindow::terminalCommand()
 {
-    QTextDocument* doc = ui->textEdit_terminal->document();
-    QTextBlock tb = doc->findBlockByLineNumber(doc->lineCount() - 1); // The second line.
+    // The second line.
+    QTextBlock tb = ui->textEdit_terminal->document()->findBlockByLineNumber(ui->textEdit_terminal->document()->lineCount() - 1);
     QString cmdline = tb.text();
     qDebug() << "Get terminal command" << cmdline;
     if (cmdline.length() > 2 && cmdline.left(2) == ">>")
@@ -3790,6 +3817,7 @@ void MainWindow::terminalCommand()
             {
                 errorTerminalMessage("No previous commands.");
                 ui->textEdit_terminal->append("\n>> ");
+                // delete doc;
                 return;
             }
             else
@@ -3808,6 +3836,10 @@ void MainWindow::terminalCommand()
                                           "  clear                  Clear the terminal screen.\n"
                                           "  createimages           Create fractal images.\n"
                                           "  createvideo            Create fractal video.\n"
+#ifdef __linux__
+                                          "                         You need to have ffmpeg."
+                                          "                         If you don't have, use \"sudo apt install ffmpeg\"."
+#endif
                                           "  closepreview           Close the preview window.\n"
                                           "  exit                   Exit Fractal Designer.\n"
                                           "    -f                     Force exit no matter whether script is saved.\n"
@@ -3819,8 +3851,13 @@ void MainWindow::terminalCommand()
                                           "                           These parameters are set using function \"%CONFIGURE\".\n"
                                           "    -var                   View all variables information.\n"
                                           "    -all                   View both configuration and variable information.\n"
-                                          "  run                    Run the frd script and display information in the form of Json.\n"
+                                          "  playvideo              Play generated video using ffplay.\n"
+#ifdef __linux__
+                                          "                         You need to have ffmpeg."
+                                          "                         If you don't have, use \"sudo apt install ffmpeg\"."
+#endif
                                           "  preview                View the preview image.\n"
+                                          "  run                    Run the frd script and display information in the form of Json.\n"
                                           "                         Need to run the script first to get information updated.\n"
                                           "  save                   Save the frd script.\n");
             ui->textEdit_terminal->append(">> ");
@@ -3874,6 +3911,10 @@ void MainWindow::terminalCommand()
         {
             createVideo();
             ui->textEdit_terminal->append("\n>> ");
+        }
+        else if (cmds[0] == "playvideo")
+        {
+            playVideo();
         }
         else if (cmds[0] == "history")
         {

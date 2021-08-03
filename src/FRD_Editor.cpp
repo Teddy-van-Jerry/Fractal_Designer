@@ -104,6 +104,7 @@ FRD_Editor::~FRD_Editor()
 
 QString FRD_Editor::text() const
 {
+    qDebug() << editor->text();
     return editor->text();
 }
 

@@ -2,35 +2,39 @@
 This is an application to make fractal videos based on Qt(6.2.0), C++ and FFmpeg.
 
 ## Version Information
-This is version 6.0.9 updated in 2021/08/01.
+This is version 6.0.9 updated in 2021/08/02.
 
-**What's new in beta1 version than alpha version**:
-- Solve bugs listed in [6.0.9 Alpha Release](https://github.com/T-V-J/Fractal_Designer/releases/tag/v6.0.9-alpha).
-- Improve efficiency by up to 100% than alpha version.
+### What's new in beta2 version than beta1 version
+- Add **Linux** support (tested on Ubuntu 20 using Qt 6.2.0 and Qt 6.1.2).
+- Add terminal command `playvideo`.
 
+> Amazed to find effieiency on Ubuntu 20 is twice of that on Windows 10 under the same circumstance!
 
-Current version is now only available for Windows.
-Release for Linux will be published in the near future.
+### Please note
+This version only supports source code and you need to compile it yourself.
+This shall be the final beta version and the next release version will be the official 6.0.9 version (support on Windows and Linux).
 
 Visit our [Fractal Designer Website](https://frd.teddy-van-jerry.org) for more information.
+The [doxygen pages](https://frd.teddy-van-jerry.org/doxygen) are generated based on beta1 version and has not been upgraded to beta2 version.
 
 ## Build the Project
 Besides the build version for Windows (using Qt 6.2.0), you can compile it yourself by following steps:
 
-- Build project `include/qscintilla.pro` with both Debug and Release mode.
-Remember to uncheck *shadow build*.
+- Build project `include/qscintilla.pro`. On Windows, build with both Debug and Release mode; on Linux, build with Release mode.
 
 - Open project `src/Fractal_Designer.pro` and *release translations* (lrelease).
 In Qt Creator, it is in `Tools->External->Qt Languist`.
 
 - Build `src/Fractal_Designer.pro` with the same kit as that of building QScintilla.
-Also remember to uncheck *shadow build*.
+
+- Get **ffmpeg**.
+  - For Windows, Download *shared* version of [ffmpeg](http://www.ffmpeg.org/download.html) and put all contents of directory `bin` it in the right directory. (They are `bin/win/ffmpeg.exe`, `bin/win/ffplay.exe` and `dll` dependencies.)
+  - For Linux, download ffmpeg using `sudo apt install ffmpeg`.
 
 - To distribute the project, you need to
   - Build in release mode.
   - Deploy with `windeployqt`, `macdeployqt`, `linuxdeployqt` or other methods to get the dependency files.
-  - Copy the release dynamic library file of QScintilla (`qscintilla2_qt6.dll` in Windows) to directory `bin` and delete directory `lib`, `scintilla`, `include`, `tmp`.
-  - Download [ffmpeg](http://www.ffmpeg.org/download.html) and put it in the right directory. (For Windows, it is `bin/win/ffmpeg.exe`.)
+  - Copy the release dynamic library file of QScintilla (`qscintilla2_qt6.dll` on Windows, `libqscintilla2_qt6.so` and its symbolic links on Linux) to directory `bin` and delete directory `lib`, `scintilla`, `include`, `tmp`.
 
 ## Use Fractal Designer
 
@@ -69,6 +73,7 @@ Here is the basic syntax of `frd` script:
 - Enter `preview` (or `F12`) to view the preview image and `closepreview` to close the preview window.
 - Enter `createimages` (or `Ctrl + R`) to create images. This process can be time-consuming.
 - Enter `createvideo` to create the video. This process is much faster than that of creating images but the window will not respond until this process finishes.
+- Enter `playvideo` to watch the video you generated using *ffplay*.
 - Other useful commands:
   - `help` to view all commands. This can help you choose what command and argument to use.
   - `clear` to clear the screen.
@@ -84,17 +89,18 @@ Here is the basic syntax of `frd` script:
 
 ## Sample Videos
 
-| Video Name              | Watch on YouTube             | Watch on Bilibili           |
-| :-:                     | :-:                          | :-:                         |
-| Mandelbrot Set 1        | https://youtu.be/LU9eL1-9V0E | https://b23.tv/BV1TU4y147ta |
-| Mandelbrot Set 2        | -                            | https://b23.tv/BV1qX4y1P74d |
-| Mandelbrot Set 3        | -                            | https://b23.tv/BV17K4y1J7XM |
-| Mandelbrot Set 4        | -                            | https://b23.tv/BV1Hy4y1T7MD |
-| Julia Set 1             | -                            | https://b23.tv/BV1wB4y1N7pU |
-| Burning Ship Fractal 1  | -                            | https://b23.tv/BV1RA41157kJ |
-| Newton Fractal 1        | -                            | https://b23.tv/BV1Tb4y1D7oN |
+| Video Name               | Watch on YouTube             | Watch on Bilibili           |
+| :-:                      | :-:                          | :-:                         |
+| Mandelbrot Set 1         | https://youtu.be/LU9eL1-9V0E | https://b23.tv/BV1TU4y147ta |
+| Mandelbrot Set 2         | -                            | https://b23.tv/BV1qX4y1P74d |
+| Mandelbrot Set 3         | -                            | https://b23.tv/BV17K4y1J7XM |
+| Mandelbrot Set 4         | -                            | https://b23.tv/BV1Hy4y1T7MD |
+| Julia Set 1              | -                            | https://b23.tv/BV1wB4y1N7pU |
+| Burning Ship Fractal 1   | -                            | https://b23.tv/BV1RA41157kJ |
+| Newton Fractal 1         | -                            | https://b23.tv/BV1Tb4y1D7oN |
+| FRD 6.0.9 Ubuntu 20 Test | -                            | https://b23.tv/BV1CL411n7F1 |
 
 > More videos are being uploaded.
 
 ## Download Release
-Now there is only release versions for Windows in this version.
+This beta2 version does not provide build version.

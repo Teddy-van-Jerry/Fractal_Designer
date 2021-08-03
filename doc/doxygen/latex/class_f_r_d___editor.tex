@@ -1,0 +1,134 @@
+\hypertarget{class_f_r_d___editor}{}\doxysection{FRD\+\_\+\+Editor Class Reference}
+\label{class_f_r_d___editor}\index{FRD\_Editor@{FRD\_Editor}}
+Inheritance diagram for FRD\+\_\+\+Editor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_f_r_d___editor}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a1a12ea0a003f9a7b1b52dc8e81ad00c5}\label{class_f_r_d___editor_a1a12ea0a003f9a7b1b52dc8e81ad00c5}} 
+enum {\bfseries FRD\+\_\+\+Indicator} \{ \newline
+{\bfseries FRD\+\_\+\+INDIC\+\_\+\+CLEAR} = -\/1
+, {\bfseries FRD\+\_\+\+INDIC\+\_\+\+VARIABLE} = 15
+, {\bfseries FRD\+\_\+\+INDIC\+\_\+\+FUNCTION}
+, {\bfseries FRD\+\_\+\+INDIC\+\_\+\+CLASS}
+, \newline
+{\bfseries FRD\+\_\+\+INDIC\+\_\+\+ERROR}
+, {\bfseries FRD\+\_\+\+INDIC\+\_\+\+WARNING}
+, {\bfseries FRD\+\_\+\+INDIC\+\_\+\+SEARCH}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a8d35cd61c89428d5d9e7cf96aedb2de5}\label{class_f_r_d___editor_a8d35cd61c89428d5d9e7cf96aedb2de5}} 
+QString {\bfseries text\+Changed} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a9ac5102e0e93873a014ecfa7b97498bd}\label{class_f_r_d___editor_a9ac5102e0e93873a014ecfa7b97498bd}} 
+{\bfseries FRD\+\_\+\+Editor} (QLayout $\ast$\mbox{\hyperlink{class_f_r_d___editor_a07bf66c3b8ebf9ec7f25461f0a654273}{layout}}, int waiting\+\_\+msec=0)
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a9242c1d4dbb93a2210eaed6243ac414d}\label{class_f_r_d___editor_a9242c1d4dbb93a2210eaed6243ac414d}} 
+QString {\bfseries text} () const
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a0239b5d05042903db04594c7b554d886}\label{class_f_r_d___editor_a0239b5d05042903db04594c7b554d886}} 
+void {\bfseries set\+Text} (const QString \&text)
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a79315bb5696a36af3d7512ec99b9a80f}\label{class_f_r_d___editor_a79315bb5696a36af3d7512ec99b9a80f}} 
+void {\bfseries set\+Highlight\+Waiting} (int msec)
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_aba9062578e2f467a0763c8ed39452282}\label{class_f_r_d___editor_aba9062578e2f467a0763c8ed39452282}} 
+void {\bfseries set\+Search\+Indic} (int start, int length)
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a2754bb665dbb784dc485bfd9c057bba2}\label{class_f_r_d___editor_a2754bb665dbb784dc485bfd9c057bba2}} 
+void {\bfseries clear\+Search\+Indic} (int start, int length)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_ad2d3610a1ef565e8f9005ce82a903906}\label{class_f_r_d___editor_ad2d3610a1ef565e8f9005ce82a903906}} 
+void {\bfseries update\+Highlight} ()
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a4a496d5e72502ead206c3f4a49349e41}\label{class_f_r_d___editor_a4a496d5e72502ead206c3f4a49349e41}} 
+void {\bfseries wait\+To\+Update\+Highlight} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a6584761fab568056d9e9c138b14d231e}\label{class_f_r_d___editor_a6584761fab568056d9e9c138b14d231e}} 
+bool {\bfseries is\+End\+String} (QChar c) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a42fff217f4d9d5f74ac875c891d2163d}\label{class_f_r_d___editor_a42fff217f4d9d5f74ac875c891d2163d}} 
+bool {\bfseries is\+Comment} (int pos) const
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a72646482d4ff8309fe588b94c63a6806}\label{class_f_r_d___editor_a72646482d4ff8309fe588b94c63a6806}} 
+bool {\bfseries is\+String} (int pos) const
+\item 
+void \mbox{\hyperlink{class_f_r_d___editor_a8e52d4068a90e2d394a2661a1b8c3cc3}{set\+Indicator}} (int start, int length, FRD\+\_\+\+Indicator indicator)
+\begin{DoxyCompactList}\small\item\em set the indicator \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_f_r_d___editor_acd3828c776c8d5b9ff6d7709fa890377}\label{class_f_r_d___editor_acd3828c776c8d5b9ff6d7709fa890377}} 
+FRD\+\_\+\+Indicator {\bfseries indicator\+From\+Symbol} (QChar symbol) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Qsci\+Scintilla $\ast$ \mbox{\hyperlink{class_f_r_d___editor_a0b1d931fc25045ecbabb0238d76141e4}{editor}}
+\item 
+QLayout $\ast$ \mbox{\hyperlink{class_f_r_d___editor_a07bf66c3b8ebf9ec7f25461f0a654273}{layout}}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a6422b3f708b7687920783cf0025a5693}\label{class_f_r_d___editor_a6422b3f708b7687920783cf0025a5693}} 
+QTimer $\ast$ {\bfseries timer}
+\item 
+\mbox{\Hypertarget{class_f_r_d___editor_a1740df20cbcecabe93c1b9f72417870a}\label{class_f_r_d___editor_a1740df20cbcecabe93c1b9f72417870a}} 
+int {\bfseries waiting\+\_\+time}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_f_r_d___editor_a8e52d4068a90e2d394a2661a1b8c3cc3}\label{class_f_r_d___editor_a8e52d4068a90e2d394a2661a1b8c3cc3}} 
+\index{FRD\_Editor@{FRD\_Editor}!setIndicator@{setIndicator}}
+\index{setIndicator@{setIndicator}!FRD\_Editor@{FRD\_Editor}}
+\doxysubsubsection{\texorpdfstring{setIndicator()}{setIndicator()}}
+{\footnotesize\ttfamily void FRD\+\_\+\+Editor\+::set\+Indicator (\begin{DoxyParamCaption}\item[{int}]{start,  }\item[{int}]{length,  }\item[{FRD\+\_\+\+Indicator}]{indicator }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+set the indicator 
+
+This is used to highlight variable name, function name, class name, error, warning, and search result. \begin{DoxyRefDesc}{Bug}
+\item[\mbox{\hyperlink{bug__bug000001}{Bug}}]When there are characters taking more than 1 byte, indicators can be at the wrong position. \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em start} & the starting point of string \\
+\hline
+{\em length} & the length of string \\
+\hline
+{\em indicator} & the type of string \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_f_r_d___editor_a0b1d931fc25045ecbabb0238d76141e4}\label{class_f_r_d___editor_a0b1d931fc25045ecbabb0238d76141e4}} 
+\index{FRD\_Editor@{FRD\_Editor}!editor@{editor}}
+\index{editor@{editor}!FRD\_Editor@{FRD\_Editor}}
+\doxysubsubsection{\texorpdfstring{editor}{editor}}
+{\footnotesize\ttfamily Qsci\+Scintilla$\ast$ FRD\+\_\+\+Editor\+::editor\hspace{0.3cm}{\ttfamily [private]}}
+
+the FRD editor \mbox{\Hypertarget{class_f_r_d___editor_a07bf66c3b8ebf9ec7f25461f0a654273}\label{class_f_r_d___editor_a07bf66c3b8ebf9ec7f25461f0a654273}} 
+\index{FRD\_Editor@{FRD\_Editor}!layout@{layout}}
+\index{layout@{layout}!FRD\_Editor@{FRD\_Editor}}
+\doxysubsubsection{\texorpdfstring{layout}{layout}}
+{\footnotesize\ttfamily QLayout$\ast$ FRD\+\_\+\+Editor\+::layout\hspace{0.3cm}{\ttfamily [private]}}
+
+layout for editor 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/FRD\+\_\+\+Editor.\+h\item 
+D\+:/\+Git\+Hub/\+TVJ Group/\+Fractal\+\_\+\+Designer/src/FRD\+\_\+\+Editor.\+cpp\end{DoxyCompactItemize}
