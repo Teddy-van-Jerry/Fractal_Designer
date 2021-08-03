@@ -8,7 +8,7 @@
  *
  */
  
-@string $Your_Local_Dir = D:\FRD\Mandelbrot; // No quatation mark
+@string $Your_Local_Dir = /home/jerry/FRD/Mandelbrot; // No quatation mark
 
 @config $Config = {
 	$InverseYAxis = _FALSE_; // _FALSE_ can be substituted by false
@@ -28,7 +28,7 @@
 	$VideoDir = $Your_Local_Dir; // assignment
 	$VideoFormat = mp4;
 	$VideoName = Mandelbrot Set Sample;
-	$ImageDir = D:\FRD\Mandelbrot\img;
+	$ImageDir = /home/jerry/FRD/Mandelbrot/img;
 	$ImagePrefix = img_;
 	$ImageSize = 1920, 1080; // set as 1080p
 	$Music =
@@ -37,7 +37,7 @@
 		// If you want to play that in a loop,
 		// You can add that name more than once.
 		// NOTE: please change that into your music file
-		C:\Users\Teddy van Jerry\Music\Vorspiel.mp3;
+		/home/jerry/Music/Vorspiel.mp3;
 }
 
 @color $Color1 = {

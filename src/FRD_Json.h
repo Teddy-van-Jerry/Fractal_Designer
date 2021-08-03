@@ -1,6 +1,11 @@
 #ifndef FRD_JSON_H
 #define FRD_JSON_H
 
+// On linux (GCC), there is bug with function clear.
+#ifdef __GNUC__
+#define FRD_JSON_CRASH_WITH_CLEAR
+#endif
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>

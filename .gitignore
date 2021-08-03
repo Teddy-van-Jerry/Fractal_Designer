@@ -64,5 +64,3 @@ compile_commands.json
 !lib/qscintilla2_qt6.dll
 !lib/qscintilla2_qt6d.dll
 src/Fractal_Designer_resource.rc
-src/Fractal_Designer_resource.rc
-src/Fractal_Designer_resource.rc
