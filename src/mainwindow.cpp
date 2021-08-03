@@ -3601,7 +3601,7 @@ void MainWindow::playVideo()
         QProcess* playVideoProcess = new QProcess;
         playVideoProcess->setWorkingDirectory(QCoreApplication::applicationDirPath());
 #if defined (WIN32) || defined (WIN64)
-        playVideoProcess->start("ffplay.exe", {videoName});
+        playVideoProcess->start("win/ffplay.exe", {videoName});
 #elif defined (__linux__)
         playVideoProcess->start("ffplay", {videoName});
 #else
