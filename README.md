@@ -103,4 +103,5 @@ Here is the basic syntax of `frd` script:
 > More videos are being uploaded.
 
 ## Download Release
-This beta2 version does not provide build version.
+This beta2 version only provides build version for Windows.
+For other systems, please compile yourself.
