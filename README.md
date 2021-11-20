@@ -3,6 +3,7 @@ This is an application to make fractal videos based on Qt(6.2.0), C++ and FFmpeg
 
 ## Version Information
 This is version 6.0.9 updated in 2021/08/02.
+> Because the author is currently working on other projects of higher priorty, the development of this project is paused but it will be resumed when the author has free time.
 
 ### What's new in beta2 version than beta1 version
 - Add **Linux** support (tested on Ubuntu 20 using Qt 6.2.0 and Qt 6.1.2).
@@ -51,18 +52,18 @@ Here is the basic syntax of `frd` script:
 - No custom class name is allowed in this version.
 - Members of a class are specified also.
 - No quote mark is needed outside `@string` value.
-- To assign a `@formula` value, use `:=` instead of `=`.
+- To assign an `@formula` value, use `:=` instead of `=`.
 - Currently a value can only be set during initialization. (Which seems to a bug of `QJson`)
-- Variables is only valid in its scope block.
-- `@number` values are acctually stored as complex numbers.
+- Variables are only valid in its scope block (like `C++`).
+- `@number` values are actually stored as complex numbers.
 - `@array` stores `@number` and `@list` stores `@string`.
 - `@array` and `@list` values are set by using `,` to divide different elements. No `{}` should be used.
 - Function now only support `%CONFIGURE`.
 
 > Note:
-> - Non Ascii characters can lead to the misplace of syntax highlight of variable, function and class names.
+> - Non Ascii characters can lead to the misplace of syntax highlight of variable, function and class names. *[This will be fixed in the future.]*
 > - Try to avoid syntax error or mathematics error. (For example, `Ts` in route should between 0 to 1 and `Widths` should not be negative.)
-> The behavoir of the interpreter is undefined faced with these circumstances. *[This will be improved in the future.]*
+> The behaviour of the interpreter is undefined faced with these circumstances. *[This will be improved in the future.]*
 
 ### FRD Terminal
 - Currently you just need to use the **Editor** tab.
@@ -86,6 +87,7 @@ Here is the basic syntax of `frd` script:
 - Improve error indication of interpreter.
 - Add termination control in preview, creating images and creating video.
 - Add more terminal commands.
+- Adapt GUI for Windows 11.
 
 ## Sample Videos
 
@@ -103,4 +105,4 @@ Here is the basic syntax of `frd` script:
 > More videos are being uploaded.
 
 ## Download Release
-This beta2 version does not provide build version.
+This beta2 version provide build version for Windows only.
