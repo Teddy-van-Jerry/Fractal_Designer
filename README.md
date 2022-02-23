@@ -97,7 +97,7 @@ Here is the basic syntax of `frd` script:
 | Mandelbrot Set 2         | -                            | https://b23.tv/BV1qX4y1P74d |
 | Mandelbrot Set 3         | -                            | https://b23.tv/BV17K4y1J7XM |
 | Mandelbrot Set 4         | -                            | https://b23.tv/BV1Hy4y1T7MD |
-| Julia Set 1              | -                            | https://b23.tv/BV1wB4y1N7pU |
+| Julia Set 1              | https://youtu.be/zaU_K-6NbLg | https://b23.tv/BV1wB4y1N7pU |
 | Burning Ship Fractal 1   | -                            | https://b23.tv/BV1RA41157kJ |
 | Newton Fractal 1         | -                            | https://b23.tv/BV1Tb4y1D7oN |
 | FRD 6.0.9 Ubuntu 20 Test | -                            | https://b23.tv/BV1CL411n7F1 |
